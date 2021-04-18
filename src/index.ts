@@ -21,7 +21,7 @@ export interface ECRDeploymentProps {
 
 export interface IImageName {
   readonly uri: string;
-  readonly creds?: string;
+  creds?: string;
 }
 
 export class DockerImageName implements IImageName {
