@@ -6,7 +6,7 @@ const project = new AwsCdkConstructLibrary({
   cdkVersion: '1.95.2',
   defaultReleaseBranch: 'main',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
-  name: 'ecr-deployment',
+  name: 'cdk-ecr-deployment',
   repositoryUrl: '',
 
   /* AwsCdkConstructLibraryOptions */

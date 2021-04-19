@@ -1,5 +1,5 @@
 {
-  "name": "ecr-deployment",
+  "name": "cdk-ecr-deployment",
   "description": "CDK construct to deploy docker image to Amazon ECR",
   "repository": {
     "type": "git",
