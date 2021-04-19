@@ -48,7 +48,7 @@ new DockerImageName(name: string, creds?: string)
 
 Name | Type | Description 
 -----|------|-------------
-**uri** | <code>string</code> | <span></span>
+**uri** | <code>string</code> | The uri of the docker image.
 **creds**? | <code>string</code> | __*Optional*__
 
 
@@ -72,13 +72,13 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 * **scope** (<code>[Construct](#constructs-construct)</code>)  *No description*
 * **id** (<code>string</code>)  *No description*
 * **props** (<code>[ECRDeploymentProps](#cdk-ecr-deployment-ecrdeploymentprops)</code>)  *No description*
-  * **dest** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  *No description* 
-  * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  *No description* 
-  * **environment** (<code>Map<string, string></code>)  *No description* __*Optional*__
-  * **memoryLimit** (<code>number</code>)  *No description* __*Optional*__
-  * **role** (<code>[IRole](#aws-cdk-aws-iam-irole)</code>)  *No description* __*Optional*__
-  * **vpc** (<code>[IVpc](#aws-cdk-aws-ec2-ivpc)</code>)  *No description* __*Optional*__
-  * **vpcSubnets** (<code>[SubnetSelection](#aws-cdk-aws-ec2-subnetselection)</code>)  *No description* __*Optional*__
+  * **dest** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The destination of the docker image. 
+  * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The source of the docker image. 
+  * **environment** (<code>Map<string, string></code>)  The environment variable to set. __*Optional*__
+  * **memoryLimit** (<code>number</code>)  The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. __*Default*__: 128
+  * **role** (<code>[IRole](#aws-cdk-aws-iam-irole)</code>)  Execution role associated with this function. __*Default*__: A role is automatically created
+  * **vpc** (<code>[IVpc](#aws-cdk-aws-ec2-ivpc)</code>)  The VPC network to place the deployment lambda handler in. __*Default*__: None
+  * **vpcSubnets** (<code>[SubnetSelection](#aws-cdk-aws-ec2-subnetselection)</code>)  Where in the VPC to place the deployment lambda handler. __*Default*__: the Vpc default strategy if not specified
 
 
 
@@ -92,13 +92,13 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 
 Name | Type | Description 
 -----|------|-------------
-**dest** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | <span></span>
-**src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | <span></span>
-**environment**? | <code>Map<string, string></code> | __*Optional*__
-**memoryLimit**? | <code>number</code> | __*Optional*__
-**role**? | <code>[IRole](#aws-cdk-aws-iam-irole)</code> | __*Optional*__
-**vpc**? | <code>[IVpc](#aws-cdk-aws-ec2-ivpc)</code> | __*Optional*__
-**vpcSubnets**? | <code>[SubnetSelection](#aws-cdk-aws-ec2-subnetselection)</code> | __*Optional*__
+**dest** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The destination of the docker image.
+**src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The source of the docker image.
+**environment**? | <code>Map<string, string></code> | The environment variable to set.<br/>__*Optional*__
+**memoryLimit**? | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.<br/>__*Default*__: 128
+**role**? | <code>[IRole](#aws-cdk-aws-iam-irole)</code> | Execution role associated with this function.<br/>__*Default*__: A role is automatically created
+**vpc**? | <code>[IVpc](#aws-cdk-aws-ec2-ivpc)</code> | The VPC network to place the deployment lambda handler in.<br/>__*Default*__: None
+**vpcSubnets**? | <code>[SubnetSelection](#aws-cdk-aws-ec2-subnetselection)</code> | Where in the VPC to place the deployment lambda handler.<br/>__*Default*__: the Vpc default strategy if not specified
 
 
 
@@ -113,8 +113,8 @@ __Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename)
 
 Name | Type | Description 
 -----|------|-------------
-**uri** | <code>string</code> | <span></span>
-**creds**? | <code>string</code> | __*Optional*__
+**uri** | <code>string</code> | The uri of the docker image.
+**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
 
 
 
