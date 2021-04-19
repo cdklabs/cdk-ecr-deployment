@@ -49,7 +49,9 @@ const project = new AwsCdkConstructLibrary({
     '@aws-cdk/aws-lambda',
   ], /* Runtime dependencies of this module. */
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
-  // devDeps: [],                                                              /* Build dependencies for this module. */
+  devDeps: [
+    '@aws-cdk/aws-ecr-assets',
+  ], /* Build dependencies for this module. */
   // entrypoint: 'lib/index.js',                                               /* Module entrypoint (`main` in `package.json`). */
   // homepage: undefined,                                                      /* Package's Homepage / Website. */
   // keywords: undefined,                                                      /* Keywords to include in `package.json`. */
