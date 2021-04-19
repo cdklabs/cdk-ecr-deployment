@@ -9,18 +9,68 @@ import { Construct } from 'constructs';
 import { Construct as CoreConstruct } from '@aws-cdk/core';
 
 export interface ECRDeploymentProps {
+  /**
+   * The source of the docker image.
+   */
   readonly src: IImageName;
+
+  /**
+   * The destination of the docker image.
+   */
   readonly dest: IImageName;
 
+  /**
+   * The amount of memory (in MiB) to allocate to the AWS Lambda function which
+   * replicates the files from the CDK bucket to the destination bucket.
+   *
+   * If you are deploying large files, you will need to increase this number
+   * accordingly.
+   *
+   * @default 128
+   */
   readonly memoryLimit?: number;
+
+  /**
+   * Execution role associated with this function
+   *
+   * @default - A role is automatically created
+   */
   readonly role?: iam.IRole;
+
+  /**
+   * The VPC network to place the deployment lambda handler in.
+   *
+   * @default None
+   */
   readonly vpc?: ec2.IVpc;
+
+  /**
+   * Where in the VPC to place the deployment lambda handler.
+   * Only used if 'vpc' is supplied.
+   *
+   * @default - the Vpc default strategy if not specified
+   */
   readonly vpcSubnets?: ec2.SubnetSelection;
+
+  /**
+   * The environment variable to set
+   */
   readonly environment?: { [key: string]: string };
 }
 
 export interface IImageName {
+  /**
+   *  The uri of the docker image.
+   *
+   *  The uri spec follows https://github.com/containers/skopeo
+   */
   readonly uri: string;
+
+  /**
+   * The credentials of the docker image.
+   *
+   * Format should be either "USER:[PASSWORD]"
+   */
   creds?: string;
 }
 
