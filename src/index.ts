@@ -86,7 +86,7 @@ export class ECRDeployment extends CoreConstruct {
 
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(props.memoryLimit),
-      code: lambda.Code.fromAsset(path.join(__dirname, 'lambda'), {
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
         bundling: {
           image: lambda.Runtime.GO_1_X.bundlingImage,
           environment: Object.assign({

@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8](https://github.com/wchaws/cdk-ecr-deployment/compare/v0.0.7...v0.0.8) (2021-04-20)
+
+### [0.0.7](https://github.com/wchaws/cdk-ecr-deployment/compare/v0.0.6...v0.0.7) (2021-04-20)
+
+
+### Bug Fixes
+
+* lambda is not included in release pkg ([#14](https://github.com/wchaws/cdk-ecr-deployment/issues/14)) ([25de96c](https://github.com/wchaws/cdk-ecr-deployment/commit/25de96cf7364b1b438b2af6faec62312b45900b9))
+
+### [0.0.6](https://github.com/wchaws/cdk-ecr-deployment/compare/v0.0.3...v0.0.6) (2021-04-20)
+
 ### [0.0.5](https://github.com/wchaws/cdk-ecr-deployment/compare/v0.0.3...v0.0.5) (2021-04-20)
 
 ### [0.0.4](https://github.com/wchaws/cdk-ecr-deployment/compare/v0.0.3...v0.0.4) (2021-04-19)
