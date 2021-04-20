@@ -98,7 +98,9 @@ const project = new AwsCdkConstructLibrary({
   // mergifyAutoMergeLabel: 'auto-merge',                                      /* Automatically merge PRs that build successfully and have this label. */
   // mergifyOptions: undefined,                                                /* Options for mergify. */
   // mutableBuild: true,                                                       /* Automatically update files modified during builds to pull-request branches. */
-  // npmignore: undefined,                                                     /* Additional entries to .npmignore. */
+  npmignore: [
+    '/cdk.out',
+  ], /* Additional entries to .npmignore. */
   // npmignoreEnabled: true,                                                   /* Defines an .npmignore file. Normally this is only needed for libraries that are packaged as tarballs. */
   // projenDevDependency: true,                                                /* Indicates of "projen" should be installed as a devDependency. */
   // projenDuringBuild: true,                                                  /* Execute `projen` as the first step of the `build` task to synthesize project files. */
