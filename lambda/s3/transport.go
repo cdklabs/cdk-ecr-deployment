@@ -3,6 +3,9 @@ package s3
 import (
 	"context"
 	"errors"
+	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/containers/image/v5/docker/reference"
 	"github.com/containers/image/v5/transports"
@@ -22,7 +25,7 @@ func (t *s3Transport) Name() string {
 }
 
 func (t *s3Transport) ParseReference(reference string) (types.ImageReference, error) {
-	return newS3Ref(reference)
+	return parseS3ArchiveReference(reference)
 }
 
 func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
@@ -30,14 +33,38 @@ func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
 	return errors.New(`s3: does not support any scopes except the default "" one`)
 }
 
+type s3Uri struct {
+	bucket string
+	key    string
+}
+
+func parseS3Uri(s string) (*s3Uri, error) {
+	re := regexp.MustCompile(`(?m)([\w\.-]+)/?(.*)`)
+	m := re.FindStringSubmatch(s)
+	if (m != nil) || (len(m) != 2) {
+		return &s3Uri{
+			bucket: m[1],
+			key:    m[2],
+		}, nil
+	}
+	return nil, fmt.Errorf("can't parse s3 uri: %s", s)
+}
+
 type s3ArchiveReference struct {
-	uri string
+	s3uri *s3Uri
 	// ref reference.NamedTagged
 }
 
-func newS3Ref(uri string) (types.ImageReference, error) {
+func parseS3ArchiveReference(reference string) (types.ImageReference, error) {
+	if reference == "" {
+		return nil, errors.New("s3 reference cannot be empty")
+	}
+	s3uri, err := parseS3Uri(strings.TrimLeft(reference, "/"))
+	if err != nil {
+		return nil, err
+	}
 	return &s3ArchiveReference{
-		uri: uri,
+		s3uri: s3uri,
 	}, nil
 }
 
