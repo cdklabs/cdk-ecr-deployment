@@ -4,11 +4,13 @@ go 1.15
 
 require (
 	github.com/aws/aws-lambda-go v1.23.0
-	github.com/aws/aws-sdk-go-v2 v1.3.2 // indirect
-	github.com/aws/aws-sdk-go-v2/config v1.1.5
+	github.com/aws/aws-sdk-go-v2 v1.3.2
+	github.com/aws/aws-sdk-go-v2/config v1.1.6
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.2
-	github.com/containers/image v3.0.2+incompatible
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.5.0
 	github.com/containers/image/v5 v5.11.0
-	github.com/docker/distribution v2.7.1+incompatible
+	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e
+	github.com/opencontainers/go-digest v1.0.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/stretchr/testify v1.7.0
 )

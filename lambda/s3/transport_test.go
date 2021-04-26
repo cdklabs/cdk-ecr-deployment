@@ -36,7 +36,7 @@ func TestTransportName(t *testing.T) {
 // }
 
 func TestParseReference(t *testing.T) {
-	testParseReference(t, parseS3ArchiveReference)
+	testParseReference(t, ParseReference)
 }
 
 // testParseReference is a test shared for Transport.ParseReference and ParseReference.
@@ -46,9 +46,9 @@ func testParseReference(t *testing.T, fn func(string) (types.ImageReference, err
 	}{
 		{"", "", ""}, // Empty input is explicitly rejected
 		{"//bucket", "bucket", ""},
-		{"/bucket/a/b", "bucket", "a/b"},
-		{"/bucket/", "bucket", ""},
-		{"/hello.com/", "hello.com", ""},
+		{"//bucket/a/b", "bucket", "a/b"},
+		{"//bucket/", "bucket", ""},
+		{"//hello.com/", "hello.com", ""},
 	} {
 		ref, err := fn(c.input)
 		if c.expectedBucket == "" {
@@ -57,8 +57,8 @@ func testParseReference(t *testing.T, fn func(string) (types.ImageReference, err
 			require.NoError(t, err, c.input)
 			s3ArchiveRef, ok := ref.(*s3ArchiveReference)
 			require.True(t, ok, c.input)
-			assert.Equal(t, c.expectedBucket, s3ArchiveRef.s3uri.bucket, c.input)
-			assert.Equal(t, c.expectedKey, s3ArchiveRef.s3uri.key, c.input)
+			assert.Equal(t, c.expectedBucket, s3ArchiveRef.s3uri.Bucket, c.input)
+			assert.Equal(t, c.expectedKey, s3ArchiveRef.s3uri.Key, c.input)
 		}
 	}
 }

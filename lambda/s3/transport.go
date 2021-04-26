@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"regexp"
 	"strings"
 
 	"github.com/containers/image/v5/docker/reference"
@@ -25,7 +24,7 @@ func (t *s3Transport) Name() string {
 }
 
 func (t *s3Transport) ParseReference(reference string) (types.ImageReference, error) {
-	return parseS3ArchiveReference(reference)
+	return ParseReference(reference)
 }
 
 func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
@@ -33,38 +32,39 @@ func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
 	return errors.New(`s3: does not support any scopes except the default "" one`)
 }
 
-type s3Uri struct {
-	bucket string
-	key    string
-}
-
-func parseS3Uri(s string) (*s3Uri, error) {
-	re := regexp.MustCompile(`(?m)([\w\.-]+)/?(.*)`)
-	m := re.FindStringSubmatch(s)
-	if (m != nil) || (len(m) != 2) {
-		return &s3Uri{
-			bucket: m[1],
-			key:    m[2],
-		}, nil
-	}
-	return nil, fmt.Errorf("can't parse s3 uri: %s", s)
-}
-
 type s3ArchiveReference struct {
-	s3uri *s3Uri
-	// ref reference.NamedTagged
+	s3uri *S3Uri
+	ref   reference.NamedTagged
 }
 
-func parseS3ArchiveReference(reference string) (types.ImageReference, error) {
-	if reference == "" {
+func ParseReference(refString string) (types.ImageReference, error) {
+	if refString == "" {
 		return nil, errors.New("s3 reference cannot be empty")
 	}
-	s3uri, err := parseS3Uri(strings.TrimLeft(reference, "/"))
+	parts := strings.SplitN(refString, ":", 2)
+	s3uri, err := ParseS3Uri("s3:" + parts[0])
 	if err != nil {
 		return nil, err
 	}
+	var nt reference.NamedTagged
+
+	if len(parts) == 2 {
+		// A :tag was specified.
+		ref, err := reference.ParseNormalizedNamed(parts[1])
+		if err != nil {
+			return nil, fmt.Errorf("error s3 parsing reference: %s", err.Error())
+		}
+		ref = reference.TagNameOnly(ref)
+		refTagged, ok := ref.(reference.NamedTagged)
+		if !ok { // If ref contains a digest, TagNameOnly does not change it
+			return nil, fmt.Errorf("reference does not include a tag: %s", ref.String())
+		}
+		nt = refTagged
+	}
+
 	return &s3ArchiveReference{
 		s3uri: s3uri,
+		ref:   nt,
 	}, nil
 }
 
@@ -73,11 +73,14 @@ func (r *s3ArchiveReference) Transport() types.ImageTransport {
 }
 
 func (r *s3ArchiveReference) StringWithinTransport() string {
-	return "//" + "<bucket>/<path>"
+	if r.s3uri.Key == "" {
+		return fmt.Sprintf("//%s", r.s3uri.Bucket)
+	}
+	return fmt.Sprintf("//%s/%s", r.s3uri.Bucket, r.s3uri.Key)
 }
 
 func (r *s3ArchiveReference) DockerReference() reference.Named {
-	return nil
+	return r.ref
 }
 
 func (r *s3ArchiveReference) PolicyConfigurationIdentity() string {
@@ -93,11 +96,11 @@ func (r *s3ArchiveReference) NewImage(ctx context.Context, sys *types.SystemCont
 }
 
 func (r *s3ArchiveReference) DeleteImage(ctx context.Context, sys *types.SystemContext) error {
-	return nil
+	return errors.New("deleting images not implemented for s3")
 }
 
 func (r *s3ArchiveReference) NewImageSource(ctx context.Context, sys *types.SystemContext) (types.ImageSource, error) {
-	return nil, nil
+	return newImageSource(ctx, sys, r)
 }
 
 func (r *s3ArchiveReference) NewImageDestination(ctx context.Context, sys *types.SystemContext) (types.ImageDestination, error) {
