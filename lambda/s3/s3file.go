@@ -131,33 +131,22 @@ func (f *S3File) Read(b []byte) (n int, err error) {
 }
 
 // ReadAt implements the io.ReaderAt interface.
-// func (f *S3File) ReadAt(b []byte, off int64) (n int, err error) {
-// 	logrus.Debugf("s3.S3File: ReadAt %d bytes %d offset", len(b), off)
+func (f *S3File) ReadAt(b []byte, off int64) (n int, err error) {
+	logrus.Debugf("s3.S3File: ReadAt %d bytes %d offset", len(b), off)
 
-// 	// cannot modify state - see io.ReaderAt
-// 	if off < 0 {
-// 		return 0, errors.New("s3.S3File: negative offset")
-// 	}
-// 	if off >= f.size {
-// 		return 0, io.EOF
-// 	}
+	if off < 0 {
+		return 0, errors.New("s3.S3File: negative offset")
+	}
+	if off >= f.size {
+		return 0, io.EOF
+	}
 
-// 	out, err := f.client.GetObject(context.TODO(), &s3.GetObjectInput{
-// 		Bucket: &f.s3uri.Bucket,
-// 		Key:    &f.s3uri.Key,
-// 		Range:  aws.String(fmt.Sprintf("bytes=%d-%d", off, off+int64(len(b))-1)),
-// 	})
-// 	if err != nil {
-// 		return 0, err
-// 	}
-// 	defer out.Body.Close()
-
-// 	n, err = out.Body.Read(b)
-// 	if err == io.EOF {
-// 		return n, nil // e is EOF, so return nil explicitly
-// 	}
-// 	return
-// }
+	buf, err := f.cache.Read(off, off+int64(len(b)), f.onCacheMiss)
+	if err != nil {
+		return 0, err
+	}
+	return copy(b, buf), nil
+}
 
 // Seek implements the io.Seeker interface.
 func (f *S3File) Seek(offset int64, whence int) (int64, error) {
