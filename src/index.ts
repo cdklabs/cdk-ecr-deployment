@@ -6,7 +6,7 @@ import * as cdk from '@aws-cdk/core';
 import { Construct } from 'constructs';
 
 // eslint-disable-next-line no-duplicate-imports, import/order
-import { Construct as CoreConstruct } from '@aws-cdk/core';
+import { AssetHashType, Construct as CoreConstruct } from '@aws-cdk/core';
 
 export interface ECRDeploymentProps {
   /**
@@ -87,6 +87,7 @@ export class ECRDeployment extends CoreConstruct {
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(props.memoryLimit),
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
+        assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
         bundling: {
           image: lambda.Runtime.GO_1_X.bundlingImage,
           environment: Object.assign({
