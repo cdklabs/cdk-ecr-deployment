@@ -1,7 +1,8 @@
-package s3
+package tarfile
 
 import (
 	"context"
+	"ecr-deployment/internal/iolimits"
 	"errors"
 	"fmt"
 	"io"
@@ -92,17 +93,17 @@ func (f *S3File) onCacheMiss(bid int64) (blk []byte, err error) {
 	out, err := f.client.GetObject(context.TODO(), &s3.GetObjectInput{
 		Bucket: &f.s3uri.Bucket,
 		Key:    &f.s3uri.Key,
-		Range:  aws.String(fmt.Sprintf("bytes=%d-%d", bid*BlockSize, (bid+1)*BlockSize-1)),
+		Range:  aws.String(fmt.Sprintf("bytes=%d-%d", bid*iolimits.BlockSize, (bid+1)*iolimits.BlockSize-1)),
 	})
 	if err != nil {
 		return nil, err
 	}
 	defer out.Body.Close()
 
-	blk = make([]byte, BlockSize)
+	blk = make([]byte, iolimits.BlockSize)
 	i, n := 0, 0
-	for i < BlockSize {
-		n, err = out.Body.Read(blk[i:BlockSize])
+	for i < iolimits.BlockSize {
+		n, err = out.Body.Read(blk[i:iolimits.BlockSize])
 		i += n
 		if err != nil {
 			break
@@ -212,12 +213,6 @@ func NewS3File(cfg aws.Config, s3uri S3Uri) (*S3File, error) {
 	}, nil
 }
 
-// Cache
-const (
-	megaByte  = 1 << 20
-	BlockSize = 8 * megaByte
-)
-
 type CacheMissFn func(bid int64) ([]byte, error)
 
 type LRUBlockCache struct {
@@ -240,8 +235,8 @@ func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []b
 	if begin >= end {
 		return nil, fmt.Errorf("s3.LRUBlockCache: byte end must greater than byte begin")
 	}
-	bidBegin := begin / BlockSize
-	bidEnd := end / BlockSize
+	bidBegin := begin / iolimits.BlockSize
+	bidEnd := end / iolimits.BlockSize
 	buf = make([]byte, 0)
 
 	for bid := bidBegin; bid <= bidEnd; bid++ {
@@ -258,7 +253,7 @@ func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []b
 			if err != nil {
 				return nil, err
 			}
-			if len(missingblk) != BlockSize {
+			if len(missingblk) != iolimits.BlockSize {
 				return nil, fmt.Errorf("s3.LRUBlockCache: invalid missing block size")
 			}
 			c.cache.Add(bid, missingblk)
@@ -272,8 +267,8 @@ func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []b
 
 // Returns the byte range of the block at the given begin and end address
 func blockAddressTranslation(begin, end, bid int64) (b, e int64) {
-	b = max(begin, bid*BlockSize) - bid*BlockSize
-	e = min(end, (bid+1)*BlockSize) - bid*BlockSize
+	b = max(begin, bid*iolimits.BlockSize) - bid*iolimits.BlockSize
+	e = min(end, (bid+1)*iolimits.BlockSize) - bid*iolimits.BlockSize
 	return
 }
 

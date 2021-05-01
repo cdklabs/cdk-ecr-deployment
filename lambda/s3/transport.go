@@ -2,6 +2,7 @@ package s3
 
 import (
 	"context"
+	"ecr-deployment/internal/tarfile"
 	"errors"
 	"fmt"
 	"strings"
@@ -33,7 +34,7 @@ func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
 }
 
 type s3ArchiveReference struct {
-	s3uri *S3Uri
+	s3uri *tarfile.S3Uri
 	ref   reference.NamedTagged
 }
 
@@ -42,7 +43,7 @@ func ParseReference(refString string) (types.ImageReference, error) {
 		return nil, errors.New("s3 reference cannot be empty")
 	}
 	parts := strings.SplitN(refString, ":", 2)
-	s3uri, err := ParseS3Uri("s3:" + parts[0])
+	s3uri, err := tarfile.ParseS3Uri("s3:" + parts[0])
 	if err != nil {
 		return nil, err
 	}

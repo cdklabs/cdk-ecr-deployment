@@ -1,8 +1,9 @@
-package s3
+package tarfile
 
 import (
 	"archive/tar"
 	"context"
+	"ecr-deployment/internal/iolimits"
 	"fmt"
 	"io"
 	"log"
@@ -13,7 +14,7 @@ import (
 )
 
 func TestNewS3File(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	assert.NoError(t, err)
 
@@ -38,20 +39,20 @@ func TestNewS3File(t *testing.T) {
 }
 
 func TestBlockAddressTranslation(t *testing.T) {
-	begin := int64(BlockSize - megaByte)
-	end := int64(3*BlockSize - megaByte)
+	begin := int64(iolimits.BlockSize - iolimits.MegaByte)
+	end := int64(3*iolimits.BlockSize - iolimits.MegaByte)
 
 	b, e := blockAddressTranslation(begin, end, 0)
 	assert.Equal(t, begin, b)
-	assert.Equal(t, int64(BlockSize), e)
+	assert.Equal(t, int64(iolimits.BlockSize), e)
 
 	b, e = blockAddressTranslation(begin, end, 1)
 	assert.Equal(t, int64(0), b)
-	assert.Equal(t, int64(BlockSize), e)
+	assert.Equal(t, int64(iolimits.BlockSize), e)
 
 	b, e = blockAddressTranslation(begin, end, 2)
 	assert.Equal(t, int64(0), b)
-	assert.Equal(t, int64(BlockSize-megaByte), e)
+	assert.Equal(t, int64(iolimits.BlockSize-iolimits.MegaByte), e)
 }
 
 func TestLRUBlockCache(t *testing.T) {
@@ -76,13 +77,13 @@ func TestLRUBlockCache(t *testing.T) {
 	assert.Equal(t, magicb(0), buf)
 
 	// read 0-3 bytes of block1
-	buf, err = cache.Read(BlockSize, BlockSize+3, cacheMissFn)
+	buf, err = cache.Read(iolimits.BlockSize, iolimits.BlockSize+3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, n)
 	assert.Equal(t, magicb(1), buf)
 
 	// read whole block1 and 0-3 bytes of block2
-	buf, err = cache.Read(0, BlockSize+3, cacheMissFn)
+	buf, err = cache.Read(0, iolimits.BlockSize+3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 4, n)
 	assert.Equal(t, append(mkblk(magicb(0)), magicb(1)...), buf)
@@ -93,7 +94,7 @@ func magicb(seed int64) []byte {
 }
 
 func mkblk(init []byte) []byte {
-	block := make([]byte, BlockSize)
+	block := make([]byte, iolimits.BlockSize)
 	copy(block[0:len(init)], init)
 	return block
 }
