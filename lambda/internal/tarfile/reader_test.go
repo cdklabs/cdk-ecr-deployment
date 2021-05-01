@@ -10,7 +10,7 @@ import (
 )
 
 func TestNewS3FileReader(t *testing.T) {
-	// t.Skip()
+	t.Skip()
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	assert.NoError(t, err)
 

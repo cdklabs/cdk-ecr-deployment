@@ -31,7 +31,7 @@ func newImageSource(ctx context.Context, sys *types.SystemContext, ref *s3Archiv
 		return nil, err
 	}
 	return &s3ArchiveImageSource{
-		S3FileSource: tarfile.NewSource(reader, false, ref.ref, 0),
+		S3FileSource: tarfile.NewSource(reader, false, ref.ref, ref.sourceIndex),
 		ref:          ref,
 	}, nil
 }

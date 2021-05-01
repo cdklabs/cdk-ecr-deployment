@@ -14,7 +14,13 @@ import (
 
 func TestMain(t *testing.T) {
 	t.Skip()
-	srcImage := "s3://cdk-ecr-deployment/nginx.tar"
+
+	// reference format: s3://bucket/key[:docker-reference]
+	// valid examples:
+	// s3://bucket/key:nginx:latest
+	// s3://bucket/key:@0
+
+	srcImage := "s3://cdk-ecr-deployment/nginx.tar:nginx:latest"
 	destImage := "dir:/tmp/nginx.dir"
 
 	log.Printf("SrcImage: %v DestImage: %v", srcImage, destImage)

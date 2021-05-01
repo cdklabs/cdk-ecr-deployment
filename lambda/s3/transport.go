@@ -3,9 +3,11 @@ package s3
 import (
 	"cdk-ecr-deployment-handler/internal/tarfile"
 	"context"
-	"errors"
 	"fmt"
+	"strconv"
 	"strings"
+
+	"github.com/pkg/errors"
 
 	"github.com/containers/image/v5/docker/reference"
 	"github.com/containers/image/v5/image"
@@ -36,7 +38,11 @@ func (t *s3Transport) ValidatePolicyConfigurationScope(scope string) error {
 
 type s3ArchiveReference struct {
 	s3uri *tarfile.S3Uri
-	ref   reference.NamedTagged
+	// May be nil to read the only image in an archive, or to create an untagged image.
+	ref reference.NamedTagged
+	// If not -1, a zero-based index of the image in the manifest. Valid only for sources.
+	// Must not be set if ref is set.
+	sourceIndex int
 }
 
 func ParseReference(refString string) (types.ImageReference, error) {
@@ -49,24 +55,50 @@ func ParseReference(refString string) (types.ImageReference, error) {
 		return nil, err
 	}
 	var nt reference.NamedTagged
+	sourceIndex := -1
 
 	if len(parts) == 2 {
-		// A :tag was specified.
-		ref, err := reference.ParseNormalizedNamed(parts[1])
-		if err != nil {
-			return nil, fmt.Errorf("error s3 parsing reference: %s", err.Error())
+		// A :tag or :@index was specified.
+		if len(parts[1]) > 0 && parts[1][0] == '@' {
+			i, err := strconv.Atoi(parts[1][1:])
+			if err != nil {
+				return nil, errors.Wrapf(err, "Invalid source index %s", parts[1])
+			}
+			if i < 0 {
+				return nil, errors.Errorf("Invalid source index @%d: must not be negative", i)
+			}
+			sourceIndex = i
+		} else {
+			ref, err := reference.ParseNormalizedNamed(parts[1])
+			if err != nil {
+				return nil, errors.Wrapf(err, "s3 parsing reference")
+			}
+			ref = reference.TagNameOnly(ref)
+			refTagged, isTagged := ref.(reference.NamedTagged)
+			if !isTagged { // If ref contains a digest, TagNameOnly does not change it
+				return nil, errors.Errorf("reference does not include a tag: %s", ref.String())
+			}
+			nt = refTagged
 		}
-		ref = reference.TagNameOnly(ref)
-		refTagged, ok := ref.(reference.NamedTagged)
-		if !ok { // If ref contains a digest, TagNameOnly does not change it
-			return nil, fmt.Errorf("reference does not include a tag: %s", ref.String())
-		}
-		nt = refTagged
 	}
 
+	return newReference(s3uri, nt, sourceIndex)
+}
+
+func newReference(s3uri *tarfile.S3Uri, ref reference.NamedTagged, sourceIndex int) (types.ImageReference, error) {
+	if ref != nil && sourceIndex != -1 {
+		return nil, errors.Errorf("Invalid s3: reference: cannot use both a tag and a source index")
+	}
+	if _, isDigest := ref.(reference.Canonical); isDigest {
+		return nil, errors.Errorf("s3 doesn't support digest references: %s", ref.String())
+	}
+	if sourceIndex != -1 && sourceIndex < 0 {
+		return nil, errors.Errorf("Invalid s3: reference: index @%d must not be negative", sourceIndex)
+	}
 	return &s3ArchiveReference{
-		s3uri: s3uri,
-		ref:   nt,
+		s3uri:       s3uri,
+		ref:         ref,
+		sourceIndex: sourceIndex,
 	}, nil
 }
 
