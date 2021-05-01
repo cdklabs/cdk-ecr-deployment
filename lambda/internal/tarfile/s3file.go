@@ -1,12 +1,13 @@
 package tarfile
 
 import (
+	"cdk-ecr-deployment-handler/internal/iolimits"
 	"context"
-	"ecr-deployment/internal/iolimits"
 	"errors"
 	"fmt"
 	"io"
 	"strings"
+	"sync"
 
 	"github.com/sirupsen/logrus"
 
@@ -47,9 +48,9 @@ func ParseS3Uri(s string) (*S3Uri, error) {
 type S3File struct {
 	s3uri  S3Uri
 	client *s3.Client
-	i      int64 // current reading index
-	size   int64 // the size of the s3 object
-	cache  *LRUBlockCache
+	i      int64          // current reading index
+	size   int64          // the size of the s3 object
+	rcache *LRUBlockCache // read cache
 }
 
 // Len returns the number of bytes of the unread portion of the s3 object
@@ -90,6 +91,9 @@ func (f *S3File) Size() int64 {
 // }
 
 func (f *S3File) onCacheMiss(bid int64) (blk []byte, err error) {
+	if f.client == nil {
+		return nil, errors.New("s3.S3File: api client is nil, did you close the file?")
+	}
 	out, err := f.client.GetObject(context.TODO(), &s3.GetObjectInput{
 		Bucket: &f.s3uri.Bucket,
 		Key:    &f.s3uri.Key,
@@ -122,7 +126,10 @@ func (f *S3File) Read(b []byte) (n int, err error) {
 	if f.i >= f.size {
 		return 0, io.EOF
 	}
-	buf, err := f.cache.Read(f.i, f.i+int64(len(b)), f.onCacheMiss)
+	if f.rcache == nil {
+		return 0, errors.New("s3.S3File: rcache is nil, did you close the file?")
+	}
+	buf, err := f.rcache.Read(f.i, f.i+int64(len(b)), f.onCacheMiss)
 	if err != nil {
 		return 0, err
 	}
@@ -141,8 +148,10 @@ func (f *S3File) ReadAt(b []byte, off int64) (n int, err error) {
 	if off >= f.size {
 		return 0, io.EOF
 	}
-
-	buf, err := f.cache.Read(off, off+int64(len(b)), f.onCacheMiss)
+	if f.rcache == nil {
+		return 0, errors.New("s3.S3File: rcache is nil, did you close the file?")
+	}
+	buf, err := f.rcache.Read(off, off+int64(len(b)), f.onCacheMiss)
 	if err != nil {
 		return 0, err
 	}
@@ -169,6 +178,26 @@ func (f *S3File) Seek(offset int64, whence int) (int64, error) {
 	}
 	f.i = abs
 	return abs, nil
+}
+
+func (f *S3File) Reset() {
+	f.i = 0
+}
+
+func (f *S3File) Close() error {
+	f.client = nil
+	f.rcache = nil
+	return nil
+}
+
+func (f *S3File) Clone() *S3File {
+	return &S3File{
+		s3uri:  f.s3uri,
+		client: f.client,
+		i:      0,
+		size:   f.size,
+		rcache: f.rcache,
+	}
 }
 
 // WriteTo implements the io.WriterTo interface.
@@ -209,14 +238,15 @@ func NewS3File(cfg aws.Config, s3uri S3Uri) (*S3File, error) {
 		client: client,
 		i:      0,
 		size:   output.ContentLength,
-		cache:  NewLRUBlockCache(4),
+		rcache: NewLRUBlockCache(4),
 	}, nil
 }
 
 type CacheMissFn func(bid int64) ([]byte, error)
 
 type LRUBlockCache struct {
-	cache *lru.Cache
+	cache   *lru.Cache
+	rwmutex sync.RWMutex
 }
 
 func NewLRUBlockCache(capacity int) *LRUBlockCache {
@@ -242,7 +272,9 @@ func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []b
 	for bid := bidBegin; bid <= bidEnd; bid++ {
 		var block []byte
 		b, e := blockAddressTranslation(begin, end, bid)
+		c.rwmutex.RLock()
 		cacheblock, hit := c.cache.Get(bid)
+		c.rwmutex.RUnlock()
 		if hit {
 			// cache hit
 			block = cacheblock.([]byte)
@@ -256,7 +288,9 @@ func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []b
 			if len(missingblk) != iolimits.BlockSize {
 				return nil, fmt.Errorf("s3.LRUBlockCache: invalid missing block size")
 			}
+			c.rwmutex.Lock()
 			c.cache.Add(bid, missingblk)
+			c.rwmutex.Unlock()
 			block = missingblk
 		}
 		buf = append(buf, block[b:e]...)

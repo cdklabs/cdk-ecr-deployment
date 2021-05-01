@@ -1,4 +1,4 @@
-module ecr-deployment
+module cdk-ecr-deployment-handler
 
 go 1.15
 

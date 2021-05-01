@@ -2,8 +2,8 @@ package tarfile
 
 import (
 	"archive/tar"
+	"cdk-ecr-deployment-handler/internal/iolimits"
 	"context"
-	"ecr-deployment/internal/iolimits"
 	"fmt"
 	"io"
 	"log"

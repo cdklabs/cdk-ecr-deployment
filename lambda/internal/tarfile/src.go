@@ -3,8 +3,8 @@ package tarfile
 import (
 	"archive/tar"
 	"bytes"
+	"cdk-ecr-deployment-handler/internal/iolimits"
 	"context"
-	"ecr-deployment/internal/iolimits"
 	"encoding/json"
 	"io"
 	"io/ioutil"

@@ -16,7 +16,7 @@ ifeq ($(GOOS), linux)
 endif
 
 BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp
-OUTPUT ?= ecr-deployment
+OUTPUT ?= cdk-ecr-deployment-handler
 
 all: lambda
 

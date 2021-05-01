@@ -1,13 +1,14 @@
 package s3
 
 import (
+	"cdk-ecr-deployment-handler/internal/tarfile"
 	"context"
-	"ecr-deployment/internal/tarfile"
 	"errors"
 	"fmt"
 	"strings"
 
 	"github.com/containers/image/v5/docker/reference"
+	"github.com/containers/image/v5/image"
 	"github.com/containers/image/v5/transports"
 	"github.com/containers/image/v5/types"
 )
@@ -93,7 +94,11 @@ func (r *s3ArchiveReference) PolicyConfigurationNamespaces() []string {
 }
 
 func (r *s3ArchiveReference) NewImage(ctx context.Context, sys *types.SystemContext) (types.ImageCloser, error) {
-	return nil, nil
+	src, err := newImageSource(ctx, sys, r)
+	if err != nil {
+		return nil, err
+	}
+	return image.FromSource(ctx, sys, src)
 }
 
 func (r *s3ArchiveReference) DeleteImage(ctx context.Context, sys *types.SystemContext) error {
@@ -105,5 +110,5 @@ func (r *s3ArchiveReference) NewImageSource(ctx context.Context, sys *types.Syst
 }
 
 func (r *s3ArchiveReference) NewImageDestination(ctx context.Context, sys *types.SystemContext) (types.ImageDestination, error) {
-	return nil, nil
+	return nil, fmt.Errorf(`s3 locations can only be read from, not written to`)
 }

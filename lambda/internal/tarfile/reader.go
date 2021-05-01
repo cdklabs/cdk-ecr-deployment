@@ -7,7 +7,7 @@ import (
 	"os"
 	"path"
 
-	"ecr-deployment/internal/iolimits"
+	"cdk-ecr-deployment-handler/internal/iolimits"
 
 	"github.com/containers/image/v5/docker/reference"
 	"github.com/pkg/errors"
@@ -50,7 +50,7 @@ func NewS3FileReader(s3file *S3File) (*S3FileReader, error) {
 
 // Close removes resources associated with an initialized Reader, if any.
 func (r *S3FileReader) Close() error {
-	return nil
+	return r.s3file.Close()
 }
 
 // ChooseManifestItem selects a manifest item from r.Manifest matching (ref, sourceIndex), one or
@@ -108,7 +108,10 @@ func (t *tarReadCloser) Close() error {
 // It is safe to call this method from multiple goroutines simultaneously.
 // The caller should call .Close() on the returned stream.
 func (r *S3FileReader) openTarComponent(componentPath string) (io.ReadCloser, error) {
-	tarReader, header, err := findTarComponent(r.s3file, componentPath)
+	// We must clone at here because we need to make sure each tar reader must read from the beginning.
+	// And the internal rcache should be shared.
+	f := r.s3file.Clone()
+	tarReader, header, err := findTarComponent(f, componentPath)
 	if err != nil {
 		return nil, err
 	}
@@ -117,12 +120,12 @@ func (r *S3FileReader) openTarComponent(componentPath string) (io.ReadCloser, er
 	}
 	if header.FileInfo().Mode()&os.ModeType == os.ModeSymlink { // FIXME: untested
 		// We follow only one symlink; so no loops are possible.
-		if _, err := r.s3file.Seek(0, io.SeekStart); err != nil {
+		if _, err := f.Seek(0, io.SeekStart); err != nil {
 			return nil, err
 		}
 		// The new path could easily point "outside" the archive, but we only compare it to existing tar headers without extracting the archive,
 		// so we don't care.
-		tarReader, header, err = findTarComponent(r.s3file, path.Join(path.Dir(componentPath), header.Linkname))
+		tarReader, header, err = findTarComponent(f, path.Join(path.Dir(componentPath), header.Linkname))
 		if err != nil {
 			return nil, err
 		}
