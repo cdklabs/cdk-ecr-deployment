@@ -98,12 +98,12 @@ export class ECRDeployment extends CoreConstruct {
         assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
         bundling: {
           image: lambda.Runtime.GO_1_X.bundlingImage,
-          environment: Object.assign({
+          environment: {
             GOGC: '50',
             GOOS: 'linux',
             GOARCH: 'amd64',
             GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
-          }, props.environment),
+          },
           user: 'root',
           command: [
             'bash', '-c', [
@@ -115,6 +115,7 @@ export class ECRDeployment extends CoreConstruct {
       }),
       runtime: lambda.Runtime.GO_1_X,
       handler: 'main',
+      environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: cdk.Duration.minutes(15),
       role: props.role,
