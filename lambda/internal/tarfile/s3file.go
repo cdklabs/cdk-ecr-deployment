@@ -238,7 +238,7 @@ func NewS3File(cfg aws.Config, s3uri S3Uri) (*S3File, error) {
 		client: client,
 		i:      0,
 		size:   output.ContentLength,
-		rcache: NewLRUBlockCache(4),
+		rcache: NewLRUBlockCache(iolimits.CacheBlockCount),
 	}, nil
 }
 
