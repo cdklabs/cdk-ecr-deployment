@@ -17,10 +17,6 @@ import (
 	"github.com/golang/groupcache/lru"
 )
 
-func init() {
-	logrus.SetLevel(logrus.DebugLevel)
-}
-
 const S3Prefix = "s3://"
 
 type S3Uri struct {
