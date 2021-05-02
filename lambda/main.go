@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-lambda-go/cfn"
 	"github.com/aws/aws-lambda-go/lambda"
 
-	_ "cdk-ecr-deployment-handler/s3"
+	_ "cdk-ecr-deployment-handler/s3" // install s3 transport plugin
 )
 
 func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, data map[string]interface{}, err error) {
@@ -25,7 +25,7 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 	if event.RequestType == cfn.RequestDelete {
 		return physicalResourceID, data, nil
 	}
-	if event.RequestType == cfn.RequestCreate {
+	if event.RequestType == cfn.RequestCreate || event.RequestType == cfn.RequestUpdate {
 		srcImage, err := getStrProps(event.ResourceProperties, SRC_IMAGE)
 		if err != nil {
 			return physicalResourceID, data, err

@@ -55,42 +55,69 @@ func TestBlockAddressTranslation(t *testing.T) {
 	assert.Equal(t, int64(iolimits.BlockSize-iolimits.MegaByte), e)
 }
 
-func TestLRUBlockCache(t *testing.T) {
+func TestBlockCache(t *testing.T) {
 	n := 0
-	cache := NewLRUBlockCache(1)
-	cacheMissFn := func(bid int64) ([]byte, error) {
+	cache := NewBlockCache(1)
+	cacheMissFn := func(block *Block) error {
 		n++
-		block := mkblk(magicb(bid))
-		return block, nil
+		copy(block.Buf, magic(block.Id))
+		return nil
 	}
 
 	// read 0-3 bytes of block0
 	buf, err := cache.Read(0, 3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, n)
-	assert.Equal(t, magicb(0), buf)
+	assert.Equal(t, magic(0), buf)
 
 	// read 0-3 bytes of block0's cache
 	buf, err = cache.Read(0, 3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 1, n)
-	assert.Equal(t, magicb(0), buf)
+	assert.Equal(t, magic(0), buf)
 
 	// read 0-3 bytes of block1
 	buf, err = cache.Read(iolimits.BlockSize, iolimits.BlockSize+3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, n)
-	assert.Equal(t, magicb(1), buf)
+	assert.Equal(t, magic(1), buf)
 
 	// read whole block1 and 0-3 bytes of block2
 	buf, err = cache.Read(0, iolimits.BlockSize+3, cacheMissFn)
 	assert.NoError(t, err)
 	assert.Equal(t, 4, n)
-	assert.Equal(t, append(mkblk(magicb(0)), magicb(1)...), buf)
+	assert.Equal(t, append(mkblk(magic(0)), magic(1)...), buf)
 }
 
-func magicb(seed int64) []byte {
-	return []byte{1, byte(seed), 2}
+func TestLRUBlockPool(t *testing.T) {
+	pool := NewLRUBlockPool(1)
+
+	block, hit, err := pool.GetBlock(0)
+	assert.NoError(t, err)
+	assert.False(t, hit)
+	assert.Equal(t, int64(0), block.Id)
+	assert.Equal(t, iolimits.BlockSize, block.Size())
+	block.Buf[0] = byte('A')
+
+	block, hit, err = pool.GetBlock(1)
+	assert.NoError(t, err)
+	assert.False(t, hit)
+	assert.Equal(t, int64(1), block.Id)
+	assert.Equal(t, iolimits.BlockSize, block.Size())
+	assert.Equal(t, byte('A'), block.Buf[0])
+	block.Buf[0] = byte('B')
+
+	block, hit, err = pool.GetBlock(1)
+	assert.NoError(t, err)
+	assert.True(t, hit)
+	assert.Equal(t, int64(1), block.Id)
+	assert.Equal(t, iolimits.BlockSize, block.Size())
+	assert.Equal(t, byte('B'), block.Buf[0])
+}
+
+// Create magic bytes based on seed: [seed-1, seed, seed+1]
+func magic(seed int64) []byte {
+	return []byte{byte(seed - 1), byte(seed), byte(seed + 1)}
 }
 
 func mkblk(init []byte) []byte {

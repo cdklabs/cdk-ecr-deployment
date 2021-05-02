@@ -3,11 +3,12 @@ package tarfile
 import (
 	"cdk-ecr-deployment-handler/internal/iolimits"
 	"context"
-	"errors"
 	"fmt"
 	"io"
 	"strings"
 	"sync"
+
+	"github.com/pkg/errors"
 
 	"github.com/sirupsen/logrus"
 
@@ -48,9 +49,9 @@ func ParseS3Uri(s string) (*S3Uri, error) {
 type S3File struct {
 	s3uri  S3Uri
 	client *s3.Client
-	i      int64          // current reading index
-	size   int64          // the size of the s3 object
-	rcache *LRUBlockCache // read cache
+	i      int64       // current reading index
+	size   int64       // the size of the s3 object
+	rcache *BlockCache // read cache
 }
 
 // Len returns the number of bytes of the unread portion of the s3 object
@@ -67,7 +68,7 @@ func (f *S3File) Size() int64 {
 }
 
 // func (f *S3File) Read(b []byte) (n int, err error) {
-// 	logrus.Debugf("s3.S3File: Read %d bytes", len(b))
+// 	logrus.Debugf("S3File: Read %d bytes", len(b))
 
 // 	if f.i >= f.size {
 // 		return 0, io.EOF
@@ -90,44 +91,44 @@ func (f *S3File) Size() int64 {
 // 	return
 // }
 
-func (f *S3File) onCacheMiss(bid int64) (blk []byte, err error) {
+func (f *S3File) onCacheMiss(block *Block) (err error) {
 	if f.client == nil {
-		return nil, errors.New("s3.S3File: api client is nil, did you close the file?")
+		return errors.New("S3File: api client is nil, did you close the file?")
 	}
+	bid := block.Id
 	out, err := f.client.GetObject(context.TODO(), &s3.GetObjectInput{
 		Bucket: &f.s3uri.Bucket,
 		Key:    &f.s3uri.Key,
 		Range:  aws.String(fmt.Sprintf("bytes=%d-%d", bid*iolimits.BlockSize, (bid+1)*iolimits.BlockSize-1)),
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 	defer out.Body.Close()
 
-	blk = make([]byte, iolimits.BlockSize)
 	i, n := 0, 0
 	for i < iolimits.BlockSize {
-		n, err = out.Body.Read(blk[i:iolimits.BlockSize])
+		n, err = out.Body.Read(block.Buf[i:iolimits.BlockSize])
 		i += n
 		if err != nil {
 			break
 		}
 	}
 	if err == io.EOF {
-		return blk, nil
+		return nil
 	}
-	return nil, err
+	return err
 }
 
 // Read implements the io.Reader interface.
 func (f *S3File) Read(b []byte) (n int, err error) {
-	logrus.Debugf("s3.S3File: Read %d bytes", len(b))
+	logrus.Debugf("S3File: Read %d bytes", len(b))
 
 	if f.i >= f.size {
 		return 0, io.EOF
 	}
 	if f.rcache == nil {
-		return 0, errors.New("s3.S3File: rcache is nil, did you close the file?")
+		return 0, errors.New("S3File: rcache is nil, did you close the file?")
 	}
 	buf, err := f.rcache.Read(f.i, f.i+int64(len(b)), f.onCacheMiss)
 	if err != nil {
@@ -140,16 +141,16 @@ func (f *S3File) Read(b []byte) (n int, err error) {
 
 // ReadAt implements the io.ReaderAt interface.
 func (f *S3File) ReadAt(b []byte, off int64) (n int, err error) {
-	logrus.Debugf("s3.S3File: ReadAt %d bytes %d offset", len(b), off)
+	logrus.Debugf("S3File: ReadAt %d bytes %d offset", len(b), off)
 
 	if off < 0 {
-		return 0, errors.New("s3.S3File: negative offset")
+		return 0, errors.New("S3File: negative offset")
 	}
 	if off >= f.size {
 		return 0, io.EOF
 	}
 	if f.rcache == nil {
-		return 0, errors.New("s3.S3File: rcache is nil, did you close the file?")
+		return 0, errors.New("S3File: rcache is nil, did you close the file?")
 	}
 	buf, err := f.rcache.Read(off, off+int64(len(b)), f.onCacheMiss)
 	if err != nil {
@@ -160,7 +161,7 @@ func (f *S3File) ReadAt(b []byte, off int64) (n int, err error) {
 
 // Seek implements the io.Seeker interface.
 func (f *S3File) Seek(offset int64, whence int) (int64, error) {
-	logrus.Debugf("s3.S3File: Seek %d offset %d whence", offset, whence)
+	logrus.Debugf("S3File: Seek %d offset %d whence", offset, whence)
 
 	var abs int64
 	switch whence {
@@ -171,10 +172,10 @@ func (f *S3File) Seek(offset int64, whence int) (int64, error) {
 	case io.SeekEnd:
 		abs = f.size + offset
 	default:
-		return 0, errors.New("s3.S3File: invalid whence")
+		return 0, errors.New("S3File: invalid whence")
 	}
 	if abs < 0 {
-		return 0, errors.New("s3.S3File: negative position")
+		return 0, errors.New("S3File: negative position")
 	}
 	f.i = abs
 	return abs, nil
@@ -202,7 +203,7 @@ func (f *S3File) Clone() *S3File {
 
 // WriteTo implements the io.WriterTo interface.
 // func (f *S3File) WriteTo(w io.Writer) (n int64, err error) {
-// 	logrus.Debugf("s3.S3File: WriteTo")
+// 	logrus.Debugf("S3File: WriteTo")
 
 // 	if f.i >= f.size {
 // 		return 0, io.EOF
@@ -210,7 +211,7 @@ func (f *S3File) Clone() *S3File {
 
 // 	wa, ok := w.(io.WriterAt)
 // 	if !ok {
-// 		return 0, errors.New("s3.S3File: writer must be io.WriterAt")
+// 		return 0, errors.New("S3File: writer must be io.WriterAt")
 // 	}
 
 // 	downloader := manager.NewDownloader(f.client)
@@ -238,62 +239,111 @@ func NewS3File(cfg aws.Config, s3uri S3Uri) (*S3File, error) {
 		client: client,
 		i:      0,
 		size:   output.ContentLength,
-		rcache: NewLRUBlockCache(iolimits.CacheBlockCount),
+		// The total cache size is `iolimits.CacheBlockCount * iolimits.BlockSize`
+		rcache: NewBlockCache(iolimits.CacheBlockCount),
 	}, nil
 }
 
-type CacheMissFn func(bid int64) ([]byte, error)
-
-type LRUBlockCache struct {
-	cache   *lru.Cache
-	rwmutex sync.RWMutex
+type Block struct {
+	Id  int64
+	Buf []byte
 }
 
-func NewLRUBlockCache(capacity int) *LRUBlockCache {
-	return &LRUBlockCache{
-		cache: lru.New(capacity),
+func (b *Block) Size() int {
+	return len(b.Buf)
+}
+
+type LRUBlockPool struct {
+	pool  *sync.Pool
+	cache *lru.Cache
+	mutex sync.Mutex
+}
+
+func NewLRUBlockPool(capacity int) *LRUBlockPool {
+	pool := &sync.Pool{
+		New: func() interface{} {
+			return &Block{
+				Id:  -1,
+				Buf: make([]byte, iolimits.BlockSize),
+			}
+		},
+	}
+	cache := lru.New(capacity)
+	cache.OnEvicted = func(k lru.Key, v interface{}) {
+		pool.Put(v)
+	}
+	return &LRUBlockPool{
+		pool:  pool,
+		cache: cache,
 	}
 }
 
-func (c *LRUBlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []byte, err error) {
+func (p *LRUBlockPool) GetBlock(id int64) (block *Block, hit bool, err error) {
+	p.mutex.Lock()
+	defer p.mutex.Unlock()
+	val, hit := p.cache.Get(id)
+	if hit {
+		if block, ok := val.(*Block); ok {
+			return block, hit, nil
+		} else {
+			return nil, hit, errors.New("get an invalid block from cache")
+		}
+	} else {
+		logrus.Debugf("LRUBlockPool: miss block#%d", id)
+		if (p.cache.MaxEntries != 0) && (p.cache.Len() >= p.cache.MaxEntries) {
+			p.cache.RemoveOldest()
+		}
+		blk := p.pool.Get()
+		if block, ok := blk.(*Block); ok {
+			block.Id = id
+			p.cache.Add(id, block)
+			return block, hit, nil
+		} else {
+			return nil, hit, errors.New("get an invalid block from pool")
+		}
+	}
+}
+
+type CacheMissFn func(b *Block) error
+
+type BlockCache struct {
+	pool *LRUBlockPool
+}
+
+func NewBlockCache(capacity int) *BlockCache {
+	return &BlockCache{
+		pool: NewLRUBlockPool(capacity),
+	}
+}
+
+func (c *BlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []byte, err error) {
 	if begin < 0 {
-		return nil, fmt.Errorf("s3.LRUBlockCache: negative begin")
+		return nil, fmt.Errorf("LRUBlockCache: negative begin")
 	}
 	if end < 0 {
-		return nil, fmt.Errorf("s3.LRUBlockCache: negative end")
+		return nil, fmt.Errorf("LRUBlockCache: negative end")
 	}
 	if begin >= end {
-		return nil, fmt.Errorf("s3.LRUBlockCache: byte end must greater than byte begin")
+		return nil, fmt.Errorf("LRUBlockCache: byte end must greater than byte begin")
 	}
 	bidBegin := begin / iolimits.BlockSize
 	bidEnd := end / iolimits.BlockSize
 	buf = make([]byte, 0)
 
 	for bid := bidBegin; bid <= bidEnd; bid++ {
-		var block []byte
 		b, e := blockAddressTranslation(begin, end, bid)
-		c.rwmutex.RLock()
-		cacheblock, hit := c.cache.Get(bid)
-		c.rwmutex.RUnlock()
-		if hit {
-			// cache hit
-			block = cacheblock.([]byte)
-		} else {
-			logrus.Debugf("s3.LRUBlockCache: cache miss block%d", bid)
-			// cache miss
-			missingblk, err := cacheMissFn(bid)
-			if err != nil {
-				return nil, err
-			}
-			if len(missingblk) != iolimits.BlockSize {
-				return nil, fmt.Errorf("s3.LRUBlockCache: invalid missing block size")
-			}
-			c.rwmutex.Lock()
-			c.cache.Add(bid, missingblk)
-			c.rwmutex.Unlock()
-			block = missingblk
+		block, hit, err := c.pool.GetBlock(bid)
+		if err != nil || block == nil {
+			return nil, errors.Wrapf(err, "error when get block from pool")
 		}
-		buf = append(buf, block[b:e]...)
+		if !hit {
+			// cache miss
+			err := cacheMissFn(block)
+			if err != nil {
+				return nil, errors.Wrapf(err, "error in cacheMissFn")
+			}
+		}
+		buf = append(buf, block.Buf[b:e]...)
 	}
 
 	return buf, nil

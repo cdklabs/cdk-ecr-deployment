@@ -45,7 +45,7 @@ const (
 	// This size of a block
 	BlockSize = 8 * MegaByte
 	// The number of cache blocks
-	CacheBlockCount = 4
+	CacheBlockCount = 8
 )
 
 // ReadAtMost reads from reader and errors out if the specified limit (in bytes) is exceeded.

@@ -12,12 +12,12 @@ export interface ECRDeploymentProps {
   /**
    * The source of the docker image.
    */
-  readonly src: IImageName;
+  readonly src: IImage;
 
   /**
    * The destination of the docker image.
    */
-  readonly dest: IImageName;
+  readonly dest: IImage;
 
   /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
@@ -58,7 +58,7 @@ export interface ECRDeploymentProps {
   readonly environment?: { [key: string]: string };
 }
 
-export interface IImageName {
+export interface IImage {
   /**
    *  The uri of the docker image.
    *
@@ -67,17 +67,25 @@ export interface IImageName {
   readonly uri: string;
 
   /**
-   * The credentials of the docker image.
-   *
-   * Format should be either "USER:[PASSWORD]"
+   * The credentials of the docker image. Format `user:[password]`
    */
   creds?: string;
 }
 
-export class DockerImageName implements IImageName {
+export class DockerImage implements IImage {
   public constructor(private name: string, public creds?: string) {}
-
   public get uri(): string { return `docker://${this.name}`; }
+}
+
+export class S3ArchiveImage implements IImage {
+  private name: string
+  public constructor(p: string, ref?: string, public creds?: string) {
+    this.name = p;
+    if (ref) {
+      this.name += ':' + ref;
+    }
+  }
+  public get uri(): string { return `s3://${this.name}`; }
 }
 
 export class ECRDeployment extends CoreConstruct {
@@ -91,6 +99,7 @@ export class ECRDeployment extends CoreConstruct {
         bundling: {
           image: lambda.Runtime.GO_1_X.bundlingImage,
           environment: Object.assign({
+            GOGC: '50',
             GOOS: 'linux',
             GOARCH: 'amd64',
             GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
@@ -138,14 +147,21 @@ export class ECRDeployment extends CoreConstruct {
         ],
         resources: ['*'],
       }));
+    handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        's3:GetObject',
+      ],
+      resources: ['*'],
+    }));
 
     new cdk.CustomResource(this, 'CustomResource', {
       serviceToken: handler.functionArn,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
         SrcImage: props.src.uri,
-        DestImage: props.dest.uri,
         SrcCreds: props.src.creds,
+        DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
       },
     });
