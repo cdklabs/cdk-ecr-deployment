@@ -16,7 +16,7 @@ ifeq ($(GOOS), linux)
 endif
 
 BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp
-OUTPUT ?= ecr-deployment
+OUTPUT ?= cdk-ecr-deployment-handler
 
 all: lambda
 
@@ -24,4 +24,4 @@ lambda:
 	CGO_ENABLED=0 $(GPGME_ENV) $(GO) build ${GO_DYN_FLAGS} -gcflags "$(GOGCFLAGS)" -tags "$(BUILDTAGS)" -o $(OUTPUT)
 
 test:
-	$(GO) test
+	$(GO) test -v ./...

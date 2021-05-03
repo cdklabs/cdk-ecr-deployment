@@ -6,6 +6,10 @@
       "type": "build"
     },
     {
+      "name": "@aws-cdk/aws-ecr",
+      "type": "build"
+    },
+    {
       "name": "@aws-cdk/aws-ecr-assets",
       "type": "build"
     },

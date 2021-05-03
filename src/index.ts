@@ -26,7 +26,7 @@ export interface ECRDeploymentProps {
    * If you are deploying large files, you will need to increase this number
    * accordingly.
    *
-   * @default 128
+   * @default 512
    */
   readonly memoryLimit?: number;
 
@@ -67,34 +67,43 @@ export interface IImageName {
   readonly uri: string;
 
   /**
-   * The credentials of the docker image.
-   *
-   * Format should be either "USER:[PASSWORD]"
+   * The credentials of the docker image. Format `user:[password]`
    */
   creds?: string;
 }
 
 export class DockerImageName implements IImageName {
   public constructor(private name: string, public creds?: string) {}
-
   public get uri(): string { return `docker://${this.name}`; }
+}
+
+export class S3ArchiveName implements IImageName {
+  private name: string
+  public constructor(p: string, ref?: string, public creds?: string) {
+    this.name = p;
+    if (ref) {
+      this.name += ':' + ref;
+    }
+  }
+  public get uri(): string { return `s3://${this.name}`; }
 }
 
 export class ECRDeployment extends CoreConstruct {
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
-
+    const memoryLimit = props.memoryLimit ?? 512;
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
-      uuid: this.renderSingletonUuid(props.memoryLimit),
+      uuid: this.renderSingletonUuid(memoryLimit),
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
         assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
         bundling: {
           image: lambda.Runtime.GO_1_X.bundlingImage,
-          environment: Object.assign({
+          environment: {
+            GOGC: '50',
             GOOS: 'linux',
             GOARCH: 'amd64',
             GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
-          }, props.environment),
+          },
           user: 'root',
           command: [
             'bash', '-c', [
@@ -106,10 +115,11 @@ export class ECRDeployment extends CoreConstruct {
       }),
       runtime: lambda.Runtime.GO_1_X,
       handler: 'main',
+      environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: cdk.Duration.minutes(15),
       role: props.role,
-      memorySize: props.memoryLimit,
+      memorySize: memoryLimit,
       vpc: props.vpc,
       vpcSubnets: props.vpcSubnets,
     });
@@ -138,14 +148,21 @@ export class ECRDeployment extends CoreConstruct {
         ],
         resources: ['*'],
       }));
+    handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        's3:GetObject',
+      ],
+      resources: ['*'],
+    }));
 
     new cdk.CustomResource(this, 'CustomResource', {
       serviceToken: handler.functionArn,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
         SrcImage: props.src.uri,
-        DestImage: props.dest.uri,
         SrcCreds: props.src.creds,
+        DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
       },
     });

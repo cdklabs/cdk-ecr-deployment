@@ -9,10 +9,28 @@ import (
 	"github.com/containers/image/v5/copy"
 	"github.com/containers/image/v5/signature"
 	"github.com/containers/image/v5/transports/alltransports"
+	"github.com/sirupsen/logrus"
 
 	"github.com/aws/aws-lambda-go/cfn"
 	"github.com/aws/aws-lambda-go/lambda"
+
+	_ "cdk-ecr-deployment-handler/s3" // install s3 transport plugin
 )
+
+const EnvLogLevel = "LOG_LEVEL"
+
+func init() {
+	s, exists := os.LookupEnv(EnvLogLevel)
+	if !exists {
+		logrus.SetLevel(logrus.InfoLevel)
+	} else {
+		lvl, err := logrus.ParseLevel(s)
+		if err != nil {
+			logrus.Errorf("error parsing %s: %v", EnvLogLevel, err)
+		}
+		logrus.SetLevel(lvl)
+	}
+}
 
 func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, data map[string]interface{}, err error) {
 	physicalResourceID = event.PhysicalResourceID
@@ -23,7 +41,7 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 	if event.RequestType == cfn.RequestDelete {
 		return physicalResourceID, data, nil
 	}
-	if event.RequestType == cfn.RequestCreate {
+	if event.RequestType == cfn.RequestCreate || event.RequestType == cfn.RequestUpdate {
 		srcImage, err := getStrProps(event.ResourceProperties, SRC_IMAGE)
 		if err != nil {
 			return physicalResourceID, data, err
