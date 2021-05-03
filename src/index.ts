@@ -26,7 +26,7 @@ export interface ECRDeploymentProps {
    * If you are deploying large files, you will need to increase this number
    * accordingly.
    *
-   * @default 128
+   * @default 512
    */
   readonly memoryLimit?: number;
 
@@ -91,9 +91,9 @@ export class S3ArchiveName implements IImageName {
 export class ECRDeployment extends CoreConstruct {
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
-
+    const memoryLimit = props.memoryLimit ?? 512;
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
-      uuid: this.renderSingletonUuid(props.memoryLimit),
+      uuid: this.renderSingletonUuid(memoryLimit),
       code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
         assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
         bundling: {
@@ -119,7 +119,7 @@ export class ECRDeployment extends CoreConstruct {
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: cdk.Duration.minutes(15),
       role: props.role,
-      memorySize: props.memoryLimit,
+      memorySize: memoryLimit,
       vpc: props.vpc,
       vpcSubnets: props.vpcSubnets,
     });
