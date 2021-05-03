@@ -12,12 +12,12 @@ export interface ECRDeploymentProps {
   /**
    * The source of the docker image.
    */
-  readonly src: IImage;
+  readonly src: IImageName;
 
   /**
    * The destination of the docker image.
    */
-  readonly dest: IImage;
+  readonly dest: IImageName;
 
   /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
@@ -58,7 +58,7 @@ export interface ECRDeploymentProps {
   readonly environment?: { [key: string]: string };
 }
 
-export interface IImage {
+export interface IImageName {
   /**
    *  The uri of the docker image.
    *
@@ -72,12 +72,12 @@ export interface IImage {
   creds?: string;
 }
 
-export class DockerImage implements IImage {
+export class DockerImageName implements IImageName {
   public constructor(private name: string, public creds?: string) {}
   public get uri(): string { return `docker://${this.name}`; }
 }
 
-export class S3ArchiveImage implements IImage {
+export class S3ArchiveName implements IImageName {
   private name: string
   public constructor(p: string, ref?: string, public creds?: string) {
     this.name = p;
