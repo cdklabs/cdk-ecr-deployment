@@ -14,7 +14,7 @@ import (
 	"github.com/aws/aws-lambda-go/cfn"
 	"github.com/aws/aws-lambda-go/lambda"
 
-	_ "cdk-ecr-deployment-handler/s3" // install s3 transport plugin
+	_ "cdk-ecr-deployment-handler/s3" // Install s3 transport plugin
 )
 
 const EnvLogLevel = "LOG_LEVEL"
