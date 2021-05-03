@@ -51,6 +51,7 @@ const project = new AwsCdkConstructLibrary({
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
     '@aws-cdk/aws-ecr-assets',
+    '@aws-cdk/aws-ecr',
   ], /* Build dependencies for this module. */
   // entrypoint: 'lib/index.js',                                               /* Module entrypoint (`main` in `package.json`). */
   // homepage: undefined,                                                      /* Package's Homepage / Website. */
