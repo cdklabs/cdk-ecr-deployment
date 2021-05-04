@@ -274,15 +274,15 @@ func NewLRUBlockPool(capacity int) *LRUBlockPool {
 	}
 }
 
-func (p *LRUBlockPool) GetBlock(id int64) (block *Block, hit bool, err error) {
+func (p *LRUBlockPool) GetBlock(id int64, blockInitFn func(*Block) error) (block *Block, err error) {
 	p.mutex.Lock()
 	defer p.mutex.Unlock()
 	val, hit := p.cache.Get(id)
 	if hit {
 		if block, ok := val.(*Block); ok {
-			return block, hit, nil
+			return block, nil
 		} else {
-			return nil, hit, errors.New("get an invalid block from cache")
+			return nil, errors.New("get an invalid block from cache")
 		}
 	} else {
 		logrus.Debugf("LRUBlockPool: miss block#%d", id)
@@ -292,10 +292,11 @@ func (p *LRUBlockPool) GetBlock(id int64) (block *Block, hit bool, err error) {
 		blk := p.pool.Get()
 		if block, ok := blk.(*Block); ok {
 			block.Id = id
+			err = blockInitFn(block)
 			p.cache.Add(id, block)
-			return block, hit, nil
+			return block, err
 		} else {
-			return nil, hit, errors.New("get an invalid block from pool")
+			return nil, errors.New("get an invalid block from pool")
 		}
 	}
 }
@@ -328,20 +329,12 @@ func (c *BlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []byte
 
 	for bid := bidBegin; bid <= bidEnd; bid++ {
 		b, e := blockAddressTranslation(begin, end, bid)
-		block, hit, err := c.pool.GetBlock(bid)
+		block, err := c.pool.GetBlock(bid, cacheMissFn)
 		if err != nil || block == nil {
 			return nil, errors.Wrapf(err, "error when get block from pool")
 		}
-		if !hit {
-			// cache miss
-			err := cacheMissFn(block)
-			if err != nil {
-				return nil, errors.Wrapf(err, "error in cacheMissFn")
-			}
-		}
 		buf = append(buf, block.Buf[b:e]...)
 	}
-
 	return buf, nil
 }
 
