@@ -90,26 +90,31 @@ func TestBlockCache(t *testing.T) {
 }
 
 func TestLRUBlockPool(t *testing.T) {
+	n := 0
 	pool := NewLRUBlockPool(1)
+	blockInitFn := func(block *Block) error {
+		n++
+		return nil
+	}
 
-	block, hit, err := pool.GetBlock(0)
+	block, err := pool.GetBlock(0, blockInitFn)
 	assert.NoError(t, err)
-	assert.False(t, hit)
+	assert.Equal(t, 1, n)
 	assert.Equal(t, int64(0), block.Id)
 	assert.Equal(t, iolimits.BlockSize, block.Size())
 	block.Buf[0] = byte('A')
 
-	block, hit, err = pool.GetBlock(1)
+	block, err = pool.GetBlock(1, blockInitFn)
 	assert.NoError(t, err)
-	assert.False(t, hit)
+	assert.Equal(t, 2, n)
 	assert.Equal(t, int64(1), block.Id)
 	assert.Equal(t, iolimits.BlockSize, block.Size())
 	assert.Equal(t, byte('A'), block.Buf[0])
 	block.Buf[0] = byte('B')
 
-	block, hit, err = pool.GetBlock(1)
+	block, err = pool.GetBlock(1, blockInitFn)
 	assert.NoError(t, err)
-	assert.True(t, hit)
+	assert.Equal(t, 2, n)
 	assert.Equal(t, int64(1), block.Id)
 	assert.Equal(t, iolimits.BlockSize, block.Size())
 	assert.Equal(t, byte('B'), block.Buf[0])
