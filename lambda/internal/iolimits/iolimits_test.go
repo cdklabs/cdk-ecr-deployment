@@ -1,3 +1,6 @@
+// Taken from https://github.com/containers/image
+// Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
 package iolimits
 
 import (

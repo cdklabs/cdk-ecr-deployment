@@ -1,3 +1,6 @@
+# Taken from https://github.com/containers/skopeo
+# Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+
 .PHONY: all lambda test
 
 GPGME_ENV := CGO_CFLAGS="$(shell gpgme-config --cflags 2>/dev/null)" CGO_LDFLAGS="$(shell gpgme-config --libs 2>/dev/null)"
