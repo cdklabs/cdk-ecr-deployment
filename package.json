@@ -26,8 +26,7 @@
     "start": "npx projen start"
   },
   "author": {
-    "name": "javacs3",
-    "email": "javacs3+aws@gmail.com",
+    "name": "wchaws",
     "organization": false
   },
   "devDependencies": {

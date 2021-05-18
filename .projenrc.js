@@ -1,8 +1,7 @@
 const { AwsCdkConstructLibrary } = require('projen');
 
 const project = new AwsCdkConstructLibrary({
-  author: 'javacs3',
-  authorAddress: 'javacs3+aws@gmail.com',
+  author: 'wchaws',
   cdkVersion: '1.95.2',
   defaultReleaseBranch: 'main',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
