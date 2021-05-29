@@ -1,3 +1,5 @@
+** github.com/containers/skopeo; version v1.3.0 --
+https://github.com/containers/skopeo
 ** https://github.com/containers/image; version v5.11.0 --
 https://github.com/containers/image
 
@@ -179,7 +181,7 @@ recommend that a file or class name and description of purpose be included on
 the same "printed page" as the copyright notice for easier identification
 within third-party archives.
 
-Copyright 2021 Amazon.com, Inc. or its affiliates.
+Copyright [yyyy] [name of copyright owner]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 
@@ -199,5 +201,7 @@ See the License for the specific language governing permissions and
 
 limitations under the License.
 
+* For github.com/containers/skopeo see also this required NOTICE:
+    No copyright notice was found for this project.
 * For https://github.com/containers/image see also this required NOTICE:
-    Copyright (C) 2004, 2006 The Linux Foundation and its contributors.
+    No copyright notice was found for this project.
