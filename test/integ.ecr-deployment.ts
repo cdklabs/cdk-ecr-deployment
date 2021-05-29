@@ -1,5 +1,9 @@
 import * as path from 'path';
 import * as ecr from '@aws-cdk/aws-ecr';
+// Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+// SPDX-License-Identifier: Apache-2.0
+
+
 import { DockerImageAsset } from '@aws-cdk/aws-ecr-assets';
 import * as cdk from '@aws-cdk/core';
 // eslint-disable-next-line no-duplicate-imports
