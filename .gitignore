@@ -34,10 +34,10 @@ yarn-debug.log*
 yarn-error.log*
 !/.eslintrc.json
 !/.gitattributes
-!/.github/dependabot.yml
 !/.github/pull_request_template.md
 !/.github/workflows/build.yml
 !/.github/workflows/release.yml
+!/.github/workflows/upgrade-dependencies.yml
 !/.mergify.yml
 !/.npmignore
 !/.projen/deps.json
