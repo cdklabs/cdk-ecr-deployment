@@ -5937,10 +5937,10 @@ progress@^2.0.0, progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.19.0:
-  version "0.19.0"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.19.0.tgz#db2713f578434232b011afbd56ec3d894fb8a004"
-  integrity sha512-vU+7d4p0PVaYXvXDX7H5OEbfh4RbJt1UZox8Nz3DBJVYzZpC5d5lzvDJ1YWSBS36ed6K6Dw+Ha2x4tD+JMG15A==
+projen@^0.24.1:
+  version "0.24.1"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.24.1.tgz#3ee15af00f5171b68639f8e03a4e4264b86ecf52"
+  integrity sha512-2jSWbTtPm3xHn49t8WyIBsGfROyiNA8osOoFnv+ED3wsrCFfOfSsgRJzTHrGgbFshdOUdbsMaINKAJ0gJGGTlg==
   dependencies:
     "@iarna/toml" "^2.2.5"
     chalk "^4.1.1"
@@ -7119,11 +7119,6 @@ tr46@^2.0.2:
     punycode "^2.1.1"
 
 trim-newlines@3.0.1, trim-newlines@^1.0.0, trim-newlines@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-3.0.1.tgz#260a5d962d8b752425b32f3a7db0dcacd176c144"
-  integrity sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==
-
-trim-newlines@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-3.0.1.tgz#260a5d962d8b752425b32f3a7db0dcacd176c144"
   integrity sha512-c1PTsA3tYrIsLGkJkzHF+w9F2EyxfXGo4UyJc4pFL++FMjnq0HJS69T3M7d//gKrFKwy429bouPescbjecU+Zw==
