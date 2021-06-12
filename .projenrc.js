@@ -133,4 +133,8 @@ const project = new AwsCdkConstructLibrary({
   // readme: undefined,                                                        /* The README setup. */
 });
 
+project.package.addField('resolutions', {
+  'trim-newlines': '3.0.1',
+});
+
 project.synth();
