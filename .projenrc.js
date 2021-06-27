@@ -10,10 +10,12 @@ const project = new AwsCdkConstructLibrary({
   defaultReleaseBranch: 'main',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
+  projenUpgradeSecret: 'AUTOMATION',
   autoApproveOptions: {
     secret: 'GITHUB_TOKEN',
     allowedUsernames: ['dependabot[bot]'],
   },
+  autoApproveUpgrades: true,
   depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
     workflowOptions: {
       labels: ['auto-approve', 'auto-merge'],
