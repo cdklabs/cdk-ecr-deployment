@@ -37,6 +37,7 @@ yarn-error.log*
 !/.github/workflows/auto-approve.yml
 !/.github/workflows/build.yml
 !/.github/workflows/release.yml
+!/.github/workflows/stale.yml
 !/.github/workflows/upgrade-dependencies.yml
 !/.github/workflows/upgrade-projen.yml
 !/.mergify.yml
