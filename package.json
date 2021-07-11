@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "^1.95.2",
-    "@aws-cdk/aws-ecr": "^1.111.0",
-    "@aws-cdk/aws-ecr-assets": "^1.111.0",
+    "@aws-cdk/aws-ecr": "^1.112.0",
+    "@aws-cdk/aws-ecr-assets": "^1.112.0",
     "@types/jest": "^26.0.24",
     "@types/node": "^10.17.0",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
@@ -44,10 +44,10 @@
     "eslint-plugin-import": "^2.23.4",
     "jest": "^26.6.3",
     "jest-junit": "^12",
-    "jsii": "^1.30.0",
-    "jsii-diff": "^1.30.0",
+    "jsii": "^1.31.0",
+    "jsii-diff": "^1.31.0",
     "jsii-docgen": "^1.8.110",
-    "jsii-pacmak": "^1.30.0",
+    "jsii-pacmak": "^1.31.0",
     "json-schema": "^0.3.0",
     "npm-check-updates": "^11",
     "projen": "^0.24.17",
@@ -56,17 +56,17 @@
     "typescript": "^4.3.5"
   },
   "peerDependencies": {
-    "@aws-cdk/aws-ec2": "^1.111.0",
-    "@aws-cdk/aws-iam": "^1.111.0",
-    "@aws-cdk/aws-lambda": "^1.111.0",
-    "@aws-cdk/core": "^1.111.0",
+    "@aws-cdk/aws-ec2": "^1.112.0",
+    "@aws-cdk/aws-iam": "^1.112.0",
+    "@aws-cdk/aws-lambda": "^1.112.0",
+    "@aws-cdk/core": "^1.112.0",
     "constructs": "^3.2.27"
   },
   "dependencies": {
-    "@aws-cdk/aws-ec2": "^1.111.0",
-    "@aws-cdk/aws-iam": "^1.111.0",
-    "@aws-cdk/aws-lambda": "^1.111.0",
-    "@aws-cdk/core": "^1.111.0"
+    "@aws-cdk/aws-ec2": "^1.112.0",
+    "@aws-cdk/aws-iam": "^1.112.0",
+    "@aws-cdk/aws-lambda": "^1.112.0",
+    "@aws-cdk/core": "^1.112.0"
   },
   "bundledDependencies": [],
   "keywords": [
