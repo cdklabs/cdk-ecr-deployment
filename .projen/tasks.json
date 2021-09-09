@@ -250,6 +250,19 @@
         }
       ]
     },
+    "publish:pypi": {
+      "name": "publish:pypi",
+      "description": "Publish this package to PyPI",
+      "requiredEnv": [
+        "TWINE_USERNAME",
+        "TWINE_PASSWORD"
+      ],
+      "steps": [
+        {
+          "exec": "npx -p jsii-release@latest jsii-release-pypi"
+        }
+      ]
+    },
     "docgen": {
       "name": "docgen",
       "description": "Generate API.md from .jsii manifest",
