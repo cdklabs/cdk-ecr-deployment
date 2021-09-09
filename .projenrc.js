@@ -42,7 +42,10 @@ const project = new AwsCdkConstructLibrary({
   // publishToGo: undefined,                                                   /* Publish Go bindings to a git repository. */
   // publishToMaven: undefined,                                                /* Publish to maven. */
   // publishToNuget: undefined,                                                /* Publish to NuGet. */
-  // publishToPypi: undefined,                                                 /* Publish to pypi. */
+  publishToPyPi: {
+    distName: 'cdk-ecr-deployment',
+    module: 'cdk_ecr_deployment',
+  }, /* Publish to pypi. */
   // rootdir: '.',                                                             /* undefined */
   // sampleCode: true,                                                         /* Generate one-time sample in `src/` and `test/` if there are no files there. */
 

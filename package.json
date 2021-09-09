@@ -15,18 +15,16 @@
     "test:update": "npx projen test:update",
     "bump": "npx projen bump",
     "unbump": "npx projen unbump",
-    "publish:github": "npx projen publish:github",
-    "upgrade": "npx projen upgrade",
+    "upgrade-dependencies": "npx projen upgrade-dependencies",
     "upgrade-projen": "npx projen upgrade-projen",
     "default": "npx projen default",
     "watch": "npx projen watch",
     "package": "npx projen package",
     "eslint": "npx projen eslint",
     "compat": "npx projen compat",
-    "publish:npm": "npx projen publish:npm",
     "docgen": "npx projen docgen",
-    "release": "npx projen release",
-    "projen": "npx projen"
+    "projen": "npx projen",
+    "start": "npx projen start"
   },
   "author": {
     "name": "wchaws",
