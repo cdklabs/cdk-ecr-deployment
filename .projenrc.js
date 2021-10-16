@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { AwsCdkConstructLibrary } = require('projen');
+const { AwsCdkConstructLibrary, DependenciesUpgradeMechanism } = require('projen');
 
 const project = new AwsCdkConstructLibrary({
   author: 'wchaws',
@@ -16,7 +16,11 @@ const project = new AwsCdkConstructLibrary({
     allowedUsernames: ['dependabot[bot]'],
   },
   autoApproveUpgrades: true,
-  depsUpgrade: true,
+  depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
+    workflowOptions: {
+      labels: ['auto-approve', 'auto-merge'],
+    },
+  }),
 
   /* AwsCdkConstructLibraryOptions */
   // cdkAssert: true,                                                          /* Install the @aws-cdk/assert library? */
