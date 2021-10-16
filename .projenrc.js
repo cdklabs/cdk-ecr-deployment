@@ -87,6 +87,10 @@ project.release.addJobs({
       {
         name: 'Release lambda',
         run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 ',
+        env: {
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
+          GITHUB_REPOSITORY: '${{ github.repository }}',
+        },
       },
     ],
   },
