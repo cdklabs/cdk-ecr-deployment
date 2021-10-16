@@ -6,6 +6,7 @@ import * as path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
+import * as child_process from 'child_process';
 import * as cdk from '@aws-cdk/core';
 import { Construct } from 'constructs';
 
@@ -76,8 +77,43 @@ export interface IImageName {
   creds?: string;
 }
 
+function getCode(): lambda.AssetCode {
+  try {
+    console.log('Try to get prebuilt lambda');
+
+    const installScript = path.join(__dirname, '../lambda/install.js');
+    const prebuiltPath = path.join(__dirname, '../lambda/out');
+    child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
+
+    return lambda.Code.fromAsset(prebuiltPath);
+  } catch (e) {
+    console.warn(e);
+    console.log('Try build lambda from source');
+  }
+
+  return lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
+    assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
+    bundling: {
+      image: lambda.Runtime.GO_1_X.bundlingImage,
+      environment: {
+        GOGC: '50',
+        GOOS: 'linux',
+        GOARCH: 'amd64',
+        GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
+      },
+      user: 'root',
+      command: [
+        'bash', '-c', [
+          'yum -y install gpgme-devel btrfs-progs-devel device-mapper-devel libassuan-devel libudev-devel',
+          'make OUTPUT=/asset-output/main',
+        ].join(' && '),
+      ],
+    },
+  });
+}
+
 export class DockerImageName implements IImageName {
-  public constructor(private name: string, public creds?: string) {}
+  public constructor(private name: string, public creds?: string) { }
   public get uri(): string { return `docker://${this.name}`; }
 }
 
@@ -98,25 +134,7 @@ export class ECRDeployment extends CoreConstruct {
     const memoryLimit = props.memoryLimit ?? 512;
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
-        assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
-        bundling: {
-          image: lambda.Runtime.GO_1_X.bundlingImage,
-          environment: {
-            GOGC: '50',
-            GOOS: 'linux',
-            GOARCH: 'amd64',
-            GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
-          },
-          user: 'root',
-          command: [
-            'bash', '-c', [
-              'yum -y install gpgme-devel btrfs-progs-devel device-mapper-devel libassuan-devel libudev-devel',
-              'make OUTPUT=/asset-output/main',
-            ].join(' && '),
-          ],
-        },
-      }),
+      code: getCode(),
       runtime: lambda.Runtime.GO_1_X,
       handler: 'main',
       environment: props.environment,
