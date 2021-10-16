@@ -23,6 +23,8 @@
     "package": "npx projen package",
     "eslint": "npx projen eslint",
     "compat": "npx projen compat",
+    "publish:npm": "npx projen publish:npm",
+    "publish:pypi": "npx projen publish:pypi",
     "docgen": "npx projen docgen",
     "release": "npx projen release",
     "projen": "npx projen"
@@ -122,7 +124,12 @@
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "cdk-ecr-deployment",
+        "module": "cdk_ecr_deployment"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"
