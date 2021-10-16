@@ -63,6 +63,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
   release_prebuilt_lambda:
+    name: Publish Lambda to GitHub Releases
     needs: release
     runs-on: ubuntu-latest
     permissions:
