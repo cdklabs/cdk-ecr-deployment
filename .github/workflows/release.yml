@@ -103,3 +103,25 @@ jobs:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
     container:
       image: jsii/superchain:node14
+  release_prebuilt_lambda:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: dist
+          path: dist
+      - name: Build lambda
+        run: docker build -t cdk-ecr-deployment-lambda lambda && docker run -v
+          $PWD/lambda:/out cdk-ecr-deployment-lambda cp /ws/main /out && echo
+          $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
+      - name: Release lambda
+        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt)
+          lambda/main lambda/main.sha256 "
