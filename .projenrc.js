@@ -21,16 +21,19 @@ const project = new AwsCdkConstructLibrary({
       labels: ['auto-approve', 'auto-merge'],
     },
   }),
-  releaseToNpm: false,
-  // publishToPypi: {
-  //   distName: 'cdk-ecr-deployment',
-  //   module: 'cdk_ecr_deployment',
-  // }, /* Publish to pypi. */
+  publishToPypi: {
+    distName: 'cdk-ecr-deployment',
+    module: 'cdk_ecr_deployment',
+  }, /* Publish to pypi. */
+  bundledDeps: [
+    'got',
+  ],
   deps: [
     '@aws-cdk/core',
     '@aws-cdk/aws-iam',
     '@aws-cdk/aws-ec2',
     '@aws-cdk/aws-lambda',
+    'got',
   ], /* Runtime dependencies of this module. */
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
@@ -44,7 +47,7 @@ const project = new AwsCdkConstructLibrary({
     '@aws-cdk/aws-lambda',
   ], /* Peer dependencies for this module. */
   // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
-  repository: 'https://github.com/wchaws/cdk-ecr-deployment.git', /* The repository is the location where the actual code for your package lives. */
+  repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
   ], /* Additional entries to .gitignore. */
@@ -56,6 +59,7 @@ const project = new AwsCdkConstructLibrary({
 project.release.addJobs({
   release_prebuilt_lambda: {
     runsOn: 'ubuntu-latest',
+    name: 'Publish Lambda to GitHub Releases',
     needs: 'release',
     permissions: {
       contents: 'write',

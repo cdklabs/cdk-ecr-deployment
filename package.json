@@ -3,7 +3,7 @@
   "description": "CDK construct to deploy docker image to Amazon ECR",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wchaws/cdk-ecr-deployment.git"
+    "url": "https://github.com/cdklabs/cdk-ecr-deployment"
   },
   "scripts": {
     "clobber": "npx projen clobber",
@@ -23,6 +23,8 @@
     "package": "npx projen package",
     "eslint": "npx projen eslint",
     "compat": "npx projen compat",
+    "publish:npm": "npx projen publish:npm",
+    "publish:pypi": "npx projen publish:pypi",
     "docgen": "npx projen docgen",
     "release": "npx projen release",
     "projen": "npx projen"
@@ -67,9 +69,12 @@
     "@aws-cdk/aws-ec2": "^1.126.0",
     "@aws-cdk/aws-iam": "^1.126.0",
     "@aws-cdk/aws-lambda": "^1.126.0",
-    "@aws-cdk/core": "^1.126.0"
+    "@aws-cdk/core": "^1.126.0",
+    "got": "^11.8.2"
   },
-  "bundledDependencies": [],
+  "bundledDependencies": [
+    "got"
+  ],
   "keywords": [
     "cdk"
   ],
@@ -119,7 +124,12 @@
   "stability": "stable",
   "jsii": {
     "outdir": "dist",
-    "targets": {},
+    "targets": {
+      "python": {
+        "distName": "cdk-ecr-deployment",
+        "module": "cdk_ecr_deployment"
+      }
+    },
     "tsc": {
       "outDir": "lib",
       "rootDir": "src"

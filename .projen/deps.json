@@ -98,6 +98,10 @@
       "type": "build"
     },
     {
+      "name": "got",
+      "type": "bundled"
+    },
+    {
       "name": "@aws-cdk/aws-ec2",
       "type": "peer"
     },
@@ -132,6 +136,10 @@
     },
     {
       "name": "@aws-cdk/core",
+      "type": "runtime"
+    },
+    {
+      "name": "got",
       "type": "runtime"
     }
   ],
