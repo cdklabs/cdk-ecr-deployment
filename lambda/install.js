@@ -45,13 +45,13 @@ async function download(url, dest) {
   }
   mkdirp(dir);
 
-  const integrity = (await got(`${rootUrl}/releases/download/v${version}/main.sha256`)).body;
+  const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/main.sha256`)).body.trim();
   const bin = path.join(dir, 'main');
   await download(`${rootUrl}/releases/download/v${version}/main`, bin);
-  const checksum = await sha256sum(bin);
+  const integrity = await sha256sum(bin);
 
-  if (checksum !== integrity) {
-    throw new Error('Checksum error');
+  if (integrity !== expectedIntegrity) {
+    throw new Error(`Integrity check error: expected ${expectedIntegrity} but got ${integrity}`);
   }
 })().catch(err => {
   console.error(err);
