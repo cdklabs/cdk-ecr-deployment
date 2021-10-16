@@ -29,6 +29,7 @@ function sha256sum(p) {
 }
 
 async function download(url, dest) {
+  // TODO: Support proxy download
   console.log(`download ${url}`);
   await pipeline(
     got.stream(url),
