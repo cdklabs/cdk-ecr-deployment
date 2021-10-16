@@ -21,10 +21,11 @@ const project = new AwsCdkConstructLibrary({
       labels: ['auto-approve', 'auto-merge'],
     },
   }),
-  publishToPypi: {
-    distName: 'cdk-ecr-deployment',
-    module: 'cdk_ecr_deployment',
-  }, /* Publish to pypi. */
+  releaseToNpm: false,
+  // publishToPypi: {
+  //   distName: 'cdk-ecr-deployment',
+  //   module: 'cdk_ecr_deployment',
+  // }, /* Publish to pypi. */
   deps: [
     '@aws-cdk/core',
     '@aws-cdk/aws-iam',
