@@ -78,18 +78,21 @@ export interface IImageName {
 }
 
 function getCode(): lambda.AssetCode {
-  try {
-    console.log('Try to get prebuilt lambda');
+  if (!(process.env.CI || process.env.NO_PREBUILT_LAMBDA)) {
+    try {
+      console.log('Try to get prebuilt lambda');
 
-    const installScript = path.join(__dirname, '../lambda/install.js');
-    const prebuiltPath = path.join(__dirname, '../lambda/out');
-    child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
+      const installScript = path.join(__dirname, '../lambda/install.js');
+      const prebuiltPath = path.join(__dirname, '../lambda/out');
+      child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
 
-    return lambda.Code.fromAsset(prebuiltPath);
-  } catch (e) {
-    console.warn(e);
-    console.log('Try to build lambda from source');
+      return lambda.Code.fromAsset(prebuiltPath);
+    } catch (err) {
+      console.warn(`Can not get prebuilt lambda: ${err}`);
+    }
   }
+
+  console.log('Build lambda from scratch');
 
   return lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
     assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984

@@ -47,15 +47,17 @@ async function download(url, dest) {
 
   const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/main.sha256`)).body.trim();
   const bin = path.join(dir, 'main');
+
   if (!fs.existsSync(bin)) {
     await download(`${rootUrl}/releases/download/v${version}/main`, bin);
   }
+
   const integrity = await sha256sum(bin);
 
   if (integrity !== expectedIntegrity) {
     throw new Error(`Integrity check error: expected ${expectedIntegrity} but got ${integrity}`);
   }
 })().catch(err => {
-  console.error(err);
+  console.error(err.toString());
   process.exit(1);
 })
