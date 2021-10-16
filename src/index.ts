@@ -2,11 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
+import * as child_process from 'child_process';
 import * as path from 'path';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
-import * as child_process from 'child_process';
 import * as cdk from '@aws-cdk/core';
 import { Construct } from 'constructs';
 
@@ -88,7 +88,7 @@ function getCode(): lambda.AssetCode {
     return lambda.Code.fromAsset(prebuiltPath);
   } catch (e) {
     console.warn(e);
-    console.log('Try build lambda from source');
+    console.log('Try to build lambda from source');
   }
 
   return lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {

@@ -26,6 +26,9 @@ const project = new AwsCdkConstructLibrary({
   //   distName: 'cdk-ecr-deployment',
   //   module: 'cdk_ecr_deployment',
   // }, /* Publish to pypi. */
+  bundledDeps: [
+    'got',
+  ],
   deps: [
     '@aws-cdk/core',
     '@aws-cdk/aws-iam',

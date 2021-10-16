@@ -70,7 +70,9 @@
     "@aws-cdk/core": "^1.126.0",
     "got": "^11.8.2"
   },
-  "bundledDependencies": [],
+  "bundledDependencies": [
+    "got"
+  ],
   "keywords": [
     "cdk"
   ],

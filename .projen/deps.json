@@ -98,6 +98,10 @@
       "type": "build"
     },
     {
+      "name": "got",
+      "type": "bundled"
+    },
+    {
       "name": "@aws-cdk/aws-ec2",
       "type": "peer"
     },
