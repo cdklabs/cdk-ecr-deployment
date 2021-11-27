@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { AwsCdkConstructLibrary, DependenciesUpgradeMechanism } = require('projen');
+const { AwsCdkConstructLibrary } = require('projen');
 
 const project = new AwsCdkConstructLibrary({
   author: 'wchaws',
@@ -16,11 +16,7 @@ const project = new AwsCdkConstructLibrary({
     allowedUsernames: ['dependabot[bot]'],
   },
   autoApproveUpgrades: true,
-  depsUpgrade: DependenciesUpgradeMechanism.githubWorkflow({
-    workflowOptions: {
-      labels: ['auto-approve', 'auto-merge'],
-    },
-  }),
+  depsUpgrade: true,
   publishToPypi: {
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
