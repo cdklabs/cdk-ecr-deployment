@@ -80,7 +80,7 @@ project.release.addJobs({
         name: 'Build lambda',
         run: [
           'docker build -t cdk-ecr-deployment-lambda lambda',
-          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /ws/main /out',
+          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out',
           'echo $(sha256sum lambda/main | awk \'{ print $1 }\') > lambda/main.sha256',
         ].join(' && '),
       },
