@@ -1,7 +1,7 @@
 # Taken from https://github.com/containers/skopeo
 # Modifications Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
-.PHONY: all lambda test
+.PHONY: all lambda test upgrade-deps
 
 GPGME_ENV := CGO_CFLAGS="$(shell gpgme-config --cflags 2>/dev/null)" CGO_LDFLAGS="$(shell gpgme-config --libs 2>/dev/null)"
 GO ?= go
@@ -21,7 +21,10 @@ endif
 BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp
 OUTPUT ?= cdk-ecr-deployment-handler
 
-all: lambda
+all: test lambda
+
+upgrade-deps:
+	CGO_ENABLED=0 $(GPGME_ENV) $(GO) get -u -tags "$(BUILDTAGS)"
 
 lambda:
 	CGO_ENABLED=0 $(GPGME_ENV) $(GO) build ${GO_DYN_FLAGS} -gcflags "$(GOGCFLAGS)" -tags "$(BUILDTAGS)" -o $(OUTPUT)
