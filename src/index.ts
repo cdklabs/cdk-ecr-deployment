@@ -121,7 +121,7 @@ export class DockerImageName implements IImageName {
 }
 
 export class S3ArchiveName implements IImageName {
-  private name: string
+  private name: string;
   public constructor(p: string, ref?: string, public creds?: string) {
     this.name = p;
     if (ref) {
