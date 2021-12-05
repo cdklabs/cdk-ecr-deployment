@@ -27,7 +27,7 @@ upgrade-deps:
 	CGO_ENABLED=0 $(GPGME_ENV) $(GO) get -u -tags "$(BUILDTAGS)"
 
 lambda:
-	CGO_ENABLED=0 $(GPGME_ENV) $(GO) build ${GO_DYN_FLAGS} -gcflags "$(GOGCFLAGS)" -tags "$(BUILDTAGS)" -o $(OUTPUT)
+	CGO_ENABLED=0 $(GPGME_ENV) $(GO) build -v ${GO_DYN_FLAGS} -gcflags "$(GOGCFLAGS)" -tags "$(BUILDTAGS)" -o $(OUTPUT)
 
 test:
 	CGO_ENABLED=0 $(GPGME_ENV) $(GO) test -v -tags "$(BUILDTAGS)" ./...

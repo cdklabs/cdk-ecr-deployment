@@ -6,8 +6,6 @@ FROM lambci/lambda:build-go1.x
 
 USER root
 
-ADD . /ws
-
 RUN yum -y install \
     gpgme-devel \
     btrfs-progs-devel \
@@ -17,9 +15,18 @@ RUN yum -y install \
 
 ENV GOOS=linux \
     GOARCH=amd64 \
+    GO111MODULE=on \
     GOPROXY=https://goproxy.cn,https://goproxy.io,direct
 
-# run tests
 WORKDIR /ws
 
-RUN make OUTPUT=/ws/main
+COPY go.mod go.sum ./
+
+RUN go mod download -x
+
+COPY . /ws
+
+RUN mkdir -p /asset/ && \
+    make OUTPUT=/asset/main && \
+    file /asset/main && \
+    ls -lh /asset/main

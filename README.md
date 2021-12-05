@@ -19,7 +19,7 @@ CDK construct to deploy docker image to Amazon ECR
 Run [test/integ.ecr-deployment.ts](./test/integ.ecr-deployment.ts)
 
 ```shell
-npx cdk deploy -a "npx ts-node -P tsconfig.jest.json --prefer-ts-exts test/integ.ecr-deployment.ts"
+NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/integ.ecr-deployment.ts"
 ```
 
 ## Tech Details & Contribution
