@@ -122,7 +122,7 @@ jobs:
           path: dist
       - name: Build lambda
         run: docker build -t cdk-ecr-deployment-lambda lambda && docker run -v
-          $PWD/lambda:/out cdk-ecr-deployment-lambda cp /ws/main /out && echo
+          $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo
           $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
       - name: Release lambda
         run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt)
