@@ -11,7 +11,7 @@ import * as cdk from '@aws-cdk/core';
 import { Construct } from 'constructs';
 
 // eslint-disable-next-line no-duplicate-imports, import/order
-import { AssetHashType, Construct as CoreConstruct } from '@aws-cdk/core';
+import { Construct as CoreConstruct } from '@aws-cdk/core';
 
 export interface ECRDeploymentProps {
   /**
@@ -94,25 +94,7 @@ function getCode(): lambda.AssetCode {
 
   console.log('Build lambda from scratch');
 
-  return lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
-    assetHashType: AssetHashType.SOURCE, // see https://github.com/aws/aws-cdk/pull/12984
-    bundling: {
-      image: lambda.Runtime.GO_1_X.bundlingImage,
-      environment: {
-        GOGC: '50',
-        GOOS: 'linux',
-        GOARCH: 'amd64',
-        GOPROXY: 'https://goproxy.cn,https://goproxy.io,direct',
-      },
-      user: 'root',
-      command: [
-        'bash', '-c', [
-          'yum -y install gpgme-devel btrfs-progs-devel device-mapper-devel libassuan-devel libudev-devel',
-          'make OUTPUT=/asset-output/main',
-        ].join(' && '),
-      ],
-    },
-  });
+  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'));
 }
 
 export class DockerImageName implements IImageName {
