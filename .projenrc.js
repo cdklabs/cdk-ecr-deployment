@@ -7,10 +7,9 @@ const { awscdk } = require('projen');
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'wchaws',
   cdkVersion: '2.0.0',
-  cdkVersionPinning: true,
+  cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
   majorVersion: 2,
-  prerelease: true,
   releaseBranches: {
     'v1-main': {
       majorVersion: 1,
@@ -20,6 +19,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     //   prerelease: true,
     // },
   },
+  workflowContainerImage: 'jsii/superchain:node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
   projenUpgradeSecret: 'AUTOMATION',
