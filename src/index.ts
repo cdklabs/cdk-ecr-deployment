@@ -4,9 +4,7 @@
 
 import * as child_process from 'child_process';
 import * as path from 'path';
-import * as ec2 from 'aws-cdk-lib/aws-ec2';
-import * as iam from 'aws-cdk-lib/aws-iam';
-import * as lambda from 'aws-cdk-lib/aws-lambda';
+import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda } from 'aws-cdk-lib';
 import * as cdk from 'aws-cdk-lib/core';
 import { Construct } from 'constructs';
 
