@@ -8,7 +8,17 @@ const project = new awscdk.AwsCdkConstructLibrary({
   author: 'wchaws',
   cdkVersion: '1.134.0',
   cdkVersionPinning: true,
-  defaultReleaseBranch: 'main',
+  defaultReleaseBranch: 'v1-main',
+  majorVersion: 1,
+  releaseBranches: {
+    // 'v1-main': {
+    //   majorVersion: 1,
+    // },
+    main: {
+      majorVersion: 2,
+      prerelease: true,
+    },
+  },
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
   projenUpgradeSecret: 'AUTOMATION',
