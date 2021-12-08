@@ -2,11 +2,12 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { AwsCdkConstructLibrary } = require('projen');
+const { awscdk } = require('projen');
 
-const project = new AwsCdkConstructLibrary({
+const project = new awscdk.AwsCdkConstructLibrary({
   author: 'wchaws',
-  cdkVersion: '1.95.2',
+  cdkVersion: '1.134.0',
+  cdkVersionPinning: true,
   defaultReleaseBranch: 'main',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
