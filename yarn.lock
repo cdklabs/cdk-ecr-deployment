@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@aws-cdk/assert@^1.95.2":
+"@aws-cdk/assert@1.134.0":
   version "1.134.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/assert/-/assert-1.134.0.tgz#c105412a03cf0ebf7b1661d213ec9e15ba1de6e6"
   integrity sha512-DSk4n5eTPYGwKKPdViKHq9DAGYZlzUIi1wbclvAw6b9W1ojvuSbVYiSORNHf9Phyt4fHb3mVX3D0hjxhSy4iDQ==
@@ -5403,10 +5403,10 @@ progress@^2.0.0, progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.36.6:
-  version "0.36.6"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.36.6.tgz#533bcc59728a10b39cdfa7ba41fafa952c780f2f"
-  integrity sha512-lPskLCS5wo6WiEV7GzuFcQtrC/VVoA2Sm32kByfw3G74J9QU+DpZ3XNA26ZRjZaLwu1yec4xuaadpY7RWjUVfQ==
+projen@^0.38.0:
+  version "0.38.3"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.38.3.tgz#a6eded776b5439b7164ece84915529241ac4923c"
+  integrity sha512-Usv5ndGNSfbZi3C3TOxolGpG/bS7nk851WbdgtaI6ccD/kxjouumtSI9wyHa/4mYqiPslRQpaUoFheUFpEQsiA==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"

@@ -2,7 +2,7 @@
   "dependencies": [
     {
       "name": "@aws-cdk/assert",
-      "version": "^1.95.2",
+      "version": "1.134.0",
       "type": "build"
     },
     {
