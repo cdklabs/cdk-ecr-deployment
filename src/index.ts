@@ -4,14 +4,11 @@
 
 import * as child_process from 'child_process';
 import * as path from 'path';
-import * as ec2 from '@aws-cdk/aws-ec2';
-import * as iam from '@aws-cdk/aws-iam';
-import * as lambda from '@aws-cdk/aws-lambda';
-import * as cdk from '@aws-cdk/core';
+import * as ec2 from 'aws-cdk-lib/aws-ec2';
+import * as iam from 'aws-cdk-lib/aws-iam';
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as cdk from 'aws-cdk-lib/core';
 import { Construct } from 'constructs';
-
-// eslint-disable-next-line no-duplicate-imports, import/order
-import { Construct as CoreConstruct } from '@aws-cdk/core';
 
 export interface ECRDeploymentProps {
   /**
@@ -113,7 +110,7 @@ export class S3ArchiveName implements IImageName {
   public get uri(): string { return `s3://${this.name}`; }
 }
 
-export class ECRDeployment extends CoreConstruct {
+export class ECRDeployment extends Construct {
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
     const memoryLimit = props.memoryLimit ?? 512;
