@@ -6,9 +6,20 @@ const { awscdk } = require('projen');
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'wchaws',
-  cdkVersion: '1.134.0',
-  cdkVersionPinning: true,
+  cdkVersion: '2.0.0',
+  cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
+  majorVersion: 2,
+  releaseBranches: {
+    'v1-main': {
+      majorVersion: 1,
+    },
+    // main: {
+    //   majorVersion: 2,
+    //   prerelease: true,
+    // },
+  },
+  workflowContainerImage: 'jsii/superchain:node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
   projenUpgradeSecret: 'AUTOMATION',
@@ -26,23 +37,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'got',
   ],
   deps: [
-    '@aws-cdk/core',
-    '@aws-cdk/aws-iam',
-    '@aws-cdk/aws-ec2',
-    '@aws-cdk/aws-lambda',
+    'aws-cdk-lib@2.0.0',
+    'constructs@^10.0.5',
     'got',
   ], /* Runtime dependencies of this module. */
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
-  devDeps: [
-    '@aws-cdk/aws-ecr-assets',
-    '@aws-cdk/aws-ecr',
-  ], /* Build dependencies for this module. */
-  peerDeps: [
-    '@aws-cdk/core',
-    '@aws-cdk/aws-iam',
-    '@aws-cdk/aws-ec2',
-    '@aws-cdk/aws-lambda',
-  ], /* Peer dependencies for this module. */
+  devDeps: [], /* Build dependencies for this module. */
+  peerDeps: [], /* Peer dependencies for this module. */
   // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
   repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [

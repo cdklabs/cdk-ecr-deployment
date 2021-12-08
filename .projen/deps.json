@@ -2,15 +2,7 @@
   "dependencies": [
     {
       "name": "@aws-cdk/assert",
-      "version": "1.134.0",
-      "type": "build"
-    },
-    {
-      "name": "@aws-cdk/aws-ecr",
-      "type": "build"
-    },
-    {
-      "name": "@aws-cdk/aws-ecr-assets",
+      "version": "^2.0.0",
       "type": "build"
     },
     {
@@ -105,40 +97,18 @@
       "type": "bundled"
     },
     {
-      "name": "@aws-cdk/aws-ec2",
+      "name": "constructs",
+      "version": "^10.0.5",
       "type": "peer"
     },
     {
-      "name": "@aws-cdk/aws-iam",
-      "type": "peer"
-    },
-    {
-      "name": "@aws-cdk/aws-lambda",
-      "type": "peer"
-    },
-    {
-      "name": "@aws-cdk/core",
-      "type": "peer"
+      "name": "aws-cdk-lib",
+      "version": "2.0.0",
+      "type": "runtime"
     },
     {
       "name": "constructs",
-      "version": "^3.2.27",
-      "type": "peer"
-    },
-    {
-      "name": "@aws-cdk/aws-ec2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-iam",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-lambda",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/core",
+      "version": "^10.0.5",
       "type": "runtime"
     },
     {
