@@ -8,6 +8,8 @@
 
 CDK construct to deploy docker image to Amazon ECR
 
+⚠️ Please use ^1.0.0 for cdk version 1.x.x, use ^2.0.0 for cdk version 2.x.x
+
 ## Features
 
 - Copy an ECR image to another
