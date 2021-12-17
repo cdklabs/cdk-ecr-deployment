@@ -1,17 +1,12 @@
 {
   "dependencies": [
     {
-      "name": "@aws-cdk/assert",
-      "version": "^2.0.0",
-      "type": "build"
-    },
-    {
       "name": "@types/jest",
       "type": "build"
     },
     {
       "name": "@types/node",
-      "version": "^14.17.0",
+      "version": "^12",
       "type": "build"
     },
     {
@@ -72,7 +67,7 @@
     },
     {
       "name": "npm-check-updates",
-      "version": "^11",
+      "version": "^12",
       "type": "build"
     },
     {
@@ -95,6 +90,11 @@
     {
       "name": "got",
       "type": "bundled"
+    },
+    {
+      "name": "aws-cdk-lib",
+      "version": "^2.0.0",
+      "type": "peer"
     },
     {
       "name": "constructs",
