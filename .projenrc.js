@@ -37,7 +37,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'got',
   ],
   deps: [
-    'aws-cdk-lib@2.0.0',
+    'aws-cdk-lib@^2.0.0',
     'constructs@^10.0.5',
     'got',
   ], /* Runtime dependencies of this module. */
