@@ -4,8 +4,7 @@
 
 import * as child_process from 'child_process';
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda } from 'aws-cdk-lib';
-import * as cdk from 'aws-cdk-lib/core';
+import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
@@ -119,7 +118,7 @@ export class ECRDeployment extends Construct {
       handler: 'main',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
-      timeout: cdk.Duration.minutes(15),
+      timeout: Duration.minutes(15),
       role: props.role,
       memorySize: memoryLimit,
       vpc: props.vpc,
@@ -158,7 +157,7 @@ export class ECRDeployment extends Construct {
       resources: ['*'],
     }));
 
-    new cdk.CustomResource(this, 'CustomResource', {
+    new CustomResource(this, 'CustomResource', {
       serviceToken: handler.functionArn,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
@@ -177,7 +176,7 @@ export class ECRDeployment extends Construct {
     // with this configuration. otherwise, it won't be possible to use multiple
     // configurations since we have a singleton.
     if (memoryLimit) {
-      if (cdk.Token.isUnresolved(memoryLimit)) {
+      if (Token.isUnresolved(memoryLimit)) {
         throw new Error('Can\'t use tokens when specifying "memoryLimit" since we use it to identify the singleton custom resource handler');
       }
 
