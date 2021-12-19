@@ -32,7 +32,7 @@
     "organization": false
   },
   "devDependencies": {
-    "@aws-cdk/assertions": "1.134.0",
+    "@aws-cdk/assertions": "^1.134.0",
     "@aws-cdk/aws-ecr": "^1.135.0",
     "@aws-cdk/aws-ecr-assets": "^1.135.0",
     "@types/jest": "^27.0.3",
@@ -50,7 +50,7 @@
     "jsii-docgen": "^1.8.110",
     "jsii-pacmak": "^1.47.0",
     "json-schema": "^0.4.0",
-    "npm-check-updates": "^11",
+    "npm-check-updates": "^12",
     "projen": "^0.40.1",
     "standard-version": "^9",
     "ts-jest": "^27.1.1",
