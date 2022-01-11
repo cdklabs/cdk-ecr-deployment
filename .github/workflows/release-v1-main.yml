@@ -146,7 +146,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: dist
+          name: build-artifact
           path: dist
       - name: Build lambda
         run: docker build -t cdk-ecr-deployment-lambda lambda && docker run -v
