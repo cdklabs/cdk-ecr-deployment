@@ -22,7 +22,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   workflowContainerImage: 'jsii/superchain:node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
-  projenUpgradeSecret: 'AUTOMATION',
   autoApproveOptions: {
     secret: 'GITHUB_TOKEN',
     allowedUsernames: ['dependabot[bot]'],
