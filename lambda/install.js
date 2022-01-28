@@ -9,7 +9,7 @@ const pipeline = promisify(stream.pipeline);
 
 const package = require('../package.json');
 const version = package.version;
-const rootUrl = package.repository.url;
+const rootUrl = package.repository.url.replace('git+', '').replace('.git', '');
 
 function mkdirp(p) {
   if (!fs.existsSync(p)) {
