@@ -72,7 +72,8 @@ export interface IImageName {
 }
 
 function getCode(): lambda.AssetCode {
-  if (!(process.env.CI || process.env.NO_PREBUILT_LAMBDA)) {
+  const { CI, NO_PREBUILT_LAMBDA } = process.env;
+  if (!(CI && ['true', true, 1, '1'].includes(CI)) || (NO_PREBUILT_LAMBDA && ['true', true, 1, '1'].includes(NO_PREBUILT_LAMBDA))) {
     try {
       console.log('Try to get prebuilt lambda');
 
