@@ -1,8 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
+ARG buildImage=public.ecr.aws/sam/build-go1.x:latest
 
-
-FROM public.ecr.aws/sam/build-go1.x:latest
+FROM ${buildImage}
 
 USER root
 
