@@ -15,7 +15,7 @@ CDK construct to synchronize single docker image between docker registries.
 - Copy image from ECR/external registry to (another) ECR/external registry
 - Copy an archive tarball image from s3 to ECR/external registry
 
-⚠️ Currently construct can authenticate to external registry only with basic auth, but credentials are put as plain text to template and logs. See issue #171.
+⚠️ Currently construct can authenticate to external registry only with basic auth, but credentials are put as plain text to template and logs. See issue [#171](https://github.com/cdklabs/cdk-ecr-deployment/issues/171).
 
 ## Examples
 
