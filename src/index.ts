@@ -8,6 +8,17 @@ import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomR
 import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
+
+  /**
+   * Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
+   *
+   * Might be needed for local build if all images need to come from own registry.
+   *
+   * Note that image should use yum as a package manager and have golang available.
+   *
+   * @default public.ecr.aws/sam/build-go1.x:latest
+   */
+  readonly buildImage?: string;
   /**
    * The source of the docker image.
    */
@@ -71,7 +82,7 @@ export interface IImageName {
   creds?: string;
 }
 
-function getCode(): lambda.AssetCode {
+function getCode(buildImage: string): lambda.AssetCode {
   const { CI, NO_PREBUILT_LAMBDA } = process.env;
   if (!(CI && ['true', true, 1, '1'].includes(CI)) || (NO_PREBUILT_LAMBDA && ['true', true, 1, '1'].includes(NO_PREBUILT_LAMBDA))) {
     try {
@@ -89,7 +100,11 @@ function getCode(): lambda.AssetCode {
 
   console.log('Build lambda from scratch');
 
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'));
+  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
+    buildArgs: {
+      buildImage,
+    },
+  });
 }
 
 export class DockerImageName implements IImageName {
@@ -114,7 +129,7 @@ export class ECRDeployment extends Construct {
     const memoryLimit = props.memoryLimit ?? 512;
     const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(),
+      code: getCode(props.buildImage ?? 'public.ecr.aws/sam/build-go1.x:latest'),
       runtime: lambda.Runtime.GO_1_X,
       handler: 'main',
       environment: props.environment,

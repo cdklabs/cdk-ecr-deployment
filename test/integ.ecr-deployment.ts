@@ -2,22 +2,25 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as path from 'path';
-import * as ecr from 'aws-cdk-lib/aws-ecr';
-import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
-import * as cdk from 'aws-cdk-lib/core';
+import {
+  aws_ecr as ecr,
+  aws_ecr_assets as assets,
+  RemovalPolicy,
+  Stack,
+  App,
+} from 'aws-cdk-lib';
 // eslint-disable-next-line no-duplicate-imports
-import { RemovalPolicy } from 'aws-cdk-lib/core';
 import * as ecrDeploy from '../src/index';
 
-class TestECRDeployment extends cdk.Stack {
-  constructor(scope: cdk.App, id: string) {
+class TestECRDeployment extends Stack {
+  constructor(scope: App, id: string) {
     super(scope, id);
 
     const repo = new ecr.Repository(this, 'NginxRepo', {
       repositoryName: 'nginx',
       removalPolicy: RemovalPolicy.DESTROY,
     });
-    const image = new DockerImageAsset(this, 'CDKDockerImage', {
+    const image = new assets.DockerImageAsset(this, 'CDKDockerImage', {
       directory: path.join(__dirname, 'docker'),
     });
 
@@ -34,7 +37,7 @@ class TestECRDeployment extends cdk.Stack {
   }
 }
 
-const app = new cdk.App();
+const app = new App();
 
 new TestECRDeployment(app, 'test-ecr-deployments');
 

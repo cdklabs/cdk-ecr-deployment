@@ -3,7 +3,7 @@ const got = require('got');
 const path = require('path');
 const stream = require('stream');
 const crypto = require('crypto');
-
+const { HttpProxyAgent, HttpsProxyAgent } = require('hpagent');
 const { promisify } = require('util');
 const pipeline = promisify(stream.pipeline);
 
@@ -29,10 +29,12 @@ function sha256sum(p) {
 }
 
 async function download(url, dest) {
-  // TODO: Support proxy download
+  const agent = {};
+  agent.https = process.env.HTTPS_PROXY ? new HttpsProxyAgent({proxy: process.env.HTTPS_PROXY}): undefined;
+  agent.http = process.env.HTTP_PROXY ? new HttpProxyAgent({proxy: process.env.HTTP_PROXY}): undefined;
   console.log(`download ${url}`);
   await pipeline(
-    got.stream(url),
+    got.stream(url, { agent }),
     fs.createWriteStream(dest)
   );
 }
