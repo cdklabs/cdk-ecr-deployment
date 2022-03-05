@@ -34,11 +34,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
   }, /* Publish to pypi. */
   bundledDeps: [
     'got',
+    'hpagent',
   ],
   deps: [
     'aws-cdk-lib@^2.0.0',
     'constructs@^10.0.5',
     'got',
+    'hpagent',
   ], /* Runtime dependencies of this module. */
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [], /* Build dependencies for this module. */
