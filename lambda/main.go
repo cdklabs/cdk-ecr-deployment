@@ -62,6 +62,15 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 			return physicalResourceID, data, err
 		}
 
+		srcCreds, err = parseCreds(srcCreds)
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+		destCreds, err = parseCreds(destCreds)
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+
 		log.Printf("SrcImage: %v DestImage: %v", srcImage, destImage)
 
 		srcRef, err := alltransports.ParseImageName(srcImage)
@@ -143,4 +152,17 @@ func getStrPropsDefault(m map[string]interface{}, k string, d string) (string, e
 		return val, nil
 	}
 	return "", fmt.Errorf("can't get %v", k)
+}
+
+func parseCreds(creds string) (string, error) {
+	credsType := GetCredsType(creds)
+	if creds == "" {
+		return "", nil
+	} else if (credsType == SECRET_ARN) || (credsType == SECRET_NAME) {
+		secret, err := GetSecret(creds)
+		return secret, err
+	} else if credsType == SECRET_TEXT {
+		return creds, nil
+	}
+	return "", fmt.Errorf("unkown creds type")
 }

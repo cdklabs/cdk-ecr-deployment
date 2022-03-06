@@ -5,6 +5,7 @@
 import * as child_process from 'child_process';
 import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
+import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
@@ -77,14 +78,19 @@ export interface IImageName {
   readonly uri: string;
 
   /**
-   * The credentials of the docker image. Format `user:[password]`
+   * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
    */
   creds?: string;
 }
 
+const TRUTHY = ['true', true, 1, '1'];
+
 function getCode(buildImage: string): lambda.AssetCode {
   const { CI, NO_PREBUILT_LAMBDA } = process.env;
-  if (!(CI && ['true', true, 1, '1'].includes(CI)) || (NO_PREBUILT_LAMBDA && ['true', true, 1, '1'].includes(NO_PREBUILT_LAMBDA))) {
+  const isCI = CI && TRUTHY.includes(CI);
+  const isNoPrebuilt = NO_PREBUILT_LAMBDA && TRUTHY.includes(NO_PREBUILT_LAMBDA);
+
+  if (!(isCI || isNoPrebuilt)) {
     try {
       console.log('Try to get prebuilt lambda');
 
@@ -124,10 +130,12 @@ export class S3ArchiveName implements IImageName {
 }
 
 export class ECRDeployment extends Construct {
+  private handler: lambda.SingletonFunction;
+
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
     const memoryLimit = props.memoryLimit ?? 512;
-    const handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
+    this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
       code: getCode(props.buildImage ?? 'public.ecr.aws/sam/build-go1.x:latest'),
       runtime: lambda.Runtime.GO_1_X,
@@ -141,7 +149,7 @@ export class ECRDeployment extends Construct {
       vpcSubnets: props.vpcSubnets,
     });
 
-    const handlerRole = handler.role;
+    const handlerRole = this.handler.role;
     if (!handlerRole) { throw new Error('lambda.SingletonFunction should have created a Role'); }
 
     handlerRole.addToPrincipalPolicy(
@@ -174,7 +182,7 @@ export class ECRDeployment extends Construct {
     }));
 
     new CustomResource(this, 'CustomResource', {
-      serviceToken: handler.functionArn,
+      serviceToken: this.handler.functionArn,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
         SrcImage: props.src.uri,
@@ -183,6 +191,13 @@ export class ECRDeployment extends Construct {
         DestCreds: props.dest.creds,
       },
     });
+  }
+
+  public addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyResult {
+    const handlerRole = this.handler.role;
+    if (!handlerRole) { throw new Error('lambda.SingletonFunction should have created a Role'); }
+
+    return handlerRole.addToPrincipalPolicy(statement);
   }
 
   private renderSingletonUuid(memoryLimit?: number) {

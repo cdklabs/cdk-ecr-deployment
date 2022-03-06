@@ -13,8 +13,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/containers/image/v5/types"
 )
 
@@ -146,4 +148,39 @@ func Dumps(v interface{}) string {
 		return fmt.Sprintf("dumps error: %s", err.Error())
 	}
 	return string(bytes)
+}
+
+const (
+	SECRET_ARN  = "SECRET_ARN"
+	SECRET_NAME = "SECRET_NAME"
+	SECRET_TEXT = "SECRET_TEXT"
+)
+
+func GetCredsType(s string) string {
+	if strings.HasPrefix(s, "arn:aws") {
+		return SECRET_ARN
+	} else if strings.Contains(s, ":") {
+		return SECRET_TEXT
+	} else {
+		return SECRET_NAME
+	}
+}
+
+func GetSecret(secretId string) (secret string, err error) {
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+	)
+	log.Printf("get secret id: %s of region: %s", secretId, cfg.Region)
+	if err != nil {
+		return "", fmt.Errorf("api client configuration error: %v", err.Error())
+	}
+
+	client := secretsmanager.NewFromConfig(cfg)
+	resp, err := client.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
+		SecretId: aws.String(secretId),
+	})
+	if err != nil {
+		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
+	}
+	return *resp.SecretString, nil
 }
