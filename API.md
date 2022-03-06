@@ -83,6 +83,22 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
   * **vpcSubnets** (<code>[aws_ec2.SubnetSelection](#aws-cdk-lib-aws-ec2-subnetselection)</code>)  Where in the VPC to place the deployment lambda handler. __*Default*__: the Vpc default strategy if not specified
 
 
+### Methods
+
+
+#### addToPrincipalPolicy(statement) <a id="cdk-ecr-deployment-ecrdeployment-addtoprincipalpolicy"></a>
+
+
+
+```ts
+addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyResult
+```
+
+* **statement** (<code>[aws_iam.PolicyStatement](#aws-cdk-lib-aws-iam-policystatement)</code>)  *No description*
+
+__Returns__:
+* <code>[aws_iam.AddToPrincipalPolicyResult](#aws-cdk-lib-aws-iam-addtoprincipalpolicyresult)</code>
+
 
 
 ## class S3ArchiveName  <a id="cdk-ecr-deployment-s3archivename"></a>

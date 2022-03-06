@@ -5,8 +5,8 @@
 import * as child_process from 'child_process';
 import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
-import { Construct } from 'constructs';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
+import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
 
