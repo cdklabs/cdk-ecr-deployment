@@ -7,10 +7,12 @@ require (
 	github.com/Microsoft/go-winio v0.5.1 // indirect
 	github.com/Microsoft/hcsshim v0.9.2 // indirect
 	github.com/aws/aws-lambda-go v1.23.0
-	github.com/aws/aws-sdk-go-v2 v1.3.2
+	github.com/aws/aws-sdk-go-v2 v1.14.0
 	github.com/aws/aws-sdk-go-v2/config v1.1.6
+	github.com/aws/aws-sdk-go-v2/internal/ini v1.3.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.2.2
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.5.0
+	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.14.0
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/containerd/cgroups v1.0.3 // indirect
 	github.com/containerd/containerd v1.5.10 // indirect
