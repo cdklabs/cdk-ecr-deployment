@@ -149,7 +149,8 @@ jobs:
           name: build-artifact
           path: dist
       - name: Build lambda
-        run: docker build -t cdk-ecr-deployment-lambda lambda && docker run -v
+        run: docker build -t cdk-ecr-deployment-lambda --build-arg
+          GOPROXY="https://goproxy.io|direct" lambda && docker run -v
           $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo
           $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
       - name: Release lambda

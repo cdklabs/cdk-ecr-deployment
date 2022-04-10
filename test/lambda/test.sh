@@ -20,4 +20,4 @@ cp -rvf ${scriptdir}/../../lambda/* $PWD
 cp -vf ${scriptdir}/* $PWD
 
 # this will run our tests inside the right environment
-docker build .
+docker build --build-arg GOPROXY="https://goproxy.io|direct" .

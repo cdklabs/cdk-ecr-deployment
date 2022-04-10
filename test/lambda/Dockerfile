@@ -18,11 +18,11 @@ RUN yum -y install \
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
-    GOPROXY=https://goproxy.cn|https://goproxy.io|direct
+    GOPROXY=${GOPROXY:-https://goproxy.cn|https://goproxy.io|direct}
 
 # run tests
 WORKDIR /opt/awscli
 
-RUN make test
+RUN go mod download && make test
 
 ENTRYPOINT [ "/bin/bash" ]

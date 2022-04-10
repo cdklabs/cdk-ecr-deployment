@@ -16,13 +16,13 @@ RUN yum -y install \
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
-    GOPROXY=https://goproxy.cn|https://goproxy.io|direct
+    GOPROXY=${GOPROXY:-https://goproxy.cn|https://goproxy.io|direct}
 
 WORKDIR /ws
 
 COPY go.mod go.sum ./
 
-RUN go mod download -x
+RUN go mod download
 
 COPY . /ws
 
