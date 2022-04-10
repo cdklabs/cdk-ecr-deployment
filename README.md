@@ -12,9 +12,18 @@ CDK construct to synchronize single docker image between docker registries.
 
 ## Features
 
-- Copy image from ECR/external registry to (another) ECR/external registry.
-- Copy an archive tarball image from s3 to ECR/external registry.
-- Refer docker registry secret from aws secrets manager.
+- Copy image from ECR/external registry to (another) ECR/external registry
+- Copy an archive tarball image from s3 to ECR/external registry
+
+## Environment variables
+
+Enable flags: `true`, `1`. e.g. `export CI=1`
+
+- `CI` indicate if it's CI environment. This flag will enable building lambda from scratch.
+- `NO_PREBUILT_LAMBDA` disable using prebuilt lambda.
+- `FORCE_PREBUILT_LAMBDA` force using prebuilt lambda.
+
+⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
 
 ## Examples
 

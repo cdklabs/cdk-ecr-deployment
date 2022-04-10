@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-FROM lambci/lambda:build-go1.x
+FROM public.ecr.aws/sam/build-go1.x:latest
 
 USER root
 
@@ -17,7 +17,8 @@ RUN yum -y install \
 
 ENV GOOS=linux \
     GOARCH=amd64 \
-    GOPROXY=https://goproxy.cn,https://goproxy.io,direct
+    GO111MODULE=on \
+    GOPROXY=https://goproxy.cn|https://goproxy.io|direct
 
 # run tests
 WORKDIR /opt/awscli

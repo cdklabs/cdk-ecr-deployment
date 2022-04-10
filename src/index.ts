@@ -7,6 +7,7 @@ import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
+import { shouldUsePrebuiltLambda } from './config';
 
 export interface ECRDeploymentProps {
 
@@ -83,14 +84,8 @@ export interface IImageName {
   creds?: string;
 }
 
-const TRUTHY = ['true', true, 1, '1'];
-
 function getCode(buildImage: string): lambda.AssetCode {
-  const { CI, NO_PREBUILT_LAMBDA } = process.env;
-  const isCI = CI && TRUTHY.includes(CI);
-  const isNoPrebuilt = NO_PREBUILT_LAMBDA && TRUTHY.includes(NO_PREBUILT_LAMBDA);
-
-  if (!(isCI || isNoPrebuilt)) {
+  if (shouldUsePrebuiltLambda()) {
     try {
       console.log('Try to get prebuilt lambda');
 
