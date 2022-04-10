@@ -17,6 +17,16 @@ CDK construct to synchronize single docker image between docker registries.
 
 ⚠️ Currently construct can authenticate to external registry only with basic auth, but credentials are put as plain text to template and logs. See issue [#171](https://github.com/cdklabs/cdk-ecr-deployment/issues/171).
 
+## Environment variables
+
+Enable flags: `true`, `1`. e.g. `export CI=1`
+
+- `CI` indicate if it's CI environment. This flag will enable building lambda from scratch.
+- `NO_PREBUILT_LAMBDA` disable using prebuilt lambda.
+- `FORCE_PREBUILT_LAMBDA` force using prebuilt lambda.
+
+⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
+
 ## Examples
 
 Run [test/integ.ecr-deployment.ts](./test/integ.ecr-deployment.ts)
