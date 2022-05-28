@@ -19,7 +19,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
     //   prerelease: true,
     // },
   },
-  workflowContainerImage: 'jsii/superchain:node14',
+  workflowContainerImage: 'jsii/superchain:1-buster-slim-node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
   autoApproveOptions: {
