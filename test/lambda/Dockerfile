@@ -1,12 +1,9 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-ARG GOPROXY=https://goproxy.cn|https://goproxy.io|direct
 
 FROM public.ecr.aws/sam/build-go1.x:latest
 
 USER root
-
-ADD . /opt/awscli
 
 RUN yum -y install \
     gpgme-devel \
@@ -15,14 +12,18 @@ RUN yum -y install \
     libassuan-devel \
     libudev-devel
 
+ARG GOPROXY
+
 ENV GOOS=linux \
     GOARCH=amd64 \
     GO111MODULE=on \
-    GOPROXY=${GOPROXY}
+    GOPROXY="https://goproxy.io|https://goproxy.cn|direct"
+
+ADD . /opt/awscli
 
 # run tests
 WORKDIR /opt/awscli
 
-RUN printenv && go mod download && make test
+RUN go env && go mod download -x && make test
 
 ENTRYPOINT [ "/bin/bash" ]
