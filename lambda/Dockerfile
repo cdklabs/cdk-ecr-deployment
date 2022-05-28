@@ -28,7 +28,9 @@ WORKDIR /ws
 
 COPY go.mod go.sum ./
 
-RUN go env && go mod download -x
+RUN go env
+
+# RUN go mod download -x
 
 COPY . /ws
 
