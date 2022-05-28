@@ -30,8 +30,7 @@ jobs:
         run: npx projen release
       - name: Check for new commits
         id: git_remote
-        run: echo ::set-output name=latest_commit::"$(git ls-remote origin -h ${{
-          github.ref }} | cut -f1)"
+        run: echo ::set-output name=latest_commit::"$(git ls-remote origin -h ${{ github.ref }} | cut -f1)"
       - name: Upload artifact
         if: ${{ steps.git_remote.outputs.latest_commit == github.sha }}
         uses: actions/upload-artifact@v2.1.1
@@ -61,11 +60,7 @@ jobs:
       - name: Collect GitHub Metadata
         run: mv .repo/dist dist
       - name: Release
-        run: errout=$(mktemp); gh release create $(cat dist/releasetag.txt) -R
-          $GITHUB_REPOSITORY -F dist/changelog.md -t $(cat dist/releasetag.txt)
-          --target $GITHUB_REF 2> $errout && true; exitcode=$?; if [ $exitcode
-          -ne 0 ] && ! grep -q "Release.tag_name already exists" $errout; then
-          cat $errout; exit $exitcode; fi
+        run: errout=$(mktemp); gh release create $(cat dist/releasetag.txt) -R $GITHUB_REPOSITORY -F dist/changelog.md -t $(cat dist/releasetag.txt) --target $GITHUB_REF 2> $errout && true; exitcode=$?; if [ $exitcode -ne 0 ] && ! grep -q "Release.tag_name already exists" $errout; then cat $errout; exit $exitcode; fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
@@ -95,7 +90,7 @@ jobs:
       - name: Collect js Artifact
         run: mv .repo/dist dist
       - name: Release
-        run: npx -p jsii-release@latest jsii-release-npm
+        run: npx -p publib@latest publib-npm
         env:
           NPM_DIST_TAG: latest
           NPM_REGISTRY: registry.npmjs.org
@@ -128,7 +123,7 @@ jobs:
       - name: Collect python Artifact
         run: mv .repo/dist dist
       - name: Release
-        run: npx -p jsii-release@latest jsii-release-pypi
+        run: npx -p publib@latest publib-pypi
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
@@ -149,13 +144,9 @@ jobs:
           name: build-artifact
           path: dist
       - name: Build lambda
-        run: docker build -t cdk-ecr-deployment-lambda --build-arg
-          GOPROXY="https://goproxy.io|direct" lambda && docker run -v
-          $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo
-          $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
+        run: docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
       - name: Release lambda
-        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt)
-          lambda/main lambda/main.sha256 "
+        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
