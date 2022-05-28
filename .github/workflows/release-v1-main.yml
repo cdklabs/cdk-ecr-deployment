@@ -144,7 +144,7 @@ jobs:
           name: build-artifact
           path: dist
       - name: Build lambda
-        run: docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
+        run: docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
       - name: Release lambda
         run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 "
         env:

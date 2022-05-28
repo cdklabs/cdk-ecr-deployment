@@ -15,8 +15,9 @@ require (
 	github.com/containers/storage v1.39.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da
 	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/opencontainers/go-digest v1.0.0
-	github.com/opencontainers/runc v1.1.1 // indirect
+	github.com/opencontainers/runc v1.1.2 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/common v0.33.0 // indirect
 	github.com/sirupsen/logrus v1.8.1
