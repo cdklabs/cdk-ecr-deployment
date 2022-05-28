@@ -28,6 +28,8 @@ ADD . /opt/awscli
 # run tests
 WORKDIR /opt/awscli
 
-RUN go env && go mod download -x && make test
+RUN go env
+# RUN go mod download -x
+RUN make test
 
 ENTRYPOINT [ "/bin/bash" ]
