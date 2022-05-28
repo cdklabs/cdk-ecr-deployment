@@ -23,6 +23,6 @@ ENV GOOS=linux \
 # run tests
 WORKDIR /opt/awscli
 
-RUN go mod download && make test
+RUN printenv && go mod download && make test
 
 ENTRYPOINT [ "/bin/bash" ]
