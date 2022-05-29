@@ -25,6 +25,8 @@ Enable flags: `true`, `1`. e.g. `export CI=1`
 
 ⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
 
+⚠️ The above flags are only available in cdk-ecr-deployment 2.x.
+
 ## Examples
 
 ```ts
