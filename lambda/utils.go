@@ -35,6 +35,13 @@ type ECRAuth struct {
 	ExpiresAt     time.Time
 }
 
+type Creds struct {
+	PlainText   string `json:"plainText"`
+	SecretArn   string `json:"secretArn"`
+	UsernameKey string `json:"usernameKey"`
+	PasswordKey string `json:"passwordKey"`
+}
+
 func GetECRRegion(uri string) string {
 	re := regexp.MustCompile(`dkr\.ecr\.(.+?)\.amazonaws\.com`)
 	m := re.FindStringSubmatch(uri)
@@ -142,6 +149,13 @@ func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 	return ctx, nil
 }
 
+func ToCreds(data interface{}) Creds {
+	creds := &Creds{}
+	jsonString, _ := json.Marshal(data)
+	json.Unmarshal(jsonString, creds)
+	return *creds
+}
+
 func Dumps(v interface{}) string {
 	bytes, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
@@ -150,37 +164,38 @@ func Dumps(v interface{}) string {
 	return string(bytes)
 }
 
-const (
-	SECRET_ARN  = "SECRET_ARN"
-	SECRET_NAME = "SECRET_NAME"
-	SECRET_TEXT = "SECRET_TEXT"
-)
-
-func GetCredsType(s string) string {
-	if strings.HasPrefix(s, "arn:aws") {
-		return SECRET_ARN
-	} else if strings.Contains(s, ":") {
-		return SECRET_TEXT
-	} else {
-		return SECRET_NAME
-	}
+type SecretsManager struct {
+	Client *secretsmanager.Client
 }
 
-func GetSecret(secretId string) (secret string, err error) {
-	cfg, err := config.LoadDefaultConfig(
-		context.TODO(),
-	)
-	log.Printf("get secret id: %s of region: %s", secretId, cfg.Region)
-	if err != nil {
-		return "", fmt.Errorf("api client configuration error: %v", err.Error())
+func (sm *SecretsManager) GetSecret(creds Creds) (secret string, err error) {
+	if sm.Client == nil {
+		cfg, err := config.LoadDefaultConfig(
+			context.TODO(),
+		)
+		if err != nil {
+			return "", fmt.Errorf("api client configuration error: %v", err.Error())
+		}
+		sm.Client = secretsmanager.NewFromConfig(cfg)
 	}
+	log.Printf("get secret id: %s", creds.SecretArn)
 
-	client := secretsmanager.NewFromConfig(cfg)
-	resp, err := client.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
-		SecretId: aws.String(secretId),
+	resp, err := sm.Client.GetSecretValue(context.TODO(), &secretsmanager.GetSecretValueInput{
+		SecretId: aws.String(creds.SecretArn),
 	})
 	if err != nil {
 		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
 	}
-	return *resp.SecretString, nil
+
+	if creds.UsernameKey == "" && creds.PasswordKey == "" {
+		return *resp.SecretString, nil
+	}
+
+	// Declared an empty map interface
+	var result map[string]string
+
+	// Unmarshal or Decode the JSON to the interface.
+	json.Unmarshal([]byte(*resp.SecretString), &result)
+
+	return fmt.Sprintf("%s:%s", result[creds.UsernameKey], result[creds.PasswordKey]), nil
 }

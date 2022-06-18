@@ -32,6 +32,8 @@ jspm_packages/
 .yarn-integrity
 .cache
 cdk.out/
+lambda/cdk-ecr-deployment-handler
+lambda/out/
 !/.projenrc.js
 /test-reports/
 junit.xml
