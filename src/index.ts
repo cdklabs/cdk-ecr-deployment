@@ -4,7 +4,16 @@
 
 import * as child_process from 'child_process';
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
+import {
+  aws_ec2 as ec2,
+  aws_iam as iam,
+  aws_lambda as lambda,
+  aws_secretsmanager as sm,
+  Duration,
+  CustomResource,
+  Token,
+  DockerImage,
+} from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import { shouldUsePrebuiltLambda } from './config';
@@ -81,41 +90,93 @@ export interface IImageName {
   /**
    * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
    */
-  creds?: string;
+  creds?: ICredentials;
 }
 
-function getCode(buildImage: string): lambda.AssetCode {
-  if (shouldUsePrebuiltLambda()) {
-    try {
-      console.log('Try to get prebuilt lambda');
+/**
+ * Credentials to autenticate to used container registry
+ */
+export interface ICredentials {
+  /**
+   * Plain text authentication
+   *
+   * Not recommended, as credentials are left in code, stack template and lambda logs.
+   */
+  plainText?: IPlainText;
 
-      const installScript = path.join(__dirname, '../lambda/install.js');
-      const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
+  /**
+   * Secrets Manager stored authentication
+   */
+  secretManager?: ISecret;
+}
 
-      return lambda.Code.fromAsset(prebuiltPath);
-    } catch (err) {
-      console.warn(`Can not get prebuilt lambda: ${err}`);
-    }
+/**
+ * Secrets Manager provided credentials
+ */
+export interface ISecret {
+  /**
+   * Reference to secret where credentials are stored
+   *
+   * By default handled to include only authentication token.
+   *
+   * If using key-value secret, please define also `usernameKey` and `passwordKey`.
+   */
+  secret: sm.ISecret;
+  /**
+   * Key containing username
+   */
+  usenameKey?: string;
+  /**
+   * Key containing password
+   */
+  passwordKey?: string;
+}
+
+/**
+ * Plain text credentials
+ */
+export interface IPlainText {
+  /** Username to registry */
+  userName: string;
+  /** Password to registry */
+  password: string;
+};
+
+/**
+ * Simplified credentials delivery to Lambda
+ */
+interface LambdaCredentials {
+  /** Plain text credentials in form of username: password */
+  plainText?: string;
+  /** ARN of secret containing credentials. If only this is provided, secret's whole content is used */
+  secretArn?: string;
+  /** Key containing username */
+  usernameKey?: string;
+  /** Key containing password */
+  passwordKey?: string;
+}
+
+function getPrebuiltLambda(outputDir: string): boolean {
+  try {
+    console.log('Try to get prebuilt lambda');
+
+    const installScript = path.join(__dirname, '../lambda/install.js');
+    child_process.execSync(`${process.argv0} ${installScript} ${outputDir}`);
+    return true;
+  } catch (err) {
+    console.warn(`Can not get prebuilt lambda: ${err}`);
+    return false;
   }
-
-  console.log('Build lambda from scratch');
-
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
-    buildArgs: {
-      buildImage,
-    },
-  });
 }
 
 export class DockerImageName implements IImageName {
-  public constructor(private name: string, public creds?: string) { }
+  public constructor(private name: string, public creds?: ICredentials) { }
   public get uri(): string { return `docker://${this.name}`; }
 }
 
 export class S3ArchiveName implements IImageName {
   private name: string;
-  public constructor(p: string, ref?: string, public creds?: string) {
+  public constructor(p: string, ref?: string, public creds?: ICredentials) {
     this.name = p;
     if (ref) {
       this.name += ':' + ref;
@@ -123,6 +184,15 @@ export class S3ArchiveName implements IImageName {
   }
   public get uri(): string { return `s3://${this.name}`; }
 }
+
+/** Format credentials for Lambda call */
+const formatCredentials = (creds?: ICredentials): LambdaCredentials => ({
+  plainText: creds?.plainText ? `${creds?.plainText?.userName}:${creds?.plainText?.password}` : undefined,
+  secretArn: creds?.secretManager?.secret.secretArn,
+  usernameKey: creds?.secretManager?.usenameKey,
+  passwordKey: creds?.secretManager?.passwordKey,
+});
+
 
 export class ECRDeployment extends Construct {
   private handler: lambda.SingletonFunction;
@@ -132,7 +202,55 @@ export class ECRDeployment extends Construct {
     const memoryLimit = props.memoryLimit ?? 512;
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(props.buildImage ?? 'public.ecr.aws/sam/build-go1.x:latest'),
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda'), {
+        bundling: {
+          image: props.buildImage ? DockerImage.fromRegistry(props.buildImage) : lambda.Runtime.GO_1_X.bundlingImage,
+          local: {
+            tryBundle(outputDir: string) {
+              try {
+                if (shouldUsePrebuiltLambda() && getPrebuiltLambda(outputDir)) {
+                  return true;
+                }
+                // Check Go
+                if (child_process.spawnSync('go', ['version']).error) {
+                  // No local Golang available
+                  return false;
+                }
+                // Check make
+                if (child_process.spawnSync('make', ['-v']).error) {
+                  // No local Make available
+                  return false;
+                };
+              } catch (e) {
+                return false;
+              }
+              const command = [
+                '/bin/bash',
+                '-c',
+                // Build always Linux version as that's what is needed in Lambda
+                `cd ${path.join(__dirname, '../lambda')} && GOOS=linux GOARCH=amd64 OUTPUT=${path.join(outputDir, 'main')} make lambda`,
+              ];
+              try {
+                const buildOutput = child_process.spawnSync(command.shift()!, command);
+                console.debug(buildOutput.stdout.toString());
+                console.debug(buildOutput.stderr.toString());
+              } catch (e) {
+                console.log(`build failed to ${outputDir}`);
+                return false;
+              }
+              return true;
+            },
+          },
+          command: [
+            'bash',
+            '-c',
+            'OUTPUT=/asset-output/main make lambda',
+          ],
+          // Ensure that Docker build can crete cache direcotories in bundling image
+          user: 'root',
+        },
+      }),
+      //code: getCode(props.buildImage ?? 'public.ecr.aws/sam/build-go1.x:latest'),
       runtime: lambda.Runtime.GO_1_X,
       handler: 'main',
       environment: props.environment,
@@ -176,14 +294,18 @@ export class ECRDeployment extends Construct {
       resources: ['*'],
     }));
 
+    // Provide access to specific secret if needed
+    props.src.creds?.secretManager?.secret.grantRead(handlerRole);
+    props.dest.creds?.secretManager?.secret.grantRead(handlerRole);
+
     new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
         SrcImage: props.src.uri,
-        SrcCreds: props.src.creds,
+        SrcCreds: formatCredentials(props.src.creds),
         DestImage: props.dest.uri,
-        DestCreds: props.dest.creds,
+        DestCreds: formatCredentials(props.dest.creds),
       },
     });
   }

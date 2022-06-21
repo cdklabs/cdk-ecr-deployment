@@ -50,19 +50,30 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage2', {
 });
 
 // Copy from private docker registry to ECR.
-// The format of secret in aws secrets manager must be plain text! e.g. <username>:<password>
 new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
-  src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'username:password'),
-  // src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'aws-secrets-manager-secret-name'),
-  // src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'arn:aws:secretsmanager:us-west-2:000000000000:secret:id'),
+  src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', { plainText: 'username:password', }),
+  /* src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', {
+        secretManager: {
+          secret: sm.Secret.fromSecretNameV2(this, 'SrcSecret', 'aws-secrets-manager-secret-name'),
+        },
+      }),
+  */
+  /* src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', {
+        secretManager: {
+          secret: sm.Secret.fromPartialArn(this, 'SrcSecret', 'arn:aws:secretsmanager:us-west-2:000000000000:secret:id'),
+        },
+      }),
+  */,
+  /* src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', {
+        secretManager: {
+          secret: sm.Secret.fromSecretNameV2(this, 'SrcSecret', 'aws-secrets-manager-secret-name'),
+          usernameKey: 'username',
+          passwordKey: 'password',
+        },
+      }),
+  */
   dest: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/my-nginx3:latest`),
-}).addToPrincipalPolicy(new iam.PolicyStatement({
-  effect: iam.Effect.ALLOW,
-  actions: [
-    'secretsmanager:GetSecretValue',
-  ],
-  resources: ['*'],
-}));
+});
 ```
 
 ## Sample: [test/integ.ecr-deployment.ts](./test/integ.ecr-deployment.ts)

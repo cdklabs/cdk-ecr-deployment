@@ -20,7 +20,10 @@ Name|Description
 
 Name|Description
 ----|-----------
+[ICredentials](#cdk-ecr-deployment-icredentials)|Credentials to autenticate to used container registry.
 [IImageName](#cdk-ecr-deployment-iimagename)|*No description*
+[IPlainText](#cdk-ecr-deployment-iplaintext)|Plain text credentials.
+[ISecret](#cdk-ecr-deployment-isecret)|Secrets Manager provided credentials.
 
 
 
@@ -36,11 +39,11 @@ __Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
 
 
 ```ts
-new DockerImageName(name: string, creds?: string)
+new DockerImageName(name: string, creds?: ICredentials)
 ```
 
 * **name** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  *No description*
+* **creds** (<code>[ICredentials](#cdk-ecr-deployment-icredentials)</code>)  *No description*
 
 
 
@@ -50,7 +53,7 @@ new DockerImageName(name: string, creds?: string)
 Name | Type | Description 
 -----|------|-------------
 **uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | __*Optional*__
+**creds**? | <code>[ICredentials](#cdk-ecr-deployment-icredentials)</code> | __*Optional*__
 
 
 
@@ -113,12 +116,12 @@ __Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
 
 
 ```ts
-new S3ArchiveName(p: string, ref?: string, creds?: string)
+new S3ArchiveName(p: string, ref?: string, creds?: ICredentials)
 ```
 
 * **p** (<code>string</code>)  *No description*
 * **ref** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  *No description*
+* **creds** (<code>[ICredentials](#cdk-ecr-deployment-icredentials)</code>)  *No description*
 
 
 
@@ -128,7 +131,7 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 Name | Type | Description 
 -----|------|-------------
 **uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | __*Optional*__
+**creds**? | <code>[ICredentials](#cdk-ecr-deployment-icredentials)</code> | __*Optional*__
 
 
 
@@ -152,6 +155,21 @@ Name | Type | Description
 
 
 
+## interface ICredentials  <a id="cdk-ecr-deployment-icredentials"></a>
+
+
+Credentials to autenticate to used container registry.
+
+### Properties
+
+
+Name | Type | Description 
+-----|------|-------------
+**plainText**? | <code>[IPlainText](#cdk-ecr-deployment-iplaintext)</code> | Plain text authentication.<br/>__*Optional*__
+**secretManager**? | <code>[ISecret](#cdk-ecr-deployment-isecret)</code> | Secrets Manager stored authentication.<br/>__*Optional*__
+
+
+
 ## interface IImageName  <a id="cdk-ecr-deployment-iimagename"></a>
 
 __Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename), [S3ArchiveName](#cdk-ecr-deployment-s3archivename)
@@ -164,7 +182,38 @@ __Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename), [S3A
 Name | Type | Description 
 -----|------|-------------
 **uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
+**creds**? | <code>[ICredentials](#cdk-ecr-deployment-icredentials)</code> | The credentials of the docker image.<br/>__*Optional*__
+
+
+
+## interface IPlainText  <a id="cdk-ecr-deployment-iplaintext"></a>
+
+
+Plain text credentials.
+
+### Properties
+
+
+Name | Type | Description 
+-----|------|-------------
+**password** | <code>string</code> | Password to registry.
+**userName** | <code>string</code> | Username to registry.
+
+
+
+## interface ISecret  <a id="cdk-ecr-deployment-isecret"></a>
+
+
+Secrets Manager provided credentials.
+
+### Properties
+
+
+Name | Type | Description 
+-----|------|-------------
+**secret** | <code>[aws_secretsmanager.ISecret](#aws-cdk-lib-aws-secretsmanager-isecret)</code> | Reference to secret where credentials are stored.
+**passwordKey**? | <code>string</code> | Key containing password.<br/>__*Optional*__
+**usenameKey**? | <code>string</code> | Key containing username.<br/>__*Optional*__
 
 
 
