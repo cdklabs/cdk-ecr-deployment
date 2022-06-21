@@ -32,6 +32,12 @@ const project = new awscdk.AwsCdkConstructLibrary({
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
   }, /* Publish to pypi. */
+  publishToMaven: {
+    mavenGroupId: 'io.github.cdklabs',
+    mavenArtifactId: 'cdk-ecr-deployment',
+    javaPackage: 'io.github.cdklabs.cdkecrdeployment',
+    mavenEndpoint: 'https://s01.oss.sonatype.org',
+  }, /* Publish to maven central. */
   bundledDeps: [
     'got',
     'hpagent',
