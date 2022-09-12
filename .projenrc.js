@@ -9,7 +9,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
-  majorVersion: 2,
+  majorVersion: 3,
   releaseBranches: {
     'v1-main': {
       majorVersion: 1,

@@ -8,7 +8,7 @@
 
 CDK construct to synchronize single docker image between docker registries.
 
-⚠️ Please use ^1.0.0 for cdk version 1.x.x, use ^2.0.0 for cdk version 2.x.x
+⚠️ Please use ^1.0.0 for cdk version 1.x.x, use >=2.0.0 for cdk version 2.x.x
 
 ## Features
 
@@ -25,9 +25,11 @@ Enable flags: `true`, `1`. e.g. `export CI=1`
 
 ⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
 
-⚠️ The above flags are only available in cdk-ecr-deployment 2.x.
+⚠️ The above flags are only available in cdk-ecr-deployment 2.x. 
 
 ## Examples
+
+Note that credential input in example works with cdk-ecr-deployment 3.x.x or newer.
 
 ```ts
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
