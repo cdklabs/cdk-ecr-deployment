@@ -35,6 +35,13 @@ type ECRAuth struct {
 	ExpiresAt     time.Time
 }
 
+type UserParameters struct {
+	SrcImage  string
+	SrcCreds  Creds
+	DestImage string
+	DestCreds Creds
+}
+
 type Creds struct {
 	PlainText   string `json:"plainText"`
 	SecretArn   string `json:"secretArn"`
@@ -147,13 +154,6 @@ func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 		}
 	}
 	return ctx, nil
-}
-
-func ToCreds(data interface{}) Creds {
-	creds := &Creds{}
-	jsonString, _ := json.Marshal(data)
-	json.Unmarshal(jsonString, creds)
-	return *creds
 }
 
 func Dumps(v interface{}) string {
