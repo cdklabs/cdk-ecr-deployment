@@ -2,6 +2,7 @@
   "dependencies": [
     {
       "name": "@types/jest",
+      "version": "^27",
       "type": "build"
     },
     {
@@ -68,7 +69,7 @@
     },
     {
       "name": "npm-check-updates",
-      "version": "^12",
+      "version": "^16",
       "type": "build"
     },
     {
@@ -96,6 +97,16 @@
     {
       "name": "hpagent",
       "type": "bundled"
+    },
+    {
+      "name": "@types/babel__traverse",
+      "version": "7.18.2",
+      "type": "override"
+    },
+    {
+      "name": "@types/prettier",
+      "version": "2.6.0",
+      "type": "override"
     },
     {
       "name": "aws-cdk-lib",

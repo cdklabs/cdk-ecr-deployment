@@ -30,10 +30,14 @@ jobs:
         run: npx projen release
       - name: Check for new commits
         id: git_remote
-        run: echo ::set-output name=latest_commit::"$(git ls-remote origin -h ${{ github.ref }} | cut -f1)"
+        run: echo "latest_commit=$(git ls-remote origin -h ${{ github.ref }} | cut -f1)" >> $GITHUB_OUTPUT
+      - name: Backup artifact permissions
+        if: ${{ steps.git_remote.outputs.latest_commit == github.sha }}
+        run: cd dist && getfacl -R . > permissions-backup.acl
+        continue-on-error: true
       - name: Upload artifact
         if: ${{ steps.git_remote.outputs.latest_commit == github.sha }}
-        uses: actions/upload-artifact@v2.1.1
+        uses: actions/upload-artifact@v3
         with:
           name: build-artifact
           path: dist
@@ -55,16 +59,19 @@ jobs:
         with:
           name: build-artifact
           path: dist
+      - name: Restore build artifact permissions
+        run: cd dist && setfacl --restore=permissions-backup.acl
+        continue-on-error: true
       - name: Prepare Repository
         run: mv dist .repo
       - name: Collect GitHub Metadata
         run: mv .repo/dist dist
       - name: Release
-        run: errout=$(mktemp); gh release create $(cat dist/releasetag.txt) -R $GITHUB_REPOSITORY -F dist/changelog.md -t $(cat dist/releasetag.txt) --target $GITHUB_REF 2> $errout && true; exitcode=$?; if [ $exitcode -ne 0 ] && ! grep -q "Release.tag_name already exists" $errout; then cat $errout; exit $exitcode; fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           GITHUB_REF: ${{ github.ref }}
+        run: errout=$(mktemp); gh release create $(cat dist/releasetag.txt) -R $GITHUB_REPOSITORY -F dist/changelog.md -t $(cat dist/releasetag.txt) --target $GITHUB_REF 2> $errout && true; exitcode=$?; if [ $exitcode -ne 0 ] && ! grep -q "Release.tag_name already exists" $errout; then cat $errout; exit $exitcode; fi
   release_npm:
     name: Publish to npm
     needs: release
@@ -81,6 +88,9 @@ jobs:
         with:
           name: build-artifact
           path: dist
+      - name: Restore build artifact permissions
+        run: cd dist && setfacl --restore=permissions-backup.acl
+        continue-on-error: true
       - name: Prepare Repository
         run: mv dist .repo
       - name: Install Dependencies
@@ -90,11 +100,11 @@ jobs:
       - name: Collect js Artifact
         run: mv .repo/dist dist
       - name: Release
-        run: npx -p publib@latest publib-npm
         env:
           NPM_DIST_TAG: latest
           NPM_REGISTRY: registry.npmjs.org
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx -p publib@latest publib-npm
   release_pypi:
     name: Publish to PyPI
     needs: release
@@ -106,7 +116,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 14.x
-      - uses: actions/setup-python@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.x
       - name: Download build artifacts
@@ -114,6 +124,9 @@ jobs:
         with:
           name: build-artifact
           path: dist
+      - name: Restore build artifact permissions
+        run: cd dist && setfacl --restore=permissions-backup.acl
+        continue-on-error: true
       - name: Prepare Repository
         run: mv dist .repo
       - name: Install Dependencies
@@ -123,10 +136,10 @@ jobs:
       - name: Collect python Artifact
         run: mv .repo/dist dist
       - name: Release
-        run: npx -p publib@latest publib-pypi
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: npx -p publib@latest publib-pypi
   release_prebuilt_lambda:
     name: Publish Lambda to GitHub Releases
     needs: release
@@ -146,7 +159,7 @@ jobs:
       - name: Build lambda
         run: docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
       - name: Release lambda
-        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 "
