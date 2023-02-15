@@ -53,16 +53,20 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		if err != nil {
 			return physicalResourceID, data, err
 		}
-
-		srcCreds := ToCreds(event.ResourceProperties[SRC_CREDS])
-		destCreds := ToCreds(event.ResourceProperties[DEST_CREDS])
-
-		sm := SecretsManager{}
-		srcCredsText, err := sm.parseCreds(srcCreds)
+		srcCreds, err := getStrPropsDefault(event.ResourceProperties, SRC_CREDS, "")
 		if err != nil {
 			return physicalResourceID, data, err
 		}
-		destCredsText, err := sm.parseCreds(destCreds)
+		destCreds, err := getStrPropsDefault(event.ResourceProperties, DEST_CREDS, "")
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+
+		srcCreds, err = parseCreds(srcCreds)
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+		destCreds, err = parseCreds(destCreds)
 		if err != nil {
 			return physicalResourceID, data, err
 		}
@@ -79,13 +83,13 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		}
 
 		srcOpts := NewImageOpts(srcImage)
-		srcOpts.SetCreds(srcCredsText)
+		srcOpts.SetCreds(srcCreds)
 		srcCtx, err := srcOpts.NewSystemContext()
 		if err != nil {
 			return physicalResourceID, data, err
 		}
 		destOpts := NewImageOpts(destImage)
-		destOpts.SetCreds(destCredsText)
+		destOpts.SetCreds(destCreds)
 		destCtx, err := destOpts.NewSystemContext()
 		if err != nil {
 			return physicalResourceID, data, err
@@ -150,14 +154,15 @@ func getStrPropsDefault(m map[string]interface{}, k string, d string) (string, e
 	return "", fmt.Errorf("can't get %v", k)
 }
 
-func (sm *SecretsManager) parseCreds(creds Creds) (string, error) {
-	if creds.SecretArn != "" {
-		secret, err := sm.GetSecret(creds)
+func parseCreds(creds string) (string, error) {
+	credsType := GetCredsType(creds)
+	if creds == "" {
+		return "", nil
+	} else if (credsType == SECRET_ARN) || (credsType == SECRET_NAME) {
+		secret, err := GetSecret(creds)
 		return secret, err
+	} else if credsType == SECRET_TEXT {
+		return creds, nil
 	}
-	if creds.PlainText != "" {
-		return creds.PlainText, nil
-	}
-
-	return "", nil
+	return "", fmt.Errorf("unkown creds type")
 }

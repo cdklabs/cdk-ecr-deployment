@@ -49,8 +49,6 @@ const project = new awscdk.AwsCdkConstructLibrary({
   repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
-    'lambda/cdk-ecr-deployment-handler',
-    'lambda/out/',
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',
