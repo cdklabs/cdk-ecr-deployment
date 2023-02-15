@@ -3,9 +3,9 @@
 
 import * as path from 'path';
 import {
+  aws_iam as iam,
   aws_ecr as ecr,
   aws_ecr_assets as assets,
-  aws_secretsmanager as sm,
   Stack,
   App,
   StackProps,
@@ -35,13 +35,15 @@ class TestECRDeployment extends Stack {
     });
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', {
-        secretManager: {
-          secret: sm.Secret.fromSecretNameV2(this, 'SrcSecret', 'dockerhub'),
-        },
-      }),
+      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
-    });
+    }).addToPrincipalPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'secretsmanager:GetSecretValue',
+      ],
+      resources: ['*'],
+    }));
 
     // Your can also copy a docker archive image tarball from s3
     // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
