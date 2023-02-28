@@ -91,7 +91,7 @@ function getCode(buildImage: string): lambda.AssetCode {
 
       const installScript = path.join(__dirname, '../lambda/install.js');
       const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
+      child_process.execFileSync(process.argv0, [installScript, prebuiltPath]);
 
       return lambda.Code.fromAsset(prebuiltPath);
     } catch (err) {
