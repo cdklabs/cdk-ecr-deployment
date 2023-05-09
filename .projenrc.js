@@ -5,7 +5,7 @@
 const { awscdk } = require('projen');
 
 const project = new awscdk.AwsCdkConstructLibrary({
-  author: 'wchaws',
+  author: 'hackerbuddy',
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
@@ -21,7 +21,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   },
   workflowContainerImage: 'jsii/superchain:1-buster-slim-node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
-  name: 'cdk-ecr-deployment',
+  name: 'cdk-ecr-deployment-patched',
   autoApproveOptions: {
     secret: 'GITHUB_TOKEN',
     allowedUsernames: ['dependabot[bot]'],
@@ -29,8 +29,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
   autoApproveUpgrades: true,
   depsUpgrade: true,
   publishToPypi: {
-    distName: 'cdk-ecr-deployment',
-    module: 'cdk_ecr_deployment',
+    distName: 'cdk-ecr-deployment-patched',
+    module: 'cdk_ecr_deployment-patched',
   }, /* Publish to pypi. */
   bundledDeps: [
     'got',
@@ -42,11 +42,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
-  description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
+  description: 'Patched CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [], /* Build dependencies for this module. */
   peerDeps: [], /* Peer dependencies for this module. */
   // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
-  repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
+  repository: 'https://github.com/hackerbuddy/cdk-ecr-deployment-patched', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
   ], /* Additional entries to .gitignore. */
@@ -55,49 +55,49 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ], /* Additional entries to .npmignore. */
 });
 
-project.release.addJobs({
-  release_prebuilt_lambda: {
-    runsOn: 'ubuntu-latest',
-    name: 'Publish Lambda to GitHub Releases',
-    needs: 'release',
-    permissions: {
-      contents: 'write',
-    },
-    steps: [
-      {
-        name: 'Checkout',
-        uses: 'actions/checkout@v2',
-        with: {
-          'fetch-depth': 0,
-        },
-      },
-      {
-        name: 'Download build artifacts',
-        uses: 'actions/download-artifact@v2',
-        with: {
-          name: 'build-artifact',
-          path: 'dist',
-        },
-      },
-      {
-        name: 'Build lambda',
-        run: [
-          'docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
-          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out',
-          'echo $(sha256sum lambda/main | awk \'{ print $1 }\') > lambda/main.sha256',
-        ].join(' && '),
-      },
-      {
-        name: 'Release lambda',
-        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 ',
-        env: {
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
-          GITHUB_REPOSITORY: '${{ github.repository }}',
-        },
-      },
-    ],
-  },
-});
+// project.release.addJobs({
+//   release_prebuilt_lambda: {
+//     runsOn: 'ubuntu-latest',
+//     name: 'Publish Lambda to GitHub Releases',
+//     needs: 'release',
+//     permissions: {
+//       contents: 'write',
+//     },
+//     steps: [
+//       {
+//         name: 'Checkout',
+//         uses: 'actions/checkout@v2',
+//         with: {
+//           'fetch-depth': 0,
+//         },
+//       },
+//       {
+//         name: 'Download build artifacts',
+//         uses: 'actions/download-artifact@v2',
+//         with: {
+//           name: 'build-artifact',
+//           path: 'dist',
+//         },
+//       },
+//       {
+//         name: 'Build lambda',
+//         run: [
+//           'docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
+//           'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out',
+//           'echo $(sha256sum lambda/main | awk \'{ print $1 }\') > lambda/main.sha256',
+//         ].join(' && '),
+//       },
+//       {
+//         name: 'Release lambda',
+//         run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 ',
+//         env: {
+//           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
+//           GITHUB_REPOSITORY: '${{ github.repository }}',
+//         },
+//       },
+//     ],
+//   },
+// });
 
 project.package.addField('resolutions', {
   'trim-newlines': '3.0.1',

@@ -4,31 +4,31 @@
 
 Name|Description
 ----|-----------
-[DockerImageName](#cdk-ecr-deployment-dockerimagename)|*No description*
-[ECRDeployment](#cdk-ecr-deployment-ecrdeployment)|*No description*
-[S3ArchiveName](#cdk-ecr-deployment-s3archivename)|*No description*
+[DockerImageName](#cdk-ecr-deployment-patched-dockerimagename)|*No description*
+[ECRDeployment](#cdk-ecr-deployment-patched-ecrdeployment)|*No description*
+[S3ArchiveName](#cdk-ecr-deployment-patched-s3archivename)|*No description*
 
 
 **Structs**
 
 Name|Description
 ----|-----------
-[ECRDeploymentProps](#cdk-ecr-deployment-ecrdeploymentprops)|*No description*
+[ECRDeploymentProps](#cdk-ecr-deployment-patched-ecrdeploymentprops)|*No description*
 
 
 **Interfaces**
 
 Name|Description
 ----|-----------
-[IImageName](#cdk-ecr-deployment-iimagename)|*No description*
+[IImageName](#cdk-ecr-deployment-patched-iimagename)|*No description*
 
 
 
-## class DockerImageName  <a id="cdk-ecr-deployment-dockerimagename"></a>
+## class DockerImageName  <a id="cdk-ecr-deployment-patched-dockerimagename"></a>
 
 
 
-__Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
+__Implements__: [IImageName](#cdk-ecr-deployment-patched-iimagename)
 
 ### Initializer
 
@@ -54,7 +54,7 @@ Name | Type | Description
 
 
 
-## class ECRDeployment  <a id="cdk-ecr-deployment-ecrdeployment"></a>
+## class ECRDeployment  <a id="cdk-ecr-deployment-patched-ecrdeployment"></a>
 
 
 
@@ -72,9 +72,9 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 
 * **scope** (<code>[Construct](#constructs-construct)</code>)  *No description*
 * **id** (<code>string</code>)  *No description*
-* **props** (<code>[ECRDeploymentProps](#cdk-ecr-deployment-ecrdeploymentprops)</code>)  *No description*
-  * **dest** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The destination of the docker image. 
-  * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The source of the docker image. 
+* **props** (<code>[ECRDeploymentProps](#cdk-ecr-deployment-patched-ecrdeploymentprops)</code>)  *No description*
+  * **dest** (<code>[IImageName](#cdk-ecr-deployment-patched-iimagename)</code>)  The destination of the docker image. 
+  * **src** (<code>[IImageName](#cdk-ecr-deployment-patched-iimagename)</code>)  The source of the docker image. 
   * **buildImage** (<code>string</code>)  Image to use to build Golang lambda for custom resource, if download fails or is not wanted. __*Default*__: public.ecr.aws/sam/build-go1.x:latest
   * **environment** (<code>Map<string, string></code>)  The environment variable to set. __*Optional*__
   * **memoryLimit** (<code>number</code>)  The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. __*Default*__: 512
@@ -86,7 +86,7 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 ### Methods
 
 
-#### addToPrincipalPolicy(statement) <a id="cdk-ecr-deployment-ecrdeployment-addtoprincipalpolicy"></a>
+#### addToPrincipalPolicy(statement) <a id="cdk-ecr-deployment-patched-ecrdeployment-addtoprincipalpolicy"></a>
 
 
 
@@ -101,11 +101,11 @@ __Returns__:
 
 
 
-## class S3ArchiveName  <a id="cdk-ecr-deployment-s3archivename"></a>
+## class S3ArchiveName  <a id="cdk-ecr-deployment-patched-s3archivename"></a>
 
 
 
-__Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
+__Implements__: [IImageName](#cdk-ecr-deployment-patched-iimagename)
 
 ### Initializer
 
@@ -132,7 +132,7 @@ Name | Type | Description
 
 
 
-## struct ECRDeploymentProps  <a id="cdk-ecr-deployment-ecrdeploymentprops"></a>
+## struct ECRDeploymentProps  <a id="cdk-ecr-deployment-patched-ecrdeploymentprops"></a>
 
 
 
@@ -141,8 +141,8 @@ Name | Type | Description
 
 Name | Type | Description 
 -----|------|-------------
-**dest** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The destination of the docker image.
-**src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The source of the docker image.
+**dest** | <code>[IImageName](#cdk-ecr-deployment-patched-iimagename)</code> | The destination of the docker image.
+**src** | <code>[IImageName](#cdk-ecr-deployment-patched-iimagename)</code> | The source of the docker image.
 **buildImage**? | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted.<br/>__*Default*__: public.ecr.aws/sam/build-go1.x:latest
 **environment**? | <code>Map<string, string></code> | The environment variable to set.<br/>__*Optional*__
 **memoryLimit**? | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.<br/>__*Default*__: 512
@@ -152,9 +152,9 @@ Name | Type | Description
 
 
 
-## interface IImageName  <a id="cdk-ecr-deployment-iimagename"></a>
+## interface IImageName  <a id="cdk-ecr-deployment-patched-iimagename"></a>
 
-__Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename), [S3ArchiveName](#cdk-ecr-deployment-s3archivename)
+__Implemented by__: [DockerImageName](#cdk-ecr-deployment-patched-dockerimagename), [S3ArchiveName](#cdk-ecr-deployment-patched-s3archivename)
 
 
 
