@@ -1,9 +1,9 @@
 {
-  "name": "cdk-ecr-deployment",
-  "description": "CDK construct to deploy docker image to Amazon ECR",
+  "name": "cdk-ecr-deployment-patched",
+  "description": "Patched CDK construct to deploy docker image to Amazon ECR",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cdklabs/cdk-ecr-deployment"
+    "url": "https://github.com/hackerbuddy/cdk-ecr-deployment/"
   },
   "scripts": {
     "build": "npx projen build",
