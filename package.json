@@ -1,9 +1,9 @@
 {
-  "name": "cdk-ecr-deployment",
-  "description": "CDK construct to deploy docker image to Amazon ECR",
+  "name": "cdk-ecr-deployment-patched",
+  "description": "Patched CDK construct to deploy docker image to Amazon ECR",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cdklabs/cdk-ecr-deployment"
+    "url": "https://github.com/hackerbuddy/cdk-ecr-deployment-patched"
   },
   "scripts": {
     "build": "npx projen build",
@@ -33,7 +33,7 @@
     "projen": "npx projen"
   },
   "author": {
-    "name": "wchaws",
+    "name": "hackerbuddy",
     "organization": false
   },
   "devDependencies": {
@@ -124,8 +124,8 @@
     "outdir": "dist",
     "targets": {
       "python": {
-        "distName": "cdk-ecr-deployment",
-        "module": "cdk_ecr_deployment"
+        "distName": "cdk-ecr-deployment-patched",
+        "module": "cdk_ecr_deployment-patched"
       }
     },
     "tsc": {

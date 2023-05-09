@@ -127,26 +127,3 @@ jobs:
         env:
           TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-  release_prebuilt_lambda:
-    name: Publish Lambda to GitHub Releases
-    needs: release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: build-artifact
-          path: dist
-      - name: Build lambda
-        run: docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out && echo $(sha256sum lambda/main | awk '{ print $1 }') > lambda/main.sha256
-      - name: Release lambda
-        run: "gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 "
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
