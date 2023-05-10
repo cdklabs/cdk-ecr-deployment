@@ -1,0 +1,22 @@
+{
+  "packageFiles": [
+    {
+      "filename": "/Users/bradenrucinski/Documents/final-countdown/cdk-ecr-deployment-patched/package.json",
+      "type": "json"
+    }
+  ],
+  "bumpFiles": [
+    {
+      "filename": "/Users/bradenrucinski/Documents/final-countdown/cdk-ecr-deployment-patched/package.json",
+      "type": "json"
+    }
+  ],
+  "commitAll": false,
+  "infile": "/Users/bradenrucinski/Documents/final-countdown/cdk-ecr-deployment-patched/dist/changelog.md",
+  "header": "",
+  "skip": {
+    "commit": true,
+    "tag": true,
+    "bump": false
+  }
+}

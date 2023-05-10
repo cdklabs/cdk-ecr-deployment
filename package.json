@@ -70,7 +70,8 @@
     "hpagent"
   ],
   "resolutions": {
-    "xmldom": "github:xmldom/xmldom#0.7.0"
+    "@types/prettier": "2.6.0",
+    "@types/babel__traverse": "7.18.2"
   },
   "keywords": [
     "cdk"
