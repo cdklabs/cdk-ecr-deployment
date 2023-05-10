@@ -9,16 +9,16 @@ const project = new awscdk.AwsCdkConstructLibrary({
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
-  majorVersion: 2,
-  releaseBranches: {
-    'v1-main': {
-      majorVersion: 1,
-    },
-    // main: {
-    //   majorVersion: 2,
-    //   prerelease: true,
-    // },
-  },
+  // majorVersion: 1,
+  // releaseBranches: {
+  //   'v1-main': {
+  //     majorVersion: 1,
+  //   },
+  // main: {
+  //   majorVersion: 2,
+  //   prerelease: true,
+  // },
+  // },
   workflowContainerImage: 'jsii/superchain:1-buster-slim-node14',
   jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment-patched',
@@ -99,9 +99,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
 //   },
 // });
 
-project.package.addField('resolutions', {
-  'trim-newlines': '3.0.1',
-  'xmldom': 'github:xmldom/xmldom#0.7.0', // TODO: remove this when xmldom^0.7.0 is released in npm
-});
+// project.package.addField('resolutions', {
+//   'trim-newlines': '3.0.1',
+//   'xmldom': 'github:xmldom/xmldom#0.7.0', // TODO: remove this when xmldom^0.7.0 is released in npm
+// });
 
 project.synth();

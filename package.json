@@ -23,7 +23,6 @@
     "post-upgrade": "npx projen post-upgrade",
     "pre-compile": "npx projen pre-compile",
     "release": "npx projen release",
-    "release:v1-main": "npx projen release:v1-main",
     "test": "npx projen test",
     "test:watch": "npx projen test:watch",
     "unbump": "npx projen unbump",
@@ -71,7 +70,6 @@
     "hpagent"
   ],
   "resolutions": {
-    "trim-newlines": "3.0.1",
     "xmldom": "github:xmldom/xmldom#0.7.0"
   },
   "keywords": [
@@ -79,7 +77,7 @@
   ],
   "main": "lib/index.js",
   "license": "Apache-2.0",
-  "version": "3.0.0",
+  "version": "0.0.0",
   "jest": {
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
