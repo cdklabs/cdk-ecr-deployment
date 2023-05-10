@@ -9,6 +9,19 @@ Due to Typescript-related patching being a priority in this fork, certain featur
 - Copy image from ECR/external registry to (another) ECR/external registry
 - Copy an archive tarball image from s3 to ECR/external registry
 
+## Building and deploying
+
+This project can be developed and deployed two ways generally:
+
+1. Use `npx projen` and `yarn` commands, like the original authors intended
+    - start by running `yarn install`, this gets projen ready
+    - edit the `.projenrc` and run `npx projen`
+    - do coding stuffs, run more `npx projen` commands (check package.json scripts for more supported projen commands!)
+    - `npx projen test` and `npx projen release`
+    - merging with the main branch on Github will trigger actions, like pushing to pypi and npm
+
+2. Ignore `.projenrc` and Github Actions and boilerplate, live dangerously, then publish directly with `npm init` and `npm publish`
+
 ## Examples
 
 ```ts
