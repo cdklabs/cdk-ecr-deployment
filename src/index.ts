@@ -7,7 +7,7 @@ import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
-import { shouldUsePrebuiltLambda } from './config';
+// not supporting prebuilt lambdas import { shouldUsePrebuiltLambda } from './config';
 
 export interface ECRDeploymentProps {
 
@@ -85,21 +85,21 @@ export interface IImageName {
 }
 
 function getCode(buildImage: string): lambda.AssetCode {
-  if (shouldUsePrebuiltLambda()) {
-    try {
-      console.log('Try to get prebuilt lambda');
+  // if (shouldUsePrebuiltLambda()) {
+  //   try {
+  //     console.log('Try to get prebuilt lambda');
 
-      const installScript = path.join(__dirname, '../lambda/install.js');
-      const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
+  //     const installScript = path.join(__dirname, '../lambda/install.js');
+  //     const prebuiltPath = path.join(__dirname, '../lambda/out');
+  //     child_process.execSync(`${process.argv0} ${installScript} ${prebuiltPath}`);
 
-      return lambda.Code.fromAsset(prebuiltPath);
-    } catch (err) {
-      console.warn(`Can not get prebuilt lambda: ${err}`);
-    }
-  }
+  //     return lambda.Code.fromAsset(prebuiltPath);
+  //   } catch (err) {
+  //     console.warn(`Can not get prebuilt lambda: ${err}`);
+  //   }
+  // }
 
-  console.log('Build lambda from scratch');
+  console.log('Building lambda from scratch, no longer supporting downloading an external pre-built lambda');
 
   return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
     buildArgs: {
