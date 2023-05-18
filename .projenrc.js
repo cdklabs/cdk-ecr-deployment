@@ -32,6 +32,11 @@ const project = new awscdk.AwsCdkConstructLibrary({
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
   }, /* Publish to pypi. */
+  publishToGo: {
+    moduleName: 'github.com/cdklabs/cdk-ecr-deployment-go',
+    gitUserName: 'cdklabs-automation',
+    gitUserEmail: 'cdklabs-automation@amazon.com',
+  },
   bundledDeps: [
     'got',
     'hpagent',
