@@ -2,10 +2,11 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-const { awscdk } = require('projen');
+import { awscdk, github } from 'projen';
 
 const project = new awscdk.AwsCdkConstructLibrary({
   author: 'wchaws',
+  authorAddress: 'https://aws.amazon.com',
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
@@ -19,9 +20,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
     //   prerelease: true,
     // },
   },
-  workflowContainerImage: 'jsii/superchain:1-buster-slim-node14',
-  jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
+  projenrcTs: true,
   autoApproveOptions: {
     secret: 'GITHUB_TOKEN',
     allowedUsernames: ['dependabot[bot]'],
@@ -46,7 +46,7 @@ const project = new awscdk.AwsCdkConstructLibrary({
   devDeps: [], /* Build dependencies for this module. */
   peerDeps: [], /* Peer dependencies for this module. */
   // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
-  repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
+  repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
   ], /* Additional entries to .gitignore. */
@@ -55,13 +55,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ], /* Additional entries to .npmignore. */
 });
 
-project.release.addJobs({
+project.release?.addJobs({
   release_prebuilt_lambda: {
-    runsOn: 'ubuntu-latest',
+    runsOn: ['ubuntu-latest'],
     name: 'Publish Lambda to GitHub Releases',
-    needs: 'release',
+    needs: ['release'],
     permissions: {
-      contents: 'write',
+      contents: github.workflows.JobPermission.WRITE,
     },
     steps: [
       {

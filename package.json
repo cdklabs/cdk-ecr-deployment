@@ -34,6 +34,7 @@
   },
   "author": {
     "name": "wchaws",
+    "url": "https://aws.amazon.com",
     "organization": false
   },
   "devDependencies": {
@@ -56,6 +57,7 @@
     "projen": "^0.56.36",
     "standard-version": "^9",
     "ts-jest": "^27",
+    "ts-node": "^10.9.1",
     "typescript": "^4.5.5"
   },
   "peerDependencies": {
