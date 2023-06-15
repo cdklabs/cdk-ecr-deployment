@@ -68,7 +68,7 @@ project.release?.addJobs({
         uses: 'actions/download-artifact@v2',
         with: {
           name: 'build-artifact',
-          path: 'dist',
+          path: '.repo',
         },
       },
       {
@@ -81,7 +81,7 @@ project.release?.addJobs({
       },
       {
         name: 'Release lambda',
-        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 ',
+        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',
