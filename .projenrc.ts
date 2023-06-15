@@ -1,11 +1,15 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
+import { github } from 'projen';
 
-const { awscdk } = require('projen');
-
-const project = new awscdk.AwsCdkConstructLibrary({
+const project = new CdklabsConstructLibrary({
+  setNodeEngineVersion: false,
+  stability: 'stable',
+  private: false,
   author: 'wchaws',
+  authorAddress: 'https://aws.amazon.com',
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
@@ -19,15 +23,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
     //   prerelease: true,
     // },
   },
-  workflowContainerImage: 'jsii/superchain:1-buster-slim-node14',
-  jsiiFqn: 'projen.AwsCdkConstructLibrary',
   name: 'cdk-ecr-deployment',
-  autoApproveOptions: {
-    secret: 'GITHUB_TOKEN',
-    allowedUsernames: ['dependabot[bot]'],
-  },
-  autoApproveUpgrades: true,
-  depsUpgrade: true,
+  projenrcTs: true,
   publishToPypi: {
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
@@ -42,11 +39,9 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
+  jsiiVersion: '5.1.x',
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
-  devDeps: [], /* Build dependencies for this module. */
-  peerDeps: [], /* Peer dependencies for this module. */
-  // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
-  repository: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
+  repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
   ], /* Additional entries to .gitignore. */
@@ -55,13 +50,13 @@ const project = new awscdk.AwsCdkConstructLibrary({
   ], /* Additional entries to .npmignore. */
 });
 
-project.release.addJobs({
+project.release?.addJobs({
   release_prebuilt_lambda: {
-    runsOn: 'ubuntu-latest',
+    runsOn: ['ubuntu-latest'],
     name: 'Publish Lambda to GitHub Releases',
-    needs: 'release',
+    needs: ['release'],
     permissions: {
-      contents: 'write',
+      contents: github.workflows.JobPermission.WRITE,
     },
     steps: [
       {

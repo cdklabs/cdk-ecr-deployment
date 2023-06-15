@@ -31,7 +31,6 @@ Enable flags: `true`, `1`. e.g. `export CI=1`
 
 ```ts
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
-import * as ecrdeploy from 'cdk-ecr-deployment';
 
 const image = new DockerImageAsset(this, 'CDKDockerImage', {
   directory: path.join(__dirname, 'docker'),
@@ -65,11 +64,11 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
 }));
 ```
 
-## Sample: [test/integ.ecr-deployment.ts](./test/integ.ecr-deployment.ts)
+## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
 
 ```shell
 # Run the following command to try the sample.
-NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/integ.ecr-deployment.ts"
+NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
 ```
 
 ## [API](./API.md)
