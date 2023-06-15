@@ -21,6 +21,10 @@
       "type": "build"
     },
     {
+      "name": "cdklabs-projen-project-types",
+      "type": "build"
+    },
+    {
       "name": "eslint-import-resolver-node",
       "type": "build"
     },
@@ -98,6 +102,16 @@
     {
       "name": "hpagent",
       "type": "bundled"
+    },
+    {
+      "name": "@aws-cdk/integ-runner",
+      "version": "latest",
+      "type": "devenv"
+    },
+    {
+      "name": "@aws-cdk/integ-tests-alpha",
+      "version": "latest",
+      "type": "devenv"
     },
     {
       "name": "@types/babel__traverse",

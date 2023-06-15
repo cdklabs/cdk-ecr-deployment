@@ -25,6 +25,18 @@
   resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v5/-/asset-node-proxy-agent-v5-2.0.165.tgz#c169599d83beceea7e638082ef9833997f04c85d"
   integrity sha512-bsyLQD/vqXQcc9RDmlM1XqiFNO/yewgVFXmkMcQkndJbmE/jgYkzewwYGrBlfL725hGLQipXq19+jwWwdsXQqg==
 
+"@aws-cdk/integ-runner@latest":
+  version "2.84.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-runner/-/integ-runner-2.84.0-alpha.0.tgz#8cc46803e5e50bd11d1cec11f6100fad53114cdf"
+  integrity sha512-lwRbdnu1y8xdd9M7QwkUjCvNYeyFjvGN1/y1tTFA66whsNpso6WTf9c3IPz46WQ5mW4qVvJ2N8gzkYWBJbDNFQ==
+  dependencies:
+    aws-cdk "2.84.0"
+
+"@aws-cdk/integ-tests-alpha@latest":
+  version "2.84.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-tests-alpha/-/integ-tests-alpha-2.84.0-alpha.0.tgz#a7128655997ffb3e8dff8e09d4a4467e26516991"
+  integrity sha512-gWkfb5r+gNBm+txoNYLHK41QCzcOZ50LxZ7IbQ4X+ny88zV9Lbumj9NQFEbRAyhX4MEXfzsBfMYi04q6P8fkBw==
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.22.5":
   version "7.22.5"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.22.5.tgz#234d98e1551960604f1246e6475891a570ad5658"
@@ -1396,6 +1408,13 @@ aws-cdk-lib@^2.0.0:
     table "^6.8.1"
     yaml "1.10.2"
 
+aws-cdk@2.84.0:
+  version "2.84.0"
+  resolved "https://registry.yarnpkg.com/aws-cdk/-/aws-cdk-2.84.0.tgz#59890df8555b0179630af72a131fbf201dc0967b"
+  integrity sha512-XypGsMW+H6DLLIPt4zG5KWv1FuUlpS6jqEROxg5maJFFsRaQnMkfgXP/ZT1IELyIWCYAZl6xD1rz7WRS3yMueA==
+  optionalDependencies:
+    fsevents "2.3.2"
+
 babel-jest@^27.5.1:
   version "27.5.1"
   resolved "https://registry.yarnpkg.com/babel-jest/-/babel-jest-27.5.1.tgz#a1bf8d61928edfefd21da27eb86a695bfd691444"
@@ -1639,6 +1658,14 @@ case@1.6.3, case@^1.6.3:
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
+
+cdklabs-projen-project-types@^0.1.138:
+  version "0.1.138"
+  resolved "https://registry.yarnpkg.com/cdklabs-projen-project-types/-/cdklabs-projen-project-types-0.1.138.tgz#428f252383825c2f99587b17b6022f07b6257d95"
+  integrity sha512-l04PeDpu/P3TI1ahXDlr3qqvv7sqrdaxFYc/ssJrW5cUR+W4ZHHnHxiJwE5aGT7o49rBsRrLh1nbrKduftGn1Q==
+  dependencies:
+    projen "^0.71.91"
+    yaml "^2.3.1"
 
 chalk@^2.0.0, chalk@^2.4.2:
   version "2.4.2"
@@ -2830,7 +2857,7 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
-fsevents@^2.3.2:
+fsevents@2.3.2, fsevents@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
   integrity sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==
@@ -5282,7 +5309,7 @@ progress@^2.0.3:
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
 
-projen@^0.71.96:
+projen@^0.71.91, projen@^0.71.96:
   version "0.71.96"
   resolved "https://registry.yarnpkg.com/projen/-/projen-0.71.96.tgz#caecb076692ba21ce4a01ef00f523f1ce4134f51"
   integrity sha512-txStVpOb+ppD9bDHAVGwpmKHswxWfteBSR09LzcdptNlWNvT+4OHPg8TVrNfz8dOLMTzKTGKHDtS6hOg2HvvSw==
@@ -6733,7 +6760,7 @@ yaml@1.10.2:
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-1.10.2.tgz#2301c5ffbf12b467de8da2333a459e29e7920e4b"
   integrity sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==
 
-yaml@^2.2.2:
+yaml@^2.2.2, yaml@^2.3.1:
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/yaml/-/yaml-2.3.1.tgz#02fe0975d23cd441242aa7204e09fc28ac2ac33b"
   integrity sha512-2eHWfjaoXgTBC2jNM1LRef62VQa0umtvRiDSk6HSzW7RvS5YtkabJrwYLLEKWBc8a5U2PTSCs+dJjUTJdlHsWQ==

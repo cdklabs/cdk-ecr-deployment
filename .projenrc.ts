@@ -1,10 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
+import { github } from 'projen';
 
-import { awscdk, github } from 'projen';
-
-const project = new awscdk.AwsCdkConstructLibrary({
+const project = new CdklabsConstructLibrary({
+  setNodeEngineVersion: false,
+  stability: 'stable',
+  private: false,
   author: 'wchaws',
   authorAddress: 'https://aws.amazon.com',
   cdkVersion: '2.0.0',
