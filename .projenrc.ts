@@ -18,11 +18,8 @@ const project = new CdklabsConstructLibrary({
     'v1-main': {
       majorVersion: 1,
     },
-    // main: {
-    //   majorVersion: 2,
-    //   prerelease: true,
-    // },
   },
+  enablePRAutoMerge: true,
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
   publishToPypi: {
