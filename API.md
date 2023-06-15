@@ -40,7 +40,7 @@ new DockerImageName(name: string, creds?: string)
 ```
 
 * **name** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  *No description*
+* **creds** (<code>string</code>)  The credentials of the docker image.
 
 
 
@@ -50,7 +50,7 @@ new DockerImageName(name: string, creds?: string)
 Name | Type | Description 
 -----|------|-------------
 **uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | __*Optional*__
+**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
 
 
 
@@ -118,7 +118,7 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 
 * **p** (<code>string</code>)  *No description*
 * **ref** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  *No description*
+* **creds** (<code>string</code>)  The credentials of the docker image.
 
 
 
@@ -128,7 +128,7 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 Name | Type | Description 
 -----|------|-------------
 **uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | __*Optional*__
+**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
 
 
 
