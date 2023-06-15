@@ -31,7 +31,6 @@ Enable flags: `true`, `1`. e.g. `export CI=1`
 
 ```ts
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
-import * as ecrdeploy from 'cdk-ecr-deployment';
 
 const image = new DockerImageAsset(this, 'CDKDockerImage', {
   directory: path.join(__dirname, 'docker'),
