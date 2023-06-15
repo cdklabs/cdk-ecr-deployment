@@ -25,12 +25,6 @@ const project = new CdklabsConstructLibrary({
   },
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
-  autoApproveOptions: {
-    secret: 'GITHUB_TOKEN',
-    allowedUsernames: ['dependabot[bot]'],
-  },
-  autoApproveUpgrades: true,
-  depsUpgrade: true,
   publishToPypi: {
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
@@ -45,10 +39,8 @@ const project = new CdklabsConstructLibrary({
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
+  jsiiVersion: '5.1.x',
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
-  devDeps: [], /* Build dependencies for this module. */
-  peerDeps: [], /* Peer dependencies for this module. */
-  // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
