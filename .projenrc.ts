@@ -47,6 +47,12 @@ const project = new CdklabsConstructLibrary({
   ], /* Additional entries to .npmignore. */
 });
 
+project.package.addField('jsiiRosetta', {
+  exampleDependencies: {
+    '@types/node': '^16',
+  },
+});
+
 project.release?.addJobs({
   release_prebuilt_lambda: {
     runsOn: ['ubuntu-latest'],
