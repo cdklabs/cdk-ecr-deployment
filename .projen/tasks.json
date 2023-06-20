@@ -288,31 +288,6 @@
         }
       ]
     },
-    "release:v1-main": {
-      "name": "release:v1-main",
-      "description": "Prepare a release from \"v1-main\" branch",
-      "env": {
-        "RELEASE": "true",
-        "MAJOR": "1"
-      },
-      "steps": [
-        {
-          "exec": "rm -fr dist"
-        },
-        {
-          "spawn": "bump"
-        },
-        {
-          "spawn": "build"
-        },
-        {
-          "spawn": "unbump"
-        },
-        {
-          "exec": "git diff --ignore-space-at-eol --exit-code"
-        }
-      ]
-    },
     "rosetta:extract": {
       "name": "rosetta:extract",
       "description": "Test rosetta extract",
