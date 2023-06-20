@@ -87,8 +87,6 @@ export interface IImageName {
 function getCode(buildImage: string): lambda.AssetCode {
   if (shouldUsePrebuiltLambda()) {
     try {
-      console.log('Try to get prebuilt lambda');
-
       const installScript = path.join(__dirname, '../lambda/install.js');
       const prebuiltPath = path.join(__dirname, '../lambda/out');
       child_process.execFileSync(process.argv0, [installScript, prebuiltPath]);
@@ -98,8 +96,6 @@ function getCode(buildImage: string): lambda.AssetCode {
       console.warn(`Can not get prebuilt lambda: ${err}`);
     }
   }
-
-  console.log('Build lambda from scratch');
 
   return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
     buildArgs: {

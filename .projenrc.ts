@@ -1,10 +1,13 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
+import { github } from 'projen';
 
-import { awscdk, github } from 'projen';
-
-const project = new awscdk.AwsCdkConstructLibrary({
+const project = new CdklabsConstructLibrary({
+  setNodeEngineVersion: false,
+  stability: 'stable',
+  private: false,
   author: 'wchaws',
   authorAddress: 'https://aws.amazon.com',
   cdkVersion: '2.0.0',
@@ -15,19 +18,10 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'v1-main': {
       majorVersion: 1,
     },
-    // main: {
-    //   majorVersion: 2,
-    //   prerelease: true,
-    // },
   },
+  enablePRAutoMerge: true,
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
-  autoApproveOptions: {
-    secret: 'GITHUB_TOKEN',
-    allowedUsernames: ['dependabot[bot]'],
-  },
-  autoApproveUpgrades: true,
-  depsUpgrade: true,
   publishToPypi: {
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
@@ -42,10 +36,8 @@ const project = new awscdk.AwsCdkConstructLibrary({
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
+  jsiiVersion: '5.1.x',
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
-  devDeps: [], /* Build dependencies for this module. */
-  peerDeps: [], /* Peer dependencies for this module. */
-  // projenCommand: 'npx projen',                                              /* The shell command to use in order to run the projen CLI. */
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
@@ -76,7 +68,7 @@ project.release?.addJobs({
         uses: 'actions/download-artifact@v2',
         with: {
           name: 'build-artifact',
-          path: 'dist',
+          path: '.repo',
         },
       },
       {
@@ -89,7 +81,7 @@ project.release?.addJobs({
       },
       {
         name: 'Release lambda',
-        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat dist/version.txt) lambda/main lambda/main.sha256 ',
+        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',

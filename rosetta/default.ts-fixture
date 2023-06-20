@@ -1,0 +1,17 @@
+// Fixture with packages imported, but nothing else
+import * as path from 'node:path';
+import { Construct } from 'constructs';
+ import * as ecrdeploy from '.';
+import {
+  Stack,
+  aws_iam as iam,
+} from 'aws-cdk-lib';
+import * as cdk from 'aws-cdk-lib';
+
+class Fixture extends Stack {
+  constructor(scope: Construct, id: string) {
+    super(scope, id);
+
+    /// here
+  }
+}
