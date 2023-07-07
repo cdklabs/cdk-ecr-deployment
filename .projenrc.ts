@@ -82,7 +82,9 @@ project.release?.addJobs({
       },
       {
         name: 'Release lambda',
-        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
+        // For some reason, need '--clobber' otherwise we always get errors that these files already exist. They're probably
+        // uploaded elsewhere but TBH I don't know where so just add this flag to make it not fail.
+        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',
