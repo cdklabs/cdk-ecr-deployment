@@ -14,11 +14,6 @@ const project = new CdklabsConstructLibrary({
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
   majorVersion: 2,
-  releaseBranches: {
-    'v1-main': {
-      majorVersion: 1,
-    },
-  },
   enablePRAutoMerge: true,
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
@@ -45,6 +40,12 @@ const project = new CdklabsConstructLibrary({
   npmignore: [
     '/cdk.out',
   ], /* Additional entries to .npmignore. */
+});
+
+project.package.addField('jsiiRosetta', {
+  exampleDependencies: {
+    '@types/node': '^16',
+  },
 });
 
 project.release?.addJobs({
@@ -81,7 +82,9 @@ project.release?.addJobs({
       },
       {
         name: 'Release lambda',
-        run: 'gh release upload -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
+        // For some reason, need '--clobber' otherwise we always get errors that these files already exist. They're probably
+        // uploaded elsewhere but TBH I don't know where so just add this flag to make it not fail.
+        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',

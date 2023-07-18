@@ -8,7 +8,8 @@
 
 CDK construct to synchronize single docker image between docker registries.
 
-⚠️ Please use ^1.0.0 for cdk version 1.x.x, use ^2.0.0 for cdk version 2.x.x
+⚠️ Version 1.* is no longer supported, as CDK v1 has reached the end-of-life
+stage. Please use only ^2.0.0.
 
 ## Features
 

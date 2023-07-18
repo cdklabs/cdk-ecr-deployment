@@ -32,7 +32,8 @@
         "CHANGELOG": "dist/changelog.md",
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
-        "RELEASE_TAG_PREFIX": ""
+        "RELEASE_TAG_PREFIX": "",
+        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
       },
       "steps": [
         {
@@ -288,31 +289,6 @@
         }
       ]
     },
-    "release:v1-main": {
-      "name": "release:v1-main",
-      "description": "Prepare a release from \"v1-main\" branch",
-      "env": {
-        "RELEASE": "true",
-        "MAJOR": "1"
-      },
-      "steps": [
-        {
-          "exec": "rm -fr dist"
-        },
-        {
-          "spawn": "bump"
-        },
-        {
-          "spawn": "build"
-        },
-        {
-          "spawn": "unbump"
-        },
-        {
-          "exec": "git diff --ignore-space-at-eol --exit-code"
-        }
-      ]
-    },
     "rosetta:extract": {
       "name": "rosetta:extract",
       "description": "Test rosetta extract",
@@ -355,7 +331,8 @@
         "CHANGELOG": "dist/changelog.md",
         "BUMPFILE": "dist/version.txt",
         "RELEASETAG": "dist/releasetag.txt",
-        "RELEASE_TAG_PREFIX": ""
+        "RELEASE_TAG_PREFIX": "",
+        "RELEASABLE_COMMITS": "git log --no-merges --oneline $LATEST_TAG..HEAD -E --grep '^(feat|fix){1}(\\([^()[:space:]]+\\))?(!)?:[[:blank:]]+.+'"
       },
       "steps": [
         {
