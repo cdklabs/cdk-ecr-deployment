@@ -35,6 +35,6 @@ RUN go env
 COPY . /ws
 
 RUN mkdir -p /asset/ && \
-    make OUTPUT=/asset/main && \
-    file /asset/main && \
-    ls -lh /asset/main
+    make OUTPUT=/asset/bootstrap && \
+    file /asset/bootstrap && \
+    ls -lh /asset/bootstrap
