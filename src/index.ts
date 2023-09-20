@@ -65,6 +65,17 @@ export interface ECRDeploymentProps {
   readonly vpcSubnets?: ec2.SubnetSelection;
 
   /**
+   * The list of security groups to associate with the Lambda's network interfaces.
+   *
+   * Only used if 'vpc' is supplied.
+   *
+   * @default - If the function is placed within a VPC and a security group is
+   * not specified, either by this or securityGroup prop, a dedicated security
+   * group will be created for this function.
+   */
+  readonly securityGroups?: ec2.SecurityGroup[];
+
+  /**
    * The environment variable to set
    */
   readonly environment?: { [key: string]: string };
@@ -138,6 +149,7 @@ export class ECRDeployment extends Construct {
       memorySize: memoryLimit,
       vpc: props.vpc,
       vpcSubnets: props.vpcSubnets,
+      securityGroups: props.securityGroups,
     });
 
     const handlerRole = this.handler.role;
