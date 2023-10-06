@@ -4,8 +4,8 @@
 
 import * as child_process from 'child_process';
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
-import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
+import { CustomResource, Duration, Token, aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda } from 'aws-cdk-lib';
+import { AddToPrincipalPolicyResult, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 import { shouldUsePrebuiltLambda } from './config';
 
@@ -79,6 +79,12 @@ export interface ECRDeploymentProps {
    * The environment variable to set
    */
   readonly environment?: { [key: string]: string };
+
+  /**
+ * The Architecture that the Lambda will be ran on
+ */
+  readonly architecture?: lambda.Architecture;
+
 }
 
 export interface IImageName {
@@ -150,6 +156,7 @@ export class ECRDeployment extends Construct {
       vpc: props.vpc,
       vpcSubnets: props.vpcSubnets,
       securityGroups: props.securityGroups,
+      architecture: props.architecture,
     });
 
     const handlerRole = this.handler.role;
