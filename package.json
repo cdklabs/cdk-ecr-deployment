@@ -62,7 +62,7 @@
     "jsii-pacmak": "^1.91.0",
     "jsii-rosetta": "^5.2.1",
     "npm-check-updates": "^16",
-    "projen": "^0.73.45",
+    "projen": "^0.76.13",
     "standard-version": "^9",
     "ts-jest": "^27",
     "ts-node": "^10.9.1",
