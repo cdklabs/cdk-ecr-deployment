@@ -1759,9 +1759,9 @@ camelcase@^7.0.1:
   integrity sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==
 
 caniuse-lite@^1.0.30001541:
-  version "1.0.30001557"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001557.tgz#13f762ea1d7f7b009d4d2785fbbd250354d09ad9"
-  integrity sha512-91oR7hLNUP3gG6MLU+n96em322a8Xzes8wWdBKhLgUoiJsAF5irZnxSUCbc+qUZXNnPCfUwLOi9ZCZpkvjQajw==
+  version "1.0.30001558"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001558.tgz#d2c6e21fdbfe83817f70feab902421a19b7983ee"
+  integrity sha512-/Et7DwLqpjS47JPEcz6VnxU9PwcIdVi0ciLXRWBQdj1XFye68pSQYpV0QtPTfUKWuOaEig+/Vez2l74eDc1tPQ==
 
 case@1.6.3, case@^1.6.3:
   version "1.6.3"
@@ -4417,12 +4417,12 @@ jsii@5.1.x:
     yargs "^17.7.2"
 
 jsii@~5.2.5:
-  version "5.2.20"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.2.20.tgz#a2f188cad09ed5de1dfa9e6ab900a4bfcd28a57d"
-  integrity sha512-iXfSgEHGuE1OJBefZ7P3x+FwlEVaAV8M2blR6HWfg/IAmvBoCc1qbMPkQgUXRaXxH36HKR+BOFZ4n8QX0S2BXA==
+  version "5.2.21"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.2.21.tgz#4fb86f6b035318f5c0e15c308e5b4d6288c4344a"
+  integrity sha512-gYUKDxrJuCPwpWEj82kqxzs0My+r0FFvR1kKrI5s7ea+ZB5qZxNh53nnPbxNH+s87YhqVrr26x15mpYwyQIzlw==
   dependencies:
-    "@jsii/check-node" "1.90.0"
-    "@jsii/spec" "^1.90.0"
+    "@jsii/check-node" "1.91.0"
+    "@jsii/spec" "^1.91.0"
     case "^1.6.3"
     chalk "^4"
     downlevel-dts "^0.11.0"
@@ -6655,9 +6655,9 @@ typescript@^4.9.5:
   integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
 
 typescript@next:
-  version "5.3.0-dev.20231028"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.0-dev.20231028.tgz#4748ea4b41add07ca705d6105c214970c1bdb549"
-  integrity sha512-zRGbgR24bwAC/7r5GhbUE2uBPa/PT+LxH4y5A7vVbjKXEfZbkvh/nPwjw1hi6CY1sGOhN3eU21APeNuwvhZfEQ==
+  version "5.3.0-dev.20231029"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.3.0-dev.20231029.tgz#fed76a75956f9a6f8781f38546960d95219547ec"
+  integrity sha512-LKzbVRvhVhrfazgcr4V3dl/GuD/MasY4kDKn0lpB0vf1O1/iP5ERyerlEsvPYyeZG3f4GX3edFNpSsvu1shHSw==
 
 typescript@~3.9.10:
   version "3.9.10"
