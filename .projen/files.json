@@ -9,6 +9,7 @@
     ".github/workflows/pull-request-lint.yml",
     ".github/workflows/release.yml",
     ".github/workflows/upgrade-cdklabs-projen-project-types-main.yml",
+    ".github/workflows/upgrade-dev-deps-main.yml",
     ".github/workflows/upgrade-main.yml",
     ".gitignore",
     ".projen/deps.json",
