@@ -274,4 +274,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: "gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 "
+        run: "gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/bootstrap lambda/bootstrap.sha256 "
