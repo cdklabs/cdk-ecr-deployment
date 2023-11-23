@@ -75,7 +75,7 @@ project.release?.addJobs({
       {
         name: 'Build lambda',
         run: [
-          'docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
+          'docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
           'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/bootstrap /out',
           'echo $(sha256sum lambda/bootstrap | awk \'{ print $1 }\') > lambda/bootstrap.sha256',
         ].join(' && '),
