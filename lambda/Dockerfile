@@ -1,6 +1,6 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
-ARG buildImage=golang:1.21
+ARG buildImage=golang:1
 FROM ${buildImage} as build
 
 USER root
