@@ -1241,9 +1241,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-cdk-lib@^2.0.0:
-  version "2.111.0"
-  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.111.0.tgz#3d26b2e4a2a2252c341ee6d3333a4182b960c479"
-  integrity sha512-E+uBDYRAwl/KFRcpTT2B4Fz50MvVqEIcOUDBo/xK8z5TWorRkqVQry7PCts3hb7dLcGgFVONes8dLuzmarx0mQ==
+  version "2.112.0"
+  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.112.0.tgz#42a9e821b95a67636328defd536e3c7bc833d67a"
+  integrity sha512-nrxfXM05Lq6HRoOXdrGXcc1XqqJTtCW3EkjPqdT0kkZ+fR6yQgbzdW2nVxSBiVDNmcf82vLBTmFMezdEgj8N4w==
   dependencies:
     "@aws-cdk/asset-awscli-v1" "^2.2.201"
     "@aws-cdk/asset-kubectl-v20" "^2.1.2"
@@ -1251,7 +1251,7 @@ aws-cdk-lib@^2.0.0:
     "@balena/dockerignore" "^1.0.2"
     case "1.6.3"
     fs-extra "^11.1.1"
-    ignore "^5.2.4"
+    ignore "^5.3.0"
     jsonschema "^1.4.1"
     minimatch "^3.1.2"
     punycode "^2.3.1"
@@ -2857,7 +2857,7 @@ iconv-lite@0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-ignore@^5.2.0, ignore@^5.2.4:
+ignore@^5.2.0, ignore@^5.2.4, ignore@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.3.0.tgz#67418ae40d34d6999c95ff56016759c718c82f78"
   integrity sha512-g7dmpshy+gD7mh88OC9NwSGTKoc3kyLAZQRU1mt53Aw/vnvfXnbC+F/7F7QoYVKbV+KNvJx8wArewKy1vXMtlg==
