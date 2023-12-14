@@ -13,7 +13,7 @@ const project = new CdklabsConstructLibrary({
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
-  majorVersion: 2,
+  majorVersion: 3,
   enablePRAutoMerge: true,
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
