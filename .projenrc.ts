@@ -13,7 +13,7 @@ const project = new CdklabsConstructLibrary({
   cdkVersion: '2.0.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
-  majorVersion: 2,
+  majorVersion: 3,
   enablePRAutoMerge: true,
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
@@ -75,16 +75,16 @@ project.release?.addJobs({
       {
         name: 'Build lambda',
         run: [
-          'docker build -t cdk-ecr-deployment-lambda --build-arg _GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
-          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/main /out',
-          'echo $(sha256sum lambda/main | awk \'{ print $1 }\') > lambda/main.sha256',
+          'docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
+          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/bootstrap /out',
+          'echo $(sha256sum lambda/bootstrap | awk \'{ print $1 }\') > lambda/bootstrap.sha256',
         ].join(' && '),
       },
       {
         name: 'Release lambda',
         // For some reason, need '--clobber' otherwise we always get errors that these files already exist. They're probably
         // uploaded elsewhere but TBH I don't know where so just add this flag to make it not fail.
-        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/main lambda/main.sha256 ',
+        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/bootstrap lambda/bootstrap.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',

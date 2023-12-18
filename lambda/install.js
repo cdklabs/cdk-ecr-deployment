@@ -52,8 +52,8 @@ async function download(url, dest, agent) {
     agent.https = process.env.HTTPS_PROXY ? new HttpsProxyAgent({proxy: process.env.HTTPS_PROXY}): undefined;
     agent.http = process.env.HTTP_PROXY ? new HttpProxyAgent({proxy: process.env.HTTP_PROXY}): undefined;
 
-    await download(`${rootUrl}/releases/download/v${version}/main`, bin, agent);
-    const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/main.sha256`, { agent })).body.trim();
+    await download(`${rootUrl}/releases/download/v${version}/bootstrap`, bin, agent);
+    const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/bootstrap.sha256`, { agent })).body.trim();
     const integrity = await sha256sum(bin);
 
     if (integrity !== expectedIntegrity) {

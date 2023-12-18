@@ -18,7 +18,7 @@ ifeq ($(GOOS), linux)
   endif
 endif
 
-BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp
+BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp lambda.norpc
 OUTPUT ?= cdk-ecr-deployment-handler
 
 all: test lambda
