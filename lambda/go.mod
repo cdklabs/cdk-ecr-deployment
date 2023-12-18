@@ -23,7 +23,6 @@ require (
 	github.com/stretchr/testify v1.7.1
 	github.com/vbauerster/mpb/v7 v7.4.1 // indirect
 	go.mozilla.org/pkcs7 v0.0.0-20210826202110-33d05740a352 // indirect
-	golang.org/x/crypto v0.0.0-20220408190544-5352b0902921 // indirect
-	golang.org/x/sys v0.1.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect
 )
