@@ -15,7 +15,6 @@ const project = new CdklabsConstructLibrary({
   defaultReleaseBranch: 'main',
   majorVersion: 3,
   enablePRAutoMerge: true,
-  workflowNodeVersion: '18.x',
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
   publishToPypi: {
