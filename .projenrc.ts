@@ -15,6 +15,7 @@ const project = new CdklabsConstructLibrary({
   defaultReleaseBranch: 'main',
   majorVersion: 3,
   enablePRAutoMerge: true,
+  workflowNodeVersion: '18.x',
   name: 'cdk-ecr-deployment',
   projenrcTs: true,
   publishToPypi: {
@@ -44,7 +45,7 @@ const project = new CdklabsConstructLibrary({
 
 project.package.addField('jsiiRosetta', {
   exampleDependencies: {
-    '@types/node': '^16',
+    '@types/node': '^18',
   },
 });
 
