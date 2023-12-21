@@ -44,7 +44,7 @@ const project = new CdklabsConstructLibrary({
 
 project.package.addField('jsiiRosetta', {
   exampleDependencies: {
-    '@types/node': '^16',
+    '@types/node': '^18',
   },
 });
 
