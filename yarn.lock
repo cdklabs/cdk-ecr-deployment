@@ -1452,10 +1452,10 @@ case@1.6.3, case@^1.6.3:
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
-cdklabs-projen-project-types@^0.1.186:
-  version "0.1.186"
-  resolved "https://registry.yarnpkg.com/cdklabs-projen-project-types/-/cdklabs-projen-project-types-0.1.186.tgz#7bf27240000b86d7b495df62abbc393606e96677"
-  integrity sha512-EF1DMNFFsP+BH/eTB8/Qm8qSd6Sok50CKNrit1tIltJGYOqfJy7CciSrY30NZPDar+/cSgdDv5F2iUs6neW0dw==
+cdklabs-projen-project-types@^0.1.187:
+  version "0.1.187"
+  resolved "https://registry.yarnpkg.com/cdklabs-projen-project-types/-/cdklabs-projen-project-types-0.1.187.tgz#616dbb26662c09dc067a01f7035d894617cc5182"
+  integrity sha512-XZxcZ4U3CwbBwZNbUb79oPD73LrYEdNXdvPQUl5Fcc5itfjt7P9zNfNOotDk2wIQnvNN0s5YP/gtip0gY+S1ig==
   dependencies:
     yaml "^2.3.4"
 
@@ -4454,10 +4454,10 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.1.tgz#7820d9b16120cc55ca9ae7792680ae7dba6d7fe2"
   integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
 
-projen@^0.79.2:
-  version "0.79.2"
-  resolved "https://registry.yarnpkg.com/projen/-/projen-0.79.2.tgz#ac1d51a07ad3fcb503ca712055b430042ccab853"
-  integrity sha512-ZKO2GDsJyU+MfsQAcvpMKPrWcuS2rPPCpqf2biZ7rcBVdYnDiOn03G1Gm9G/wRereMdDTciL6DYqsxTF4UvfqA==
+projen@^0.79.3:
+  version "0.79.3"
+  resolved "https://registry.yarnpkg.com/projen/-/projen-0.79.3.tgz#385761af74b8df15f58eef21022eb7d3645b2690"
+  integrity sha512-nmYW1YXFNdZNNDlfHsT4sMfE5vMgMbpG061RT+gtuvGkhm+6nYd8+kWo6xk+2J/egoNvXyS5kEbh4fFc41I5hA==
   dependencies:
     "@iarna/toml" "^2.2.5"
     case "^1.6.3"
