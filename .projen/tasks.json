@@ -349,13 +349,13 @@
       },
       "steps": [
         {
-          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=prod --filter=aws-cdk-lib,constructs,got,hpagent"
+          "exec": "npx npm-check-updates@16 --upgrade --target=minor --peer --dep=prod --filter=got,hpagent"
         },
         {
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade aws-cdk-lib constructs got hpagent"
+          "exec": "yarn upgrade got hpagent"
         },
         {
           "exec": "npx projen"
