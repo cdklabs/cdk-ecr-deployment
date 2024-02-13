@@ -66,7 +66,7 @@ project.release?.addJobs({
       },
       {
         name: 'Download build artifacts',
-        uses: 'actions/download-artifact@v2',
+        uses: 'actions/download-artifact@v4',
         with: {
           name: 'build-artifact',
           path: '.repo',
