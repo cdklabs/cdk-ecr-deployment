@@ -45,7 +45,7 @@ async function download(url, dest, agent) {
   }
   mkdirp(dir);
 
-  const bin = path.join(dir, 'main');
+  const bin = path.join(dir, 'bootstrap');
 
   if (!fs.existsSync(bin)) {
     const agent = {};
