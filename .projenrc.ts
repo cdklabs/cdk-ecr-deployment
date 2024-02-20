@@ -36,6 +36,8 @@ const project = new CdklabsConstructLibrary({
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
+    '*.tar.gz',
+    '*.zip',
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',

@@ -6,7 +6,6 @@ Name|Description
 ----|-----------
 [DockerImageName](#cdk-ecr-deployment-dockerimagename)|*No description*
 [ECRDeployment](#cdk-ecr-deployment-ecrdeployment)|*No description*
-[S3ArchiveName](#cdk-ecr-deployment-s3archivename)|*No description*
 
 
 **Structs**
@@ -102,37 +101,6 @@ __Returns__:
 
 
 
-## class S3ArchiveName  <a id="cdk-ecr-deployment-s3archivename"></a>
-
-
-
-__Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
-
-### Initializer
-
-
-
-
-```ts
-new S3ArchiveName(p: string, ref?: string, creds?: string)
-```
-
-* **p** (<code>string</code>)  *No description*
-* **ref** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  The credentials of the docker image.
-
-
-
-### Properties
-
-
-Name | Type | Description 
------|------|-------------
-**uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
-
-
-
 ## struct ECRDeploymentProps  <a id="cdk-ecr-deployment-ecrdeploymentprops"></a>
 
 
@@ -156,7 +124,7 @@ Name | Type | Description
 
 ## interface IImageName  <a id="cdk-ecr-deployment-iimagename"></a>
 
-__Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename), [S3ArchiveName](#cdk-ecr-deployment-s3archivename)
+__Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename)
 
 
 

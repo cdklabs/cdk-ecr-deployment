@@ -4,6 +4,7 @@
 
 import * as path from 'path';
 import { custom_resources as cr, aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token, Stack } from 'aws-cdk-lib';
+import { AddToPrincipalPolicyResult, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
@@ -122,59 +123,63 @@ class CraneLayer extends lambda.LayerVersion {
 }
 
 export class ECRDeployment extends Construct {
+  private handler: lambda.SingletonFunction;
+
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
 
     const memoryLimit = props.memoryLimit ?? 512;
+    this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
+      uuid: this.renderSingletonUuid(memoryLimit),
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda2')),
+      runtime: lambda.Runtime.PYTHON_3_11,
+      handler: 'index.on_event',
+      environment: Object.assign({
+        DOCKER_CONFIG: '/tmp/.docker',
+      }, props.environment),
+      lambdaPurpose: 'Custom::CDKECRDeployment',
+      timeout: Duration.minutes(15),
+      role: props.role,
+      vpc: props.vpc,
+      memorySize: memoryLimit,
+      vpcSubnets: props.vpcSubnets,
+      securityGroups: props.securityGroups,
+      initialPolicy: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'ecr:GetAuthorizationToken',
+            'ecr:BatchCheckLayerAvailability',
+            'ecr:GetDownloadUrlForLayer',
+            'ecr:GetRepositoryPolicy',
+            'ecr:DescribeRepositories',
+            'ecr:ListImages',
+            'ecr:DescribeImages',
+            'ecr:BatchGetImage',
+            'ecr:ListTagsForResource',
+            'ecr:DescribeImageScanFindings',
+            'ecr:InitiateLayerUpload',
+            'ecr:UploadLayerPart',
+            'ecr:CompleteLayerUpload',
+            'ecr:PutImage',
+          ],
+          resources: ['*'],
+        }),
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            's3:GetObject',
+          ],
+          resources: ['*'],
+        }),
+      ],
+      layers: [
+        CraneLayer.getInstance(scope),
+      ],
+    });
+
     const provider = new cr.Provider(this, 'Provider', {
-      onEventHandler: new lambda.SingletonFunction(this, 'CustomResourceHandler', {
-        uuid: this.renderSingletonUuid(memoryLimit),
-        code: lambda.Code.fromAsset(path.join(__dirname, '../lambda2')),
-        runtime: lambda.Runtime.PYTHON_3_11,
-        handler: 'index.on_event',
-        environment: Object.assign({
-          DOCKER_CONFIG: '/tmp/.docker',
-        }, props.environment),
-        lambdaPurpose: 'Custom::CDKECRDeployment',
-        timeout: Duration.minutes(15),
-        role: props.role,
-        vpc: props.vpc,
-        memorySize: memoryLimit,
-        vpcSubnets: props.vpcSubnets,
-        securityGroups: props.securityGroups,
-        initialPolicy: [
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-              'ecr:GetAuthorizationToken',
-              'ecr:BatchCheckLayerAvailability',
-              'ecr:GetDownloadUrlForLayer',
-              'ecr:GetRepositoryPolicy',
-              'ecr:DescribeRepositories',
-              'ecr:ListImages',
-              'ecr:DescribeImages',
-              'ecr:BatchGetImage',
-              'ecr:ListTagsForResource',
-              'ecr:DescribeImageScanFindings',
-              'ecr:InitiateLayerUpload',
-              'ecr:UploadLayerPart',
-              'ecr:CompleteLayerUpload',
-              'ecr:PutImage',
-            ],
-            resources: ['*'],
-          }),
-          new iam.PolicyStatement({
-            effect: iam.Effect.ALLOW,
-            actions: [
-              's3:GetObject',
-            ],
-            resources: ['*'],
-          }),
-        ],
-        layers: [
-          CraneLayer.getInstance(scope),
-        ],
-      }),
+      onEventHandler: this.handler,
     });
 
     new CustomResource(this, 'CustomResource', {
@@ -188,6 +193,13 @@ export class ECRDeployment extends Construct {
         DestCreds: props.dest.creds,
       },
     });
+  }
+
+  public addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyResult {
+    const handlerRole = this.handler.role;
+    if (!handlerRole) { throw new Error('lambda.SingletonFunction should have created a Role'); }
+
+    return handlerRole.addToPrincipalPolicy(statement);
   }
 
   private renderSingletonUuid(memoryLimit?: number) {

@@ -32,6 +32,8 @@ jspm_packages/
 .yarn-integrity
 .cache
 cdk.out/
+*.tar.gz
+*.zip
 /test-reports/
 junit.xml
 /coverage/

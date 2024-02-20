@@ -34,6 +34,12 @@ class TestECRDeployment extends Stack {
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
     });
 
+
+    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
+      src: new ecrDeploy.DockerImageName('public.ecr.aws/sam/build-python3.11'),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest2`),
+    });
+
     // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
     //   src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
     //   dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
@@ -44,12 +50,6 @@ class TestECRDeployment extends Stack {
     //   ],
     //   resources: ['*'],
     // }));
-
-    // Your can also copy a docker archive image tarball from s3
-    // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-    //   src: new ecrDeploy.S3ArchiveName('bucket-name/nginx.tar', 'nginx:latest'),
-    //   dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
-    // });
   }
 }
 
