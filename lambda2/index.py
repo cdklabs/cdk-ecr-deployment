@@ -2,13 +2,17 @@ import re
 import boto3
 import base64
 import subprocess
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 
 def proc_run(command):
     try:
         return subprocess.check_output(command, text=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
-        print(e.output)
+        logger.error("Command execution failed. Error output: %s", e.output)
         raise e
 
 
@@ -46,7 +50,7 @@ def on_event(event, _):
     props = event["ResourceProperties"]
 
     if request_type == "Delete":
-        print("We don't support delete remote image repo!")
+        logger.info("Nothing to do.")
     elif request_type == "Create" or request_type == "Update":
         src_image = props["SrcImage"]
         dest_image = props["DestImage"]
@@ -54,35 +58,11 @@ def on_event(event, _):
         if "dkr.ecr" in src_image:
             region_name = get_ecr_region_name(src_image)
             username, password, endpoint = get_ecr_login_credentials(region_name)
-            print(crane_auth_login(username, password, endpoint))
+            logger.info(crane_auth_login(username, password, endpoint))
 
         if "dkr.ecr" in dest_image:
             region_name = get_ecr_region_name(src_image)
             username, password, endpoint = get_ecr_login_credentials(region_name)
-            print(crane_auth_login(username, password, endpoint))
+            logger.info(crane_auth_login(username, password, endpoint))
 
-        print(crane_cp(src_image, dest_image))
-
-
-def lambda_handler(event, context):
-    # Command to execute using Crane
-    command = ["crane", "help"]
-
-    try:
-        # Execute the command and capture the output
-        result = subprocess.check_output(command, text=True, stderr=subprocess.STDOUT)
-
-        # Output the result to stdout
-        print("Command output:")
-        print(result)
-        return {"statusCode": 200, "body": "Command executed successfully."}
-    except subprocess.CalledProcessError as e:
-        # Output error message to stdout
-        print("Command execution failed. Error:")
-        print(e.output)
-        return {"statusCode": 500, "body": "Command execution failed."}
-    except Exception as e:
-        # Output exception to stdout
-        print("Exception occurred:")
-        print(str(e))
-        return {"statusCode": 500, "body": "An error occurred."}
+        logger.info(crane_cp(src_image, dest_image))
