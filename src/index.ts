@@ -10,16 +10,6 @@ import { Construct } from 'constructs';
 export interface ECRDeploymentProps {
 
   /**
-   * Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
-   *
-   * Might be needed for local build if all images need to come from own registry.
-   *
-   * Note that image should use yum as a package manager and have golang available.
-   *
-   * @default public.ecr.aws/sam/build-go1.x:latest
-   */
-  readonly buildImage?: string;
-  /**
    * The source of the docker image.
    */
   readonly src: IImageName;
@@ -162,13 +152,6 @@ export class ECRDeployment extends Construct {
             'ecr:UploadLayerPart',
             'ecr:CompleteLayerUpload',
             'ecr:PutImage',
-          ],
-          resources: ['*'],
-        }),
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: [
-            's3:GetObject',
           ],
           resources: ['*'],
         }),

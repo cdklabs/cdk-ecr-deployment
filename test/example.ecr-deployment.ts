@@ -3,7 +3,7 @@
 
 import * as path from 'path';
 import {
-  // aws_iam as iam,
+  aws_iam as iam,
   aws_ecr as ecr,
   aws_ecr_assets as assets,
   Stack,
@@ -36,13 +36,13 @@ class TestECRDeployment extends Stack {
 
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-      src: new ecrDeploy.DockerImageName('public.ecr.aws/sam/build-python3.11'),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest2`),
+      src: new ecrDeploy.DockerImageName('openjdk'),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:openjdk`),
     });
 
-    // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-    //   src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
-    //   dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
+    // new ecrDeploy.ECRDeployment(this, 'DeployDockerImageFromDockerHub', {
+    //   src: new ecrDeploy.DockerImageName('jboss/keycloak'),
+    //   dest: new ecrDeploy.DockerImageName('javacs3/javacs3:jboss-keycloak', 'DockerLogin'),
     // }).addToPrincipalPolicy(new iam.PolicyStatement({
     //   effect: iam.Effect.ALLOW,
     //   actions: [
