@@ -3,7 +3,7 @@
 
 
 import * as path from 'path';
-import { custom_resources as cr, aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
+import { custom_resources as cr, aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token, Stack } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 
 export interface ECRDeploymentProps {
@@ -100,7 +100,19 @@ export class DockerImageName implements IImageName {
 
 
 class CraneLayer extends lambda.LayerVersion {
-  constructor(scope: Construct, id: string) {
+  public static getInstance(scope: Construct): CraneLayer {
+    const stack = Stack.of(scope);
+    let layer = CraneLayer._instances.get(stack);
+    if (!layer) {
+      layer = new CraneLayer(stack, 'CraneLayer');
+      CraneLayer._instances.set(stack, layer);
+    }
+    return layer;
+  }
+
+  private static _instances = new Map<Construct, CraneLayer>();
+
+  private constructor(scope: Construct, id: string) {
     super(scope, id, {
       code: lambda.Code.fromAsset(path.join(__dirname, '../layer/layer.zip'), {}),
       description: '/opt/crane/crane',
@@ -160,7 +172,7 @@ export class ECRDeployment extends Construct {
           }),
         ],
         layers: [
-          new CraneLayer(scope, 'CraneLayer'),
+          CraneLayer.getInstance(scope),
         ],
       }),
     });
@@ -169,6 +181,7 @@ export class ECRDeployment extends Construct {
       serviceToken: provider.serviceToken,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
+        Time: Date.now().toString(),
         SrcImage: props.src.uri,
         SrcCreds: props.src.creds,
         DestImage: props.dest.uri,
