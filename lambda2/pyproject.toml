@@ -6,7 +6,7 @@ dependencies = [
 ]
 
 [tool.pytest.ini_options]
-pythonpath = "lambda2"
+pythonpath = "."
 addopts = [
     "--import-mode=importlib",
 ]

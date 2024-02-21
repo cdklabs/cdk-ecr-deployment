@@ -11,4 +11,4 @@ set -e
 scriptdir=$(cd $(dirname $0) && pwd)
 cd $scriptdir
 pip install -r requirements.txt
-pytest .
+pytest -c $scriptdir/../../lambda2/pyproject.toml .
