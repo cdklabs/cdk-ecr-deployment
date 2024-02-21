@@ -14,6 +14,7 @@ mkdir -p crane
 cd crane
 tar xvzf ../go-containerregistry.tar.gz crane
 cd ..
+mkdir -p ../lib
 zip --symlinks -r ../lib/layer.zip crane/crane
 cp ../lib/layer.zip ../src/layer.zip
 
