@@ -47,6 +47,7 @@ const project = new CdklabsConstructLibrary({
 });
 
 project.preCompileTask.exec('layer/build.sh');
+project.testTask.exec('test/lambda/test.sh');
 
 project.package.addField('jsiiRosetta', {
   exampleDependencies: {

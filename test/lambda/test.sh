@@ -9,6 +9,6 @@
 # prepares a staging directory with the requirements
 set -e
 scriptdir=$(cd $(dirname $0) && pwd)
-
+cd $scriptdir
 pip install -r requirements.txt
-pytest $scriptdir
+pytest .

@@ -36,20 +36,20 @@ class TestECRDeployment extends Stack {
 
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-      src: new ecrDeploy.DockerImageName('openjdk'),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:openjdk`),
+      src: new ecrDeploy.DockerImageName('jboss/keycloak'),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:jboss-keycloak`),
     });
 
-    // new ecrDeploy.ECRDeployment(this, 'DeployDockerImageFromDockerHub', {
-    //   src: new ecrDeploy.DockerImageName('jboss/keycloak'),
-    //   dest: new ecrDeploy.DockerImageName('javacs3/javacs3:jboss-keycloak', 'DockerLogin'),
-    // }).addToPrincipalPolicy(new iam.PolicyStatement({
-    //   effect: iam.Effect.ALLOW,
-    //   actions: [
-    //     'secretsmanager:GetSecretValue',
-    //   ],
-    //   resources: ['*'],
-    // }));
+    new ecrDeploy.ECRDeployment(this, 'DeployDockerImageFromDockerHub', {
+      src: new ecrDeploy.DockerImageName('jboss/keycloak'),
+      dest: new ecrDeploy.DockerImageName('javacs3/javacs3:jboss-keycloak', 'DockerLogin'),
+    }).addToPrincipalPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'secretsmanager:GetSecretValue',
+      ],
+      resources: ['*'],
+    }));
   }
 }
 
