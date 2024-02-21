@@ -38,6 +38,8 @@ const project = new CdklabsConstructLibrary({
     '*.tar.gz',
     '*.zip',
     '/layer/crane/crane',
+    '__pycache__/',
+    '.pytest_cache',
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',

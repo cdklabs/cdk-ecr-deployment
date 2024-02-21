@@ -35,6 +35,7 @@ cdk.out/
 *.tar.gz
 *.zip
 /layer/crane/crane
+__pycache__/
 /test-reports/
 junit.xml
 /coverage/

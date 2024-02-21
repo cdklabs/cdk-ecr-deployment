@@ -10,15 +10,5 @@
 set -e
 scriptdir=$(cd $(dirname $0) && pwd)
 
-# prepare staging directory
-staging=$(mktemp -d)
-mkdir -p ${staging}
-cd ${staging}
-
-# copy src and overlay with test
-cp -rvf ${scriptdir}/../../lambda/* $PWD
-cp -vf ${scriptdir}/* $PWD
-
-# this will run our tests inside the right environment
-docker version
-docker build --progress plain --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" .
+pip install -r requirements.txt
+pytest $scriptdir
