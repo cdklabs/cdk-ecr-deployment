@@ -105,7 +105,7 @@ class CraneLayer extends lambda.LayerVersion {
 
   private constructor(scope: Construct, id: string) {
     super(scope, id, {
-      code: lambda.Code.fromAsset(path.join(__dirname, '../layer/layer.zip'), {}),
+      code: lambda.Code.fromAsset(path.join(__dirname, 'layer.zip'), {}),
       description: '/opt/crane/crane',
       license: 'Apache-2.0',
     });

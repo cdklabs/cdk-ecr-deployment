@@ -34,6 +34,7 @@ jspm_packages/
 cdk.out/
 *.tar.gz
 *.zip
+/layer/crane/crane
 /test-reports/
 junit.xml
 /coverage/

@@ -37,6 +37,7 @@ const project = new CdklabsConstructLibrary({
     'cdk.out/',
     '*.tar.gz',
     '*.zip',
+    '/layer/crane/crane',
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',
