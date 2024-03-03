@@ -60,6 +60,9 @@ npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/exampl
 
 # To run python unit test
 pytest -c lambda/pyproject.toml
+
+# To generate crane lambda layer
+./layer/build.sh
 ```
 
 ## [API](./API.md)
