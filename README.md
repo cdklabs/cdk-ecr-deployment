@@ -55,14 +55,15 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
 
 ```shell
+# Generate crane lambda layer firstly.
+./layer/build.sh
+
 # Run the following command to try the sample.
 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
 
-# To run python unit test
+# To run python unit test.
 pytest -c lambda/pyproject.toml
 
-# To generate crane lambda layer
-./layer/build.sh
 ```
 
 ## [API](./API.md)
