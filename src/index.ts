@@ -121,7 +121,7 @@ export class ECRDeployment extends Construct {
     const memoryLimit = props.memoryLimit ?? 512;
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda2')),
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda')),
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: 'index.on_event',
       environment: Object.assign({

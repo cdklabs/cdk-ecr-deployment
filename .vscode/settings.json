@@ -1,5 +1,5 @@
 {
     "python.analysis.extraPaths": [
-        "./lambda2"
+        "./lambda"
     ]
 }
