@@ -125,6 +125,8 @@ export class ECRDeployment extends Construct {
       runtime: lambda.Runtime.PYTHON_3_11,
       handler: 'index.on_event',
       environment: Object.assign({
+        // NOTICE: Change the default credentials store location.
+        // https://github.com/google/go-containerregistry/blob/8dadbe76ff8c20d0e509406f04b7eade43baa6c1/pkg/authn/README.md?plain=1#L45
         DOCKER_CONFIG: '/tmp/.docker',
       }, props.environment),
       lambdaPurpose: 'Custom::CDKECRDeployment',
