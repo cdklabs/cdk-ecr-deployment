@@ -33,10 +33,10 @@ func TestMain(t *testing.T) {
 	destRef, err := alltransports.ParseImageName(destImage)
 	assert.NoError(t, err)
 
-	srcOpts := NewImageOpts(srcImage)
+	srcOpts := NewImageOpts(srcImage, "arm64")
 	srcCtx, err := srcOpts.NewSystemContext()
 	assert.NoError(t, err)
-	destOpts := NewImageOpts(destImage)
+	destOpts := NewImageOpts(destImage, "arm64")
 	destCtx, err := destOpts.NewSystemContext()
 	assert.NoError(t, err)
 
