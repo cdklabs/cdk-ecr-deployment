@@ -75,7 +75,7 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 * **props** (<code>[ECRDeploymentProps](#cdk-ecr-deployment-ecrdeploymentprops)</code>)  *No description*
   * **dest** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The destination of the docker image. 
   * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The source of the docker image. 
-  * **architecture** (<code>string</code>)  The architecture of the images to copy. Necessary if the image architecture differs from the lambda architecture. 
+  * **architecture** (<code>string</code>)  The architecture of the docker images to copy. __*Optional*__
   * **buildImage** (<code>string</code>)  Image to use to build Golang lambda for custom resource, if download fails or is not wanted. __*Default*__: public.ecr.aws/sam/build-go1.x:latest
   * **environment** (<code>Map<string, string></code>)  The environment variable to set. __*Optional*__
   * **memoryLimit** (<code>number</code>)  The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. __*Default*__: 512
@@ -145,6 +145,7 @@ Name | Type | Description
 -----|------|-------------
 **dest** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The destination of the docker image.
 **src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The source of the docker image.
+**architecture**? | <code>string</code> | The architecture of the docker images to copy.<br/>__*Optional*__
 **buildImage**? | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted.<br/>__*Default*__: public.ecr.aws/sam/build-go1.x:latest
 **environment**? | <code>Map<string, string></code> | The environment variable to set.<br/>__*Optional*__
 **memoryLimit**? | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.<br/>__*Default*__: 512
