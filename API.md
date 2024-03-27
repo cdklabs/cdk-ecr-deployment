@@ -6,7 +6,6 @@ Name|Description
 ----|-----------
 [DockerImageName](#cdk-ecr-deployment-dockerimagename)|*No description*
 [ECRDeployment](#cdk-ecr-deployment-ecrdeployment)|*No description*
-[S3ArchiveName](#cdk-ecr-deployment-s3archivename)|*No description*
 
 
 **Structs**
@@ -75,7 +74,6 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
 * **props** (<code>[ECRDeploymentProps](#cdk-ecr-deployment-ecrdeploymentprops)</code>)  *No description*
   * **dest** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The destination of the docker image. 
   * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The source of the docker image. 
-  * **buildImage** (<code>string</code>)  Image to use to build Golang lambda for custom resource, if download fails or is not wanted. __*Default*__: public.ecr.aws/sam/build-go1.x:latest
   * **environment** (<code>Map<string, string></code>)  The environment variable to set. __*Optional*__
   * **memoryLimit** (<code>number</code>)  The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. __*Default*__: 512
   * **role** (<code>[aws_iam.IRole](#aws-cdk-lib-aws-iam-irole)</code>)  Execution role associated with this function. __*Default*__: A role is automatically created
@@ -102,37 +100,6 @@ __Returns__:
 
 
 
-## class S3ArchiveName  <a id="cdk-ecr-deployment-s3archivename"></a>
-
-
-
-__Implements__: [IImageName](#cdk-ecr-deployment-iimagename)
-
-### Initializer
-
-
-
-
-```ts
-new S3ArchiveName(p: string, ref?: string, creds?: string)
-```
-
-* **p** (<code>string</code>)  *No description*
-* **ref** (<code>string</code>)  *No description*
-* **creds** (<code>string</code>)  The credentials of the docker image.
-
-
-
-### Properties
-
-
-Name | Type | Description 
------|------|-------------
-**uri** | <code>string</code> | The uri of the docker image.
-**creds**? | <code>string</code> | The credentials of the docker image.<br/>__*Optional*__
-
-
-
 ## struct ECRDeploymentProps  <a id="cdk-ecr-deployment-ecrdeploymentprops"></a>
 
 
@@ -144,7 +111,6 @@ Name | Type | Description
 -----|------|-------------
 **dest** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The destination of the docker image.
 **src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The source of the docker image.
-**buildImage**? | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted.<br/>__*Default*__: public.ecr.aws/sam/build-go1.x:latest
 **environment**? | <code>Map<string, string></code> | The environment variable to set.<br/>__*Optional*__
 **memoryLimit**? | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.<br/>__*Default*__: 512
 **role**? | <code>[aws_iam.IRole](#aws-cdk-lib-aws-iam-irole)</code> | Execution role associated with this function.<br/>__*Default*__: A role is automatically created
@@ -156,7 +122,7 @@ Name | Type | Description
 
 ## interface IImageName  <a id="cdk-ecr-deployment-iimagename"></a>
 
-__Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename), [S3ArchiveName](#cdk-ecr-deployment-s3archivename)
+__Implemented by__: [DockerImageName](#cdk-ecr-deployment-dockerimagename)
 
 
 

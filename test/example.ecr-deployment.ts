@@ -19,8 +19,8 @@ class TestECRDeployment extends Stack {
     super(scope, id, props);
 
     const repo = new ecr.Repository(this, 'NginxRepo', {
-      repositoryName: 'nginx',
-      removalPolicy: RemovalPolicy.DESTROY,
+      repositoryName: 'nginx3',
+      removalPolicy: RemovalPolicy.RETAIN,
     });
 
     // const repo = ecr.Repository.fromRepositoryName(this, 'Repo', 'test');
@@ -34,9 +34,15 @@ class TestECRDeployment extends Stack {
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
     });
 
+
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
+      src: new ecrDeploy.DockerImageName('jboss/keycloak'),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:jboss-keycloak`),
+    });
+
+    new ecrDeploy.ECRDeployment(this, 'DeployDockerImageFromDockerHub', {
+      src: new ecrDeploy.DockerImageName('jboss/keycloak'),
+      dest: new ecrDeploy.DockerImageName('javacs3/javacs3:jboss-keycloak', 'DockerLogin'),
     }).addToPrincipalPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -44,19 +50,13 @@ class TestECRDeployment extends Stack {
       ],
       resources: ['*'],
     }));
-
-    // Your can also copy a docker archive image tarball from s3
-    // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
-    //   src: new ecrDeploy.S3ArchiveName('bucket-name/nginx.tar', 'nginx:latest'),
-    //   dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
-    // });
   }
 }
 
 const app = new App();
 
-new TestECRDeployment(app, 'test-ecr-deployments', {
-  env: { region: 'ap-northeast-1' },
+new TestECRDeployment(app, 'test-ecr-deployments3', {
+  env: { region: 'us-west-2' },
 });
 
 app.synth();
