@@ -9,7 +9,11 @@
 CDK construct to synchronize single docker image between docker registries.
 
 ⚠️ Version 1.* is no longer supported, as CDK v1 has reached the end-of-life
-stage. Please use only ^2.0.0.
+stage. Please use only ^3.0.0.
+
+⚠️ Version 2.* is no longer supported, as the Go.1.x runtime is no longer supported in AWS Lambda.
+Version 3 uses the Amazon Linux 2 runtime.
+Please use only ^3.0.0.
 
 ## Features
 
