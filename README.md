@@ -65,14 +65,14 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
 }));
 ```
 
-## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
+## Sample: [test/example.ecr-deployment.ts](https://github.com/cdklabs/cdk-ecr-deployment/tree/main/test/example.ecr-deployment.ts)
 
 ```shell
 # Run the following command to try the sample.
 NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
 ```
 
-## [API](./API.md)
+## [API](https://github.com/cdklabs/cdk-ecr-deployment/tree/main/API.md)
 
 ## Tech Details & Contribution
 
