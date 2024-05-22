@@ -32,6 +32,11 @@ export interface ECRDeploymentProps {
   readonly dest: IImageName;
 
   /**
+   * The architecture of the docker images to copy.
+   */
+  readonly architecture?: string;
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -192,6 +197,7 @@ export class ECRDeployment extends Construct {
         SrcCreds: props.src.creds,
         DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
+        Architecture: props.architecture,
       },
     });
   }

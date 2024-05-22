@@ -21,10 +21,11 @@ import (
 )
 
 const (
-	SRC_IMAGE  string = "SrcImage"
-	DEST_IMAGE string = "DestImage"
-	SRC_CREDS  string = "SrcCreds"
-	DEST_CREDS string = "DestCreds"
+	SRC_IMAGE    string = "SrcImage"
+	DEST_IMAGE   string = "DestImage"
+	SRC_CREDS    string = "SrcCreds"
+	DEST_CREDS   string = "DestCreds"
+	ARCHITECTURE string = "Architecture"
 )
 
 type ECRAuth struct {
@@ -33,6 +34,33 @@ type ECRAuth struct {
 	Pass          string
 	ProxyEndpoint string
 	ExpiresAt     time.Time
+}
+
+var validArchs = []string{
+	"386",
+	"amd64",
+	"amd64p32",
+	"arm",
+	"arm64",
+	"arm64be",
+	"armbe",
+	"loong64",
+	"mips",
+	"mips64",
+	"mips64le",
+	"mips64p32",
+	"mips64p32le",
+	"mipsle",
+	"ppc",
+	"ppc64",
+	"ppc64le",
+	"riscv",
+	"riscv64",
+	"s390",
+	"s390x",
+	"sparc",
+	"sparc64",
+	"wasm",
 }
 
 func GetECRRegion(uri string) string {
@@ -86,14 +114,15 @@ type ImageOpts struct {
 	requireECRLogin bool
 	region          string
 	creds           string
+	architecture    string
 }
 
-func NewImageOpts(uri string) *ImageOpts {
+func NewImageOpts(uri string, arch string) *ImageOpts {
 	requireECRLogin := strings.Contains(uri, "dkr.ecr")
 	if requireECRLogin {
-		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), ""}
+		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), "", arch}
 	} else {
-		return &ImageOpts{uri, requireECRLogin, "", ""}
+		return &ImageOpts{uri, requireECRLogin, "", "", arch}
 	}
 }
 
@@ -109,6 +138,7 @@ func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 	ctx := &types.SystemContext{
 		DockerRegistryUserAgent: "ecr-deployment",
 		DockerAuthConfig:        &types.DockerAuthConfig{},
+		ArchitectureChoice:      s.architecture,
 	}
 
 	if s.creds != "" {
@@ -183,4 +213,14 @@ func GetSecret(secretId string) (secret string, err error) {
 		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
 	}
 	return *resp.SecretString, nil
+}
+
+func IsValidGOARCH(arch string) bool {
+	for _, validArch := range validArchs {
+		if arch == validArch {
+			return true
+		}
+	}
+
+	return false
 }
