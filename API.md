@@ -77,6 +77,8 @@ new ECRDeployment(scope: Construct, id: string, props: ECRDeploymentProps)
   * **src** (<code>[IImageName](#cdk-ecr-deployment-iimagename)</code>)  The source of the docker image. 
   * **buildImage** (<code>string</code>)  Image to use to build Golang lambda for custom resource, if download fails or is not wanted. __*Default*__: public.ecr.aws/sam/build-go1.x:latest
   * **environment** (<code>Map<string, string></code>)  The environment variable to set. __*Optional*__
+  * **lambdaHandler** (<code>string</code>)  The name of the lambda handler. __*Default*__: bootstrap
+  * **lambdaRuntime** (<code>[aws_lambda.Runtime](#aws-cdk-lib-aws-lambda-runtime)</code>)  The lambda function runtime environment. __*Default*__: lambda.Runtime.PROVIDED_AL2023
   * **memoryLimit** (<code>number</code>)  The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. __*Default*__: 512
   * **role** (<code>[aws_iam.IRole](#aws-cdk-lib-aws-iam-irole)</code>)  Execution role associated with this function. __*Default*__: A role is automatically created
   * **securityGroups** (<code>Array<[aws_ec2.SecurityGroup](#aws-cdk-lib-aws-ec2-securitygroup)></code>)  The list of security groups to associate with the Lambda's network interfaces. __*Default*__: If the function is placed within a VPC and a security group is not specified, either by this or securityGroup prop, a dedicated security group will be created for this function.
@@ -146,6 +148,8 @@ Name | Type | Description
 **src** | <code>[IImageName](#cdk-ecr-deployment-iimagename)</code> | The source of the docker image.
 **buildImage**? | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted.<br/>__*Default*__: public.ecr.aws/sam/build-go1.x:latest
 **environment**? | <code>Map<string, string></code> | The environment variable to set.<br/>__*Optional*__
+**lambdaHandler**? | <code>string</code> | The name of the lambda handler.<br/>__*Default*__: bootstrap
+**lambdaRuntime**? | <code>[aws_lambda.Runtime](#aws-cdk-lib-aws-lambda-runtime)</code> | The lambda function runtime environment.<br/>__*Default*__: lambda.Runtime.PROVIDED_AL2023
 **memoryLimit**? | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.<br/>__*Default*__: 512
 **role**? | <code>[aws_iam.IRole](#aws-cdk-lib-aws-iam-irole)</code> | Execution role associated with this function.<br/>__*Default*__: A role is automatically created
 **securityGroups**? | <code>Array<[aws_ec2.SecurityGroup](#aws-cdk-lib-aws-ec2-securitygroup)></code> | The list of security groups to associate with the Lambda's network interfaces.<br/>__*Default*__: If the function is placed within a VPC and a security group is not specified, either by this or securityGroup prop, a dedicated security group will be created for this function.

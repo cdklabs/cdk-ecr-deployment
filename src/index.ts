@@ -18,7 +18,7 @@ export interface ECRDeploymentProps {
    *
    * Note that image should use yum as a package manager and have golang available.
    *
-   * @default public.ecr.aws/sam/build-go1.x:latest
+   * @default - public.ecr.aws/sam/build-go1.x:latest
    */
   readonly buildImage?: string;
   /**
@@ -38,7 +38,7 @@ export interface ECRDeploymentProps {
    * If you are deploying large files, you will need to increase this number
    * accordingly.
    *
-   * @default 512
+   * @default - 512
    */
   readonly memoryLimit?: number;
 
@@ -52,7 +52,7 @@ export interface ECRDeploymentProps {
   /**
    * The VPC network to place the deployment lambda handler in.
    *
-   * @default None
+   * @default - None
    */
   readonly vpc?: ec2.IVpc;
 
@@ -74,6 +74,20 @@ export interface ECRDeploymentProps {
    * group will be created for this function.
    */
   readonly securityGroups?: ec2.SecurityGroup[];
+
+  /**
+   * The lambda function runtime environment.
+   *
+   * @default - lambda.Runtime.PROVIDED_AL2023
+   */
+  readonly lambdaRuntime?: lambda.Runtime;
+
+  /**
+   * The name of the lambda handler.
+   *
+   * @default - bootstrap
+   */
+  readonly lambdaHandler?: string;
 
   /**
    * The environment variable to set
@@ -140,8 +154,8 @@ export class ECRDeployment extends Construct {
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
       code: getCode(props.buildImage ?? 'golang:1'),
-      runtime: lambda.Runtime.PROVIDED_AL2023,
-      handler: 'bootstrap',
+      runtime: props.lambdaRuntime ?? lambda.Runtime.PROVIDED_AL2023,
+      handler: props.lambdaHandler ?? 'bootstrap',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: Duration.minutes(15),
