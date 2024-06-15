@@ -14,19 +14,6 @@ stage. Please use only ^2.0.0.
 ## Features
 
 - Copy image from ECR/external registry to (another) ECR/external registry
-- Copy an archive tarball image from s3 to ECR/external registry
-
-## Environment variables
-
-Enable flags: `true`, `1`. e.g. `export CI=1`
-
-- `CI` indicate if it's CI environment. This flag will enable building lambda from scratch.
-- `NO_PREBUILT_LAMBDA` disable using prebuilt lambda.
-- `FORCE_PREBUILT_LAMBDA` force using prebuilt lambda.
-
-⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
-
-⚠️ The above flags are only available in cdk-ecr-deployment 2.x and 3.x.
 
 ## Examples
 
@@ -52,9 +39,9 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage2', {
 // Copy from private docker registry to ECR.
 // The format of secret in aws secrets manager must be plain text! e.g. <username>:<password>
 new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
-  src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'username:password'),
-  // src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'aws-secrets-manager-secret-name'),
-  // src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'arn:aws:secretsmanager:us-west-2:000000000000:secret:id'),
+  src: new ecrdeploy.DockerImageName('your-private-docker-registry/nginx:latest', 'username:password'),
+  // src: new ecrdeploy.DockerImageName('your-private-docker-registry/nginx:latest', 'aws-secrets-manager-secret-name'),
+  // src: new ecrdeploy.DockerImageName('your-private-docker-registry/nginx:latest', 'arn:aws:secretsmanager:us-west-2:000000000000:secret:id'),
   dest: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/my-nginx3:latest`),
 }).addToPrincipalPolicy(new iam.PolicyStatement({
   effect: iam.Effect.ALLOW,
@@ -68,17 +55,19 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
 
 ```shell
+# Generate crane lambda layer firstly.
+./layer/build.sh
+
 # Run the following command to try the sample.
-NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
+npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
+
+# To run python unit test.
+pytest -c lambda/pyproject.toml
+
 ```
 
 ## [API](./API.md)
 
 ## Tech Details & Contribution
 
-The core of this project relies on [containers/image](https://github.com/containers/image) which is used by [Skopeo](https://github.com/containers/skopeo).
-Please take a look at those projects before contribution.
-
-To support a new docker image source(like docker tarball in s3), you need to implement [image transport interface](https://github.com/containers/image/blob/master/types/types.go). You could take a look at [docker-archive](https://github.com/containers/image/blob/ccb87a8d0f45cf28846e307eb0ec2b9d38a458c2/docker/archive/transport.go) transport for a good start.
-
-To test the `lambda` folder, `make test`.
+The underlying implementation depends on the https://github.com/google/go-containerregistry.

@@ -32,6 +32,11 @@ jspm_packages/
 .yarn-integrity
 .cache
 cdk.out/
+*.tar.gz
+*.zip
+/layer/crane/crane
+__pycache__/
+.pytest_cache
 /test-reports/
 junit.xml
 /coverage/

@@ -1,9 +1,0 @@
-Dockerfile
-Dockerfile*
-node_modules
-coverage
-test-reports
-**/*.md
-bootstrap
-bootstrap.sha256
-cdk.out

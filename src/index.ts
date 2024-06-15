@@ -2,25 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-import * as child_process from 'child_process';
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
-import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
+import { custom_resources as cr, aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token, Stack } from 'aws-cdk-lib';
+import { AddToPrincipalPolicyResult, PolicyStatement } from 'aws-cdk-lib/aws-iam';
 import { Construct } from 'constructs';
-import { shouldUsePrebuiltLambda } from './config';
 
 export interface ECRDeploymentProps {
 
-  /**
-   * Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
-   *
-   * Might be needed for local build if all images need to come from own registry.
-   *
-   * Note that image should use yum as a package manager and have golang available.
-   *
-   * @default public.ecr.aws/sam/build-go1.x:latest
-   */
-  readonly buildImage?: string;
   /**
    * The source of the docker image.
    */
@@ -90,45 +78,38 @@ export interface IImageName {
   readonly uri: string;
 
   /**
-   * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+   *  The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
    */
   creds?: string;
 }
 
-function getCode(buildImage: string): lambda.AssetCode {
-  if (shouldUsePrebuiltLambda()) {
-    try {
-      const installScript = path.join(__dirname, '../lambda/install.js');
-      const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execFileSync(process.argv0, [installScript, prebuiltPath]);
-
-      return lambda.Code.fromAsset(prebuiltPath);
-    } catch (err) {
-      console.warn(`Can not get prebuilt lambda: ${err}`);
-    }
-  }
-
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
-    buildArgs: {
-      buildImage,
-    },
-  });
-}
 
 export class DockerImageName implements IImageName {
   public constructor(private name: string, public creds?: string) { }
-  public get uri(): string { return `docker://${this.name}`; }
+  public get uri(): string { return this.name; }
 }
 
-export class S3ArchiveName implements IImageName {
-  private name: string;
-  public constructor(p: string, ref?: string, public creds?: string) {
-    this.name = p;
-    if (ref) {
-      this.name += ':' + ref;
+
+class CraneLayer extends lambda.LayerVersion {
+  public static getInstance(scope: Construct): CraneLayer {
+    const stack = Stack.of(scope);
+    let layer = CraneLayer._instances.get(stack);
+    if (!layer) {
+      layer = new CraneLayer(stack, 'CraneLayer');
+      CraneLayer._instances.set(stack, layer);
     }
+    return layer;
   }
-  public get uri(): string { return `s3://${this.name}`; }
+
+  private static _instances = new Map<Construct, CraneLayer>();
+
+  private constructor(scope: Construct, id: string) {
+    super(scope, id, {
+      code: lambda.Code.fromAsset(path.join(__dirname, 'layer.zip'), {}),
+      description: '/opt/crane/crane',
+      license: 'Apache-2.0',
+    });
+  }
 }
 
 export class ECRDeployment extends Construct {
@@ -136,58 +117,61 @@ export class ECRDeployment extends Construct {
 
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
+
     const memoryLimit = props.memoryLimit ?? 512;
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(props.buildImage ?? 'golang:1'),
-      runtime: lambda.Runtime.PROVIDED_AL2023,
-      handler: 'bootstrap',
-      environment: props.environment,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda')),
+      runtime: lambda.Runtime.PYTHON_3_11,
+      handler: 'index.on_event',
+      environment: Object.assign({
+        // NOTICE: Change the default credentials store location.
+        // https://github.com/google/go-containerregistry/blob/8dadbe76ff8c20d0e509406f04b7eade43baa6c1/pkg/authn/README.md?plain=1#L45
+        DOCKER_CONFIG: '/tmp/.docker',
+      }, props.environment),
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: Duration.minutes(15),
       role: props.role,
-      memorySize: memoryLimit,
       vpc: props.vpc,
+      memorySize: memoryLimit,
       vpcSubnets: props.vpcSubnets,
       securityGroups: props.securityGroups,
+      initialPolicy: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'ecr:GetAuthorizationToken',
+            'ecr:BatchCheckLayerAvailability',
+            'ecr:GetDownloadUrlForLayer',
+            'ecr:GetRepositoryPolicy',
+            'ecr:DescribeRepositories',
+            'ecr:ListImages',
+            'ecr:DescribeImages',
+            'ecr:BatchGetImage',
+            'ecr:ListTagsForResource',
+            'ecr:DescribeImageScanFindings',
+            'ecr:InitiateLayerUpload',
+            'ecr:UploadLayerPart',
+            'ecr:CompleteLayerUpload',
+            'ecr:PutImage',
+          ],
+          resources: ['*'],
+        }),
+      ],
+      layers: [
+        CraneLayer.getInstance(scope),
+      ],
     });
 
-    const handlerRole = this.handler.role;
-    if (!handlerRole) { throw new Error('lambda.SingletonFunction should have created a Role'); }
-
-    handlerRole.addToPrincipalPolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'ecr:GetAuthorizationToken',
-          'ecr:BatchCheckLayerAvailability',
-          'ecr:GetDownloadUrlForLayer',
-          'ecr:GetRepositoryPolicy',
-          'ecr:DescribeRepositories',
-          'ecr:ListImages',
-          'ecr:DescribeImages',
-          'ecr:BatchGetImage',
-          'ecr:ListTagsForResource',
-          'ecr:DescribeImageScanFindings',
-          'ecr:InitiateLayerUpload',
-          'ecr:UploadLayerPart',
-          'ecr:CompleteLayerUpload',
-          'ecr:PutImage',
-        ],
-        resources: ['*'],
-      }));
-    handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        's3:GetObject',
-      ],
-      resources: ['*'],
-    }));
+    const provider = new cr.Provider(this, 'Provider', {
+      onEventHandler: this.handler,
+    });
 
     new CustomResource(this, 'CustomResource', {
-      serviceToken: this.handler.functionArn,
+      serviceToken: provider.serviceToken,
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
+        Time: Date.now().toString(),
         SrcImage: props.src.uri,
         SrcCreds: props.src.creds,
         DestImage: props.dest.uri,
