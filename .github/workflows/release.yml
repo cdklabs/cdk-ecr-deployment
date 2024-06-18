@@ -272,7 +272,9 @@ jobs:
         run: npx -p publib@latest publib-golang
   release_prebuilt_lambda:
     name: Publish Lambda to GitHub Releases
-    needs: release
+    needs:
+      - release
+      - release_github
     runs-on: ubuntu-latest
     permissions:
       contents: write

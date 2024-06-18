@@ -52,7 +52,7 @@ project.release?.addJobs({
   release_prebuilt_lambda: {
     runsOn: ['ubuntu-latest'],
     name: 'Publish Lambda to GitHub Releases',
-    needs: ['release'],
+    needs: ['release', 'release_github'],
     permissions: {
       contents: github.workflows.JobPermission.WRITE,
     },
