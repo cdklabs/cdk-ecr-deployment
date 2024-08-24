@@ -34,9 +34,9 @@
     "@cdklabs/tskb" "^0.0.3"
 
 "@aws-cdk/cloud-assembly-schema@^36.0.5":
-  version "36.0.14"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/cloud-assembly-schema/-/cloud-assembly-schema-36.0.14.tgz#e16b73ebca95016cca7953466ed119be6340c79a"
-  integrity sha512-8ecWc6vjOXzQjFuzLOX4L28u8ZQn13vNOd6N2cYu26+LuZHoxZAIyyITldLNazxbiqJ1aNSsa++GlvO/wEpGjQ==
+  version "36.0.15"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/cloud-assembly-schema/-/cloud-assembly-schema-36.0.15.tgz#b86fb49a0d45a5f0ec045b1e6d4498df33d7c30d"
+  integrity sha512-hblt0SNCYVeWKqSFi7d+xUaowCnpQWOiJuG2EGoNfj/kdkXnBPsy3gkqudwEafuiv8xJS5jHplLPfEqbdTEnYA==
   dependencies:
     jsonschema "^1.4.1"
     semver "^7.6.3"
