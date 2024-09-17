@@ -36,7 +36,7 @@ type ECRAuth struct {
 }
 
 func GetECRRegion(uri string) string {
-	re := regexp.MustCompile(`dkr\.ecr\.(.+?)\.amazonaws\.com`)
+	re := regexp.MustCompile(`dkr\.ecr\.(.+?)\.`)
 	m := re.FindStringSubmatch(uri)
 	if m != nil {
 		return m[1]
