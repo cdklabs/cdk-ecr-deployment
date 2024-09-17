@@ -8,12 +8,11 @@
 
 CDK construct to synchronize single docker image between docker registries.
 
-⚠️ Version 1.* is no longer supported, as CDK v1 has reached the end-of-life
-stage. Please use only ^3.0.0.
+**Only use v3 of this package**
 
-⚠️ Version 2.* is no longer supported, as the Go.1.x runtime is no longer supported in AWS Lambda.
-Version 3 uses the Amazon Linux 2 runtime.
-Please use only ^3.0.0.
+⚠️ Version 2.* is no longer supported, as the Go.1.x runtime is no longer supported in AWS Lambda.\
+⚠️ Version 1.* is no longer supported, as CDK v1 has reached the end-of-life
+stage.
 
 ## Features
 
@@ -29,8 +28,6 @@ Enable flags: `true`, `1`. e.g. `export CI=1`
 - `FORCE_PREBUILT_LAMBDA` force using prebuilt lambda.
 
 ⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
-
-⚠️ The above flags are only available in cdk-ecr-deployment 2.x and 3.x.
 
 ## Examples
 
