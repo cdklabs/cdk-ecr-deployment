@@ -11,9 +11,9 @@
     "@jridgewell/trace-mapping" "^0.3.24"
 
 "@aws-cdk/asset-awscli-v1@^2.2.202":
-  version "2.2.202"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-awscli-v1/-/asset-awscli-v1-2.2.202.tgz#4627201d71f6a5c60db36385ce09cb81005f4b32"
-  integrity sha512-JqlF0D4+EVugnG5dAsNZMqhu3HW7ehOXm5SDMxMbXNDMdsF0pxtQKNHRl52z1U9igsHmaFpUgSGjbhAJ+0JONg==
+  version "2.2.203"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-awscli-v1/-/asset-awscli-v1-2.2.203.tgz#8c2480582a9e561d11e5ede2158d11fdb9687f9f"
+  integrity sha512-7ZhjD0L62dhWL0yzoLCxvJTU3tLHTz/yEg6GKt3foSj+ljVR1KSP8MuAi+QPb4pT7ZTfVzELMtI36Y/ROuL3ig==
 
 "@aws-cdk/asset-kubectl-v20@^2.1.2":
   version "2.1.2"
@@ -1254,9 +1254,9 @@ available-typed-arrays@^1.0.7:
     possible-typed-array-names "^1.0.0"
 
 aws-cdk-lib@^2.0.0:
-  version "2.159.0"
-  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.159.0.tgz#ab5199dd584c73eedbf6a13900da5622cf3310f3"
-  integrity sha512-OzcOuwK11i4xfrcAdDfnALOEBk4tyL257xU9AYTywG7nxQBO7QdawgODcDQV2bXTtNZGZGTH6wwcESNvKk4n8g==
+  version "2.159.1"
+  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.159.1.tgz#65f8a1ef89cfb1cfb7685c4e68268a1e23dd6325"
+  integrity sha512-zcOyAs3+DTu+CtLehdOgvyosZ7nbLZ+OfBE6uVNMshXm957oXJrLsu6hehLt81TDxfItWYNluFcXkwepZDm6Ng==
   dependencies:
     "@aws-cdk/asset-awscli-v1" "^2.2.202"
     "@aws-cdk/asset-kubectl-v20" "^2.1.2"
