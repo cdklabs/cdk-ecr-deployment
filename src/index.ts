@@ -6,6 +6,7 @@ import * as child_process from 'child_process';
 import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
+import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
 import { shouldUsePrebuiltLambda } from './config';
 
@@ -154,7 +155,7 @@ export class ECRDeployment extends Construct {
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
       code: getCode(props.buildImage ?? 'golang:1'),
-      runtime: props.lambdaRuntime ?? lambda.Runtime.PROVIDED_AL2023,
+      runtime: props.lambdaRuntime ?? new lambda.Runtime('provided.al2023', RuntimeFamily.OTHER), // not using Runtime.PROVIDED_AL2023 to support older CDK versions (< 2.105.0)
       handler: props.lambdaHandler ?? 'bootstrap',
       environment: props.environment,
       lambdaPurpose: 'Custom::CDKECRDeployment',
