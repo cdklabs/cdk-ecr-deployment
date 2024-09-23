@@ -309,18 +309,17 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v4
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
           name: build-artifact
-          path: .repo
+          path: dist
       - name: Build lambda
         run: docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/bootstrap /out && echo $(sha256sum lambda/bootstrap | awk '{ print $1 }') > lambda/bootstrap.sha256
       - name: Release lambda
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: "gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/bootstrap lambda/bootstrap.sha256 "
+          GITHUB_REF: ${{ github.sha }}
+        run: "gh release upload --clobber -R $GITHUB_REPOSITORY $(cat dist/releasetag.txt) lambda/bootstrap lambda/bootstrap.sha256 "

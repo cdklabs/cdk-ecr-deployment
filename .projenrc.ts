@@ -59,17 +59,14 @@ project.release?.addJobs({
     steps: [
       {
         name: 'Checkout',
-        uses: 'actions/checkout@v2',
-        with: {
-          'fetch-depth': 0,
-        },
+        uses: 'actions/checkout@v4',
       },
       {
         name: 'Download build artifacts',
         uses: 'actions/download-artifact@v4',
         with: {
           name: 'build-artifact',
-          path: '.repo',
+          path: 'dist',
         },
       },
       {
@@ -84,10 +81,11 @@ project.release?.addJobs({
         name: 'Release lambda',
         // For some reason, need '--clobber' otherwise we always get errors that these files already exist. They're probably
         // uploaded elsewhere but TBH I don't know where so just add this flag to make it not fail.
-        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY v$(cat .repo/dist/version.txt) lambda/bootstrap lambda/bootstrap.sha256 ',
+        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY $(cat dist/releasetag.txt) lambda/bootstrap lambda/bootstrap.sha256 ',
         env: {
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           GITHUB_REPOSITORY: '${{ github.repository }}',
+          GITHUB_REF: '${{ github.sha }}',
         },
       },
     ],
