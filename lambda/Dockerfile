@@ -1,7 +1,7 @@
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 ARG buildImage=public.ecr.aws/docker/library/golang:1
-FROM ${buildImage} as build
+FROM ${buildImage} AS build
 
 USER root
 
