@@ -83,3 +83,7 @@ Please take a look at those projects before contribution.
 To support a new docker image source(like docker tarball in s3), you need to implement [image transport interface](https://github.com/containers/image/blob/master/types/types.go). You could take a look at [docker-archive](https://github.com/containers/image/blob/ccb87a8d0f45cf28846e307eb0ec2b9d38a458c2/docker/archive/transport.go) transport for a good start.
 
 To test the `lambda` folder, `make test`.
+
+### Contributors
+
+<img src="https://markupgo.com/github/cdklabs/cdk-ecr-deployment/contributors?count=0&circleSize=40&circleRadius=40&center=true" width="100%" /> 
