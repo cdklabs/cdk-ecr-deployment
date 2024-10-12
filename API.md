@@ -71,30 +71,7 @@ public addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyRes
 
 | **Name** | **Description** |
 | --- | --- |
-| <code><a href="#cdk-ecr-deployment.ECRDeployment.createRoot">createRoot</a></code> | Creates a new root construct node. |
 | <code><a href="#cdk-ecr-deployment.ECRDeployment.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
-
----
-
-##### `createRoot` <a name="createRoot" id="cdk-ecr-deployment.ECRDeployment.createRoot"></a>
-
-```typescript
-import { ECRDeployment } from 'cdk-ecr-deployment'
-
-ECRDeployment.createRoot(id?: string)
-```
-
-Creates a new root construct node.
-
-###### `id`<sup>Optional</sup> <a name="id" id="cdk-ecr-deployment.ECRDeployment.createRoot.parameter.id"></a>
-
-- *Type:* string
-
-The scoped construct ID.
-
-Must be unique amongst siblings. If
-the ID includes a path separator (`/`), then it will be replaced by double
-dash `--`.
 
 ---
 
