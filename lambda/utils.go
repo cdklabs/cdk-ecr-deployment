@@ -154,9 +154,18 @@ const (
 	SECRET_ARN  = "SECRET_ARN"
 	SECRET_NAME = "SECRET_NAME"
 	SECRET_TEXT = "SECRET_TEXT"
+	SECRET_JSON = "SECRET_JSON"
 )
 
 func GetCredsType(s string) string {
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal([]byte(s), &jsonData); err == nil {
+		if _, hasUsername := jsonData["username"]; hasUsername {
+			if _, hasPassword := jsonData["password"]; hasPassword {
+				return SECRET_JSON
+			}
+		}
+	}
 	if strings.HasPrefix(s, "arn:aws") {
 		return SECRET_ARN
 	} else if strings.Contains(s, ":") {
@@ -183,4 +192,20 @@ func GetSecret(secretId string) (secret string, err error) {
 		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
 	}
 	return *resp.SecretString, nil
+}
+
+func GetJSONSecret(secretJson string) (secret string, err error) {
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal([]byte(secretJson), &jsonData); err != nil {
+		return "", fmt.Errorf("json unmarshal error: %v", err.Error())
+	}
+	username, ok := jsonData["username"].(string)
+	if !ok {
+		return "", fmt.Errorf("json username error")
+	}
+	password, ok := jsonData["password"].(string)
+	if !ok {
+		return "", fmt.Errorf("json password error")
+	}
+	return fmt.Sprintf("%s:%s", username, password), nil
 }
