@@ -163,6 +163,9 @@ func parseCreds(creds string) (string, error) {
 		return secret, err
 	} else if credsType == SECRET_TEXT {
 		return creds, nil
+	} else if credsType == SECRET_JSON {
+		secret, err := GetJSONSecret(creds)
+		return secret, err
 	}
-	return "", fmt.Errorf("unkown creds type")
+	return "", fmt.Errorf("unknown creds type")
 }
