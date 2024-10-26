@@ -30,4 +30,5 @@ func TestGetCredsType(t *testing.T) {
 	assert.Equal(t, SECRET_NAME, GetCredsType("fake-secret"))
 	assert.Equal(t, SECRET_TEXT, GetCredsType("username:password"))
 	assert.Equal(t, SECRET_NAME, GetCredsType(""))
+	assert.Equal(t, SECRET_JSON, GetCredsType("{ \"username\" : \"privateRegistryUsername\", \"password\" : \"privateRegistryPassword\" }"))
 }
