@@ -159,12 +159,22 @@ func parseCreds(creds string) (string, error) {
 	if creds == "" {
 		return "", nil
 	} else if (credsType == SECRET_ARN) || (credsType == SECRET_NAME) {
-		secret, err := GetSecret(creds)
-		return secret, err
+		secret, isJSON, err := GetSecret(creds)
+		if err != nil {
+			return "", err
+		}
+		if isJSON {
+			parsedSecret, err := ParseJSONSecret(secret)
+			if err != nil {
+				return "", err
+			}
+			return parsedSecret, nil
+		}
+		return secret, nil
 	} else if credsType == SECRET_TEXT {
 		return creds, nil
 	} else if credsType == SECRET_JSON {
-		secret, err := GetJSONSecret(creds)
+		secret, err := ParseJSONSecret(creds)
 		return secret, err
 	}
 	return "", fmt.Errorf("unknown creds type")
