@@ -175,13 +175,13 @@ func GetCredsType(s string) string {
 	}
 }
 
-func GetSecret(secretId string) (secret string, err error) {
+func GetSecret(secretId string) (secret string, isJSON bool, err error) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
 	)
 	log.Printf("get secret id: %s of region: %s", secretId, cfg.Region)
 	if err != nil {
-		return "", fmt.Errorf("api client configuration error: %v", err.Error())
+		return "", false, fmt.Errorf("api client configuration error: %v", err.Error())
 	}
 
 	client := secretsmanager.NewFromConfig(cfg)
@@ -189,12 +189,20 @@ func GetSecret(secretId string) (secret string, err error) {
 		SecretId: aws.String(secretId),
 	})
 	if err != nil {
-		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
+		return "", false, fmt.Errorf("fetch secret value error: %v", err.Error())
 	}
-	return *resp.SecretString, nil
+
+	secretString := *resp.SecretString
+
+	var jsonData map[string]interface{}
+	if err := json.Unmarshal([]byte(secretString), &jsonData); err == nil {
+		return secretString, true, nil
+	}
+
+	return secretString, false, nil
 }
 
-func GetJSONSecret(secretJson string) (secret string, err error) {
+func ParseJSONSecret(secretJson string) (secret string, err error) {
 	var jsonData map[string]interface{}
 	if err := json.Unmarshal([]byte(secretJson), &jsonData); err != nil {
 		return "", fmt.Errorf("json unmarshal error: %v", err.Error())
