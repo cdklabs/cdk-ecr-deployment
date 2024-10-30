@@ -106,6 +106,7 @@ export interface IImageName {
 
   /**
    * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+   * Supports JSON format returned from AWS Secrets in the format `{"username":"<username>", "password":"<password>"}`
    */
   creds?: string;
 }
