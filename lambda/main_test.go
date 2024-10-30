@@ -53,3 +53,53 @@ func TestMain(t *testing.T) {
 	})
 	assert.NoError(t, err)
 }
+func TestParseCreds(t *testing.T) {
+	tests := []struct {
+		name    string
+		creds   string
+		want    string
+		wantErr bool
+	}{
+		{
+			name:    "Empty creds",
+			creds:   "",
+			want:    "",
+			wantErr: false,
+		},
+		// {
+		// 	name:    "Secret ARN",
+		// 	creds:   "arn:aws:secretsmanager:us-west-2:00000:secret:fake-secret",
+		// 	want:    "{\"username\":\"privateRegistryUsername\",\"password\":\"privateRegistryPassword\"}",
+		// 	wantErr: false,
+		// },
+		{
+			name:    "Secret JSON",
+			creds:   "{ \"username\" : \"privateRegistryUsername\", \"password\" : \"privateRegistryPassword\" }",
+			want:    "privateRegistryUsername:privateRegistryPassword",
+			wantErr: false,
+		},
+		{
+			name:    "Secret Text",
+			creds:   "username:password",
+			want:    "username:password",
+			wantErr: false,
+		},
+		{
+			name:    "Unknown creds type",
+			creds:   "unknown-creds",
+			want:    "",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := parseCreds(tt.creds)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("parseCreds() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			assert.Equal(t, tt.want, got)
+		})
+	}
+}
