@@ -23,6 +23,7 @@ import (
 const (
 	SRC_IMAGE  string = "SrcImage"
 	DEST_IMAGE string = "DestImage"
+	IMAGE_ARCH string = "ImageArch"
 	SRC_CREDS  string = "SrcCreds"
 	DEST_CREDS string = "DestCreds"
 )
@@ -86,14 +87,15 @@ type ImageOpts struct {
 	requireECRLogin bool
 	region          string
 	creds           string
+	arch            string
 }
 
-func NewImageOpts(uri string) *ImageOpts {
+func NewImageOpts(uri string, arch string) *ImageOpts {
 	requireECRLogin := strings.Contains(uri, "dkr.ecr")
 	if requireECRLogin {
-		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), ""}
+		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), "", arch}
 	} else {
-		return &ImageOpts{uri, requireECRLogin, "", ""}
+		return &ImageOpts{uri, requireECRLogin, "", "", arch}
 	}
 }
 
@@ -109,6 +111,7 @@ func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 	ctx := &types.SystemContext{
 		DockerRegistryUserAgent: "ecr-deployment",
 		DockerAuthConfig:        &types.DockerAuthConfig{},
+		ArchitectureChoice:      s.arch,
 	}
 
 	if s.creds != "" {

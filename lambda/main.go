@@ -53,6 +53,10 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		if err != nil {
 			return physicalResourceID, data, err
 		}
+		imageArch, err := getStrPropsDefault(event.ResourceProperties, IMAGE_ARCH, "")
+		if err != nil {
+			return physicalResourceID, data, err
+		}
 		srcCreds, err := getStrPropsDefault(event.ResourceProperties, SRC_CREDS, "")
 		if err != nil {
 			return physicalResourceID, data, err
@@ -71,7 +75,7 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 			return physicalResourceID, data, err
 		}
 
-		log.Printf("SrcImage: %v DestImage: %v", srcImage, destImage)
+		log.Printf("SrcImage: %v DestImage: %v ImageArch: %v", srcImage, destImage, imageArch)
 
 		srcRef, err := alltransports.ParseImageName(srcImage)
 		if err != nil {
@@ -82,13 +86,13 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 			return physicalResourceID, data, err
 		}
 
-		srcOpts := NewImageOpts(srcImage)
+		srcOpts := NewImageOpts(srcImage, imageArch)
 		srcOpts.SetCreds(srcCreds)
 		srcCtx, err := srcOpts.NewSystemContext()
 		if err != nil {
 			return physicalResourceID, data, err
 		}
-		destOpts := NewImageOpts(destImage)
+		destOpts := NewImageOpts(destImage, imageArch)
 		destOpts.SetCreds(destCreds)
 		destCtx, err := destOpts.NewSystemContext()
 		if err != nil {

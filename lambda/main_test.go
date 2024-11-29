@@ -33,10 +33,10 @@ func TestMain(t *testing.T) {
 	destRef, err := alltransports.ParseImageName(destImage)
 	assert.NoError(t, err)
 
-	srcOpts := NewImageOpts(srcImage)
+	srcOpts := NewImageOpts(srcImage, "")
 	srcCtx, err := srcOpts.NewSystemContext()
 	assert.NoError(t, err)
-	destOpts := NewImageOpts(destImage)
+	destOpts := NewImageOpts(destImage, "")
 	destCtx, err := destOpts.NewSystemContext()
 	assert.NoError(t, err)
 
@@ -51,5 +51,14 @@ func TestMain(t *testing.T) {
 		DestinationCtx: destCtx,
 		SourceCtx:      srcCtx,
 	})
+	assert.NoError(t, err)
+}
+
+func TestNewImageOpts(t *testing.T) {
+	srcOpts := NewImageOpts("s3://cdk-ecr-deployment/nginx.tar:nginx:latest", "arm64")
+	_, err := srcOpts.NewSystemContext()
+	assert.NoError(t, err)
+	destOpts := NewImageOpts("dir:/tmp/nginx.dir", "arm64")
+	_, err = destOpts.NewSystemContext()
 	assert.NoError(t, err)
 }
