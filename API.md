@@ -128,6 +128,119 @@ The tree node.
 ---
 
 
+### ECRDeploymentStep <a name="ECRDeploymentStep" id="cdk-ecr-deployment.ECRDeploymentStep"></a>
+
+#### Initializers <a name="Initializers" id="cdk-ecr-deployment.ECRDeploymentStep.Initializer"></a>
+
+```typescript
+import { ECRDeploymentStep } from 'cdk-ecr-deployment'
+
+new ECRDeploymentStep(scope: Construct, id: string, props: ECRDeploymentStepProps)
+```
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.scope">scope</a></code> | <code>constructs.Construct</code> | *No description.* |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.id">id</a></code> | <code>string</code> | *No description.* |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.props">props</a></code> | <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps">ECRDeploymentStepProps</a></code> | *No description.* |
+
+---
+
+##### `scope`<sup>Required</sup> <a name="scope" id="cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.scope"></a>
+
+- *Type:* constructs.Construct
+
+---
+
+##### `id`<sup>Required</sup> <a name="id" id="cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.id"></a>
+
+- *Type:* string
+
+---
+
+##### `props`<sup>Required</sup> <a name="props" id="cdk-ecr-deployment.ECRDeploymentStep.Initializer.parameter.props"></a>
+
+- *Type:* <a href="#cdk-ecr-deployment.ECRDeploymentStepProps">ECRDeploymentStepProps</a>
+
+---
+
+#### Methods <a name="Methods" id="Methods"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.toString">toString</a></code> | Returns a string representation of this construct. |
+
+---
+
+##### `toString` <a name="toString" id="cdk-ecr-deployment.ECRDeploymentStep.toString"></a>
+
+```typescript
+public toString(): string
+```
+
+Returns a string representation of this construct.
+
+#### Static Functions <a name="Static Functions" id="Static Functions"></a>
+
+| **Name** | **Description** |
+| --- | --- |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.isConstruct">isConstruct</a></code> | Checks if `x` is a construct. |
+
+---
+
+##### `isConstruct` <a name="isConstruct" id="cdk-ecr-deployment.ECRDeploymentStep.isConstruct"></a>
+
+```typescript
+import { ECRDeploymentStep } from 'cdk-ecr-deployment'
+
+ECRDeploymentStep.isConstruct(x: any)
+```
+
+Checks if `x` is a construct.
+
+Use this method instead of `instanceof` to properly detect `Construct`
+instances, even when the construct library is symlinked.
+
+Explanation: in JavaScript, multiple copies of the `constructs` library on
+disk are seen as independent, completely different libraries. As a
+consequence, the class `Construct` in each copy of the `constructs` library
+is seen as a different class, and an instance of one class will not test as
+`instanceof` the other class. `npm install` will not create installations
+like this, but users may manually symlink construct libraries together or
+use a monorepo tool: in those cases, multiple copies of the `constructs`
+library can be accidentally installed, and `instanceof` will behave
+unpredictably. It is safest to avoid using `instanceof`, and using
+this type-testing method instead.
+
+###### `x`<sup>Required</sup> <a name="x" id="cdk-ecr-deployment.ECRDeploymentStep.isConstruct.parameter.x"></a>
+
+- *Type:* any
+
+Any object.
+
+---
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStep.property.node">node</a></code> | <code>constructs.Node</code> | The tree node. |
+
+---
+
+##### `node`<sup>Required</sup> <a name="node" id="cdk-ecr-deployment.ECRDeploymentStep.property.node"></a>
+
+```typescript
+public readonly node: Node;
+```
+
+- *Type:* constructs.Node
+
+The tree node.
+
+---
+
+
 ## Structs <a name="Structs" id="Structs"></a>
 
 ### ECRDeploymentProps <a name="ECRDeploymentProps" id="cdk-ecr-deployment.ECRDeploymentProps"></a>
@@ -306,6 +419,215 @@ public readonly vpcSubnets: SubnetSelection;
 Where in the VPC to place the deployment lambda handler.
 
 Only used if 'vpc' is supplied.
+
+---
+
+### ECRDeploymentStepProps <a name="ECRDeploymentStepProps" id="cdk-ecr-deployment.ECRDeploymentStepProps"></a>
+
+#### Initializer <a name="Initializer" id="cdk-ecr-deployment.ECRDeploymentStepProps.Initializer"></a>
+
+```typescript
+import { ECRDeploymentStepProps } from 'cdk-ecr-deployment'
+
+const eCRDeploymentStepProps: ECRDeploymentStepProps = { ... }
+```
+
+#### Properties <a name="Properties" id="Properties"></a>
+
+| **Name** | **Type** | **Description** |
+| --- | --- | --- |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.dest">dest</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The destination of the docker image. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.src">src</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The source of the docker image. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.buildImage">buildImage</a></code> | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | The environment variable to set. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.lambdaHandler">lambdaHandler</a></code> | <code>string</code> | The name of the lambda handler. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda function runtime environment. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.memoryLimit">memoryLimit</a></code> | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.role">role</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Execution role associated with this function. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup[]</code> | The list of security groups to associate with the Lambda's network interfaces. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network to place the deployment lambda handler in. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Where in the VPC to place the deployment lambda handler. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.stage">stage</a></code> | <code>aws-cdk-lib.aws_codepipeline.IStage</code> | CodePipeline Stage to include lambda to. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentStepProps.property.wave">wave</a></code> | <code>aws-cdk-lib.pipelines.Wave</code> | Pipelines Wave to include lambda to. |
+
+---
+
+##### `dest`<sup>Required</sup> <a name="dest" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.dest"></a>
+
+```typescript
+public readonly dest: IImageName;
+```
+
+- *Type:* <a href="#cdk-ecr-deployment.IImageName">IImageName</a>
+
+The destination of the docker image.
+
+---
+
+##### `src`<sup>Required</sup> <a name="src" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.src"></a>
+
+```typescript
+public readonly src: IImageName;
+```
+
+- *Type:* <a href="#cdk-ecr-deployment.IImageName">IImageName</a>
+
+The source of the docker image.
+
+---
+
+##### `buildImage`<sup>Optional</sup> <a name="buildImage" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.buildImage"></a>
+
+```typescript
+public readonly buildImage: string;
+```
+
+- *Type:* string
+- *Default:* public.ecr.aws/sam/build-go1.x:latest
+
+Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
+
+Might be needed for local build if all images need to come from own registry.
+
+Note that image should use yum as a package manager and have golang available.
+
+---
+
+##### `environment`<sup>Optional</sup> <a name="environment" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.environment"></a>
+
+```typescript
+public readonly environment: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+The environment variable to set.
+
+---
+
+##### `lambdaHandler`<sup>Optional</sup> <a name="lambdaHandler" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.lambdaHandler"></a>
+
+```typescript
+public readonly lambdaHandler: string;
+```
+
+- *Type:* string
+- *Default:* bootstrap
+
+The name of the lambda handler.
+
+---
+
+##### `lambdaRuntime`<sup>Optional</sup> <a name="lambdaRuntime" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.lambdaRuntime"></a>
+
+```typescript
+public readonly lambdaRuntime: Runtime;
+```
+
+- *Type:* aws-cdk-lib.aws_lambda.Runtime
+- *Default:* lambda.Runtime.PROVIDED_AL2023
+
+The lambda function runtime environment.
+
+---
+
+##### `memoryLimit`<sup>Optional</sup> <a name="memoryLimit" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.memoryLimit"></a>
+
+```typescript
+public readonly memoryLimit: number;
+```
+
+- *Type:* number
+- *Default:* 512
+
+The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket.
+
+If you are deploying large files, you will need to increase this number
+accordingly.
+
+---
+
+##### `role`<sup>Optional</sup> <a name="role" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.role"></a>
+
+```typescript
+public readonly role: IRole;
+```
+
+- *Type:* aws-cdk-lib.aws_iam.IRole
+- *Default:* A role is automatically created
+
+Execution role associated with this function.
+
+---
+
+##### `securityGroups`<sup>Optional</sup> <a name="securityGroups" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.securityGroups"></a>
+
+```typescript
+public readonly securityGroups: SecurityGroup[];
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SecurityGroup[]
+- *Default:* If the function is placed within a VPC and a security group is not specified, either by this or securityGroup prop, a dedicated security group will be created for this function.
+
+The list of security groups to associate with the Lambda's network interfaces.
+
+Only used if 'vpc' is supplied.
+
+---
+
+##### `vpc`<sup>Optional</sup> <a name="vpc" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.vpc"></a>
+
+```typescript
+public readonly vpc: IVpc;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.IVpc
+- *Default:* None
+
+The VPC network to place the deployment lambda handler in.
+
+---
+
+##### `vpcSubnets`<sup>Optional</sup> <a name="vpcSubnets" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.vpcSubnets"></a>
+
+```typescript
+public readonly vpcSubnets: SubnetSelection;
+```
+
+- *Type:* aws-cdk-lib.aws_ec2.SubnetSelection
+- *Default:* the Vpc default strategy if not specified
+
+Where in the VPC to place the deployment lambda handler.
+
+Only used if 'vpc' is supplied.
+
+---
+
+##### `stage`<sup>Optional</sup> <a name="stage" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.stage"></a>
+
+```typescript
+public readonly stage: IStage;
+```
+
+- *Type:* aws-cdk-lib.aws_codepipeline.IStage
+
+CodePipeline Stage to include lambda to.
+
+If this is set, lambda is invoked in pipeline instead of custom resource.
+
+---
+
+##### `wave`<sup>Optional</sup> <a name="wave" id="cdk-ecr-deployment.ECRDeploymentStepProps.property.wave"></a>
+
+```typescript
+public readonly wave: Wave;
+```
+
+- *Type:* aws-cdk-lib.pipelines.Wave
+
+Pipelines Wave to include lambda to.
+
+If this is set, lambda is invoked in pipeline instead of custom resource.
 
 ---
 

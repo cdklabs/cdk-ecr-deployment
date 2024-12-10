@@ -2,133 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 
-import * as child_process from 'child_process';
-import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
+import { aws_lambda as lambda, CustomResource, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
-import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { shouldUsePrebuiltLambda } from './config';
-
-export interface ECRDeploymentProps {
-
-  /**
-   * Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
-   *
-   * Might be needed for local build if all images need to come from own registry.
-   *
-   * Note that image should use yum as a package manager and have golang available.
-   *
-   * @default - public.ecr.aws/sam/build-go1.x:latest
-   */
-  readonly buildImage?: string;
-  /**
-   * The source of the docker image.
-   */
-  readonly src: IImageName;
-
-  /**
-   * The destination of the docker image.
-   */
-  readonly dest: IImageName;
-
-  /**
-   * The amount of memory (in MiB) to allocate to the AWS Lambda function which
-   * replicates the files from the CDK bucket to the destination bucket.
-   *
-   * If you are deploying large files, you will need to increase this number
-   * accordingly.
-   *
-   * @default - 512
-   */
-  readonly memoryLimit?: number;
-
-  /**
-   * Execution role associated with this function
-   *
-   * @default - A role is automatically created
-   */
-  readonly role?: iam.IRole;
-
-  /**
-   * The VPC network to place the deployment lambda handler in.
-   *
-   * @default - None
-   */
-  readonly vpc?: ec2.IVpc;
-
-  /**
-   * Where in the VPC to place the deployment lambda handler.
-   * Only used if 'vpc' is supplied.
-   *
-   * @default - the Vpc default strategy if not specified
-   */
-  readonly vpcSubnets?: ec2.SubnetSelection;
-
-  /**
-   * The list of security groups to associate with the Lambda's network interfaces.
-   *
-   * Only used if 'vpc' is supplied.
-   *
-   * @default - If the function is placed within a VPC and a security group is
-   * not specified, either by this or securityGroup prop, a dedicated security
-   * group will be created for this function.
-   */
-  readonly securityGroups?: ec2.SecurityGroup[];
-
-  /**
-   * The lambda function runtime environment.
-   *
-   * @default - lambda.Runtime.PROVIDED_AL2023
-   */
-  readonly lambdaRuntime?: lambda.Runtime;
-
-  /**
-   * The name of the lambda handler.
-   *
-   * @default - bootstrap
-   */
-  readonly lambdaHandler?: string;
-
-  /**
-   * The environment variable to set
-   */
-  readonly environment?: { [key: string]: string };
-}
-
-export interface IImageName {
-  /**
-   *  The uri of the docker image.
-   *
-   *  The uri spec follows https://github.com/containers/skopeo
-   */
-  readonly uri: string;
-
-  /**
-   * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
-   */
-  creds?: string;
-}
-
-function getCode(buildImage: string): lambda.AssetCode {
-  if (shouldUsePrebuiltLambda()) {
-    try {
-      const installScript = path.join(__dirname, '../lambda/install.js');
-      const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execFileSync(process.argv0, [installScript, prebuiltPath]);
-
-      return lambda.Code.fromAsset(prebuiltPath);
-    } catch (err) {
-      console.warn(`Can not get prebuilt lambda: ${err}`);
-    }
-  }
-
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
-    buildArgs: {
-      buildImage,
-    },
-  });
-}
+import { addFunctionPermissions, getFunctionProps } from './lambda';
+import { ECRDeploymentProps, IImageName } from './types';
+export * from './ecr-deployment-step';
+export * from './types';
 
 export class DockerImageName implements IImageName {
   public constructor(private name: string, public creds?: string) { }
@@ -151,53 +31,17 @@ export class ECRDeployment extends Construct {
 
   constructor(scope: Construct, id: string, props: ECRDeploymentProps) {
     super(scope, id);
-    const memoryLimit = props.memoryLimit ?? 512;
+    const functionProps = getFunctionProps(props);
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
-      uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(props.buildImage ?? 'public.ecr.aws/docker/library/golang:1'),
-      runtime: props.lambdaRuntime ?? new lambda.Runtime('provided.al2023', RuntimeFamily.OTHER), // not using Runtime.PROVIDED_AL2023 to support older CDK versions (< 2.105.0)
-      handler: props.lambdaHandler ?? 'bootstrap',
-      environment: props.environment,
+      uuid: this.renderSingletonUuid(functionProps.memorySize),
       lambdaPurpose: 'Custom::CDKECRDeployment',
-      timeout: Duration.minutes(15),
-      role: props.role,
-      memorySize: memoryLimit,
-      vpc: props.vpc,
-      vpcSubnets: props.vpcSubnets,
-      securityGroups: props.securityGroups,
+      ...functionProps,
     });
 
     const handlerRole = this.handler.role;
     if (!handlerRole) { throw new Error('lambda.SingletonFunction should have created a Role'); }
 
-    handlerRole.addToPrincipalPolicy(
-      new iam.PolicyStatement({
-        effect: iam.Effect.ALLOW,
-        actions: [
-          'ecr:GetAuthorizationToken',
-          'ecr:BatchCheckLayerAvailability',
-          'ecr:GetDownloadUrlForLayer',
-          'ecr:GetRepositoryPolicy',
-          'ecr:DescribeRepositories',
-          'ecr:ListImages',
-          'ecr:DescribeImages',
-          'ecr:BatchGetImage',
-          'ecr:ListTagsForResource',
-          'ecr:DescribeImageScanFindings',
-          'ecr:InitiateLayerUpload',
-          'ecr:UploadLayerPart',
-          'ecr:CompleteLayerUpload',
-          'ecr:PutImage',
-        ],
-        resources: ['*'],
-      }));
-    handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        's3:GetObject',
-      ],
-      resources: ['*'],
-    }));
+    addFunctionPermissions(handlerRole);
 
     new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
