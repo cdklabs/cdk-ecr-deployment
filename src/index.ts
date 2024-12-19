@@ -33,6 +33,14 @@ export interface ECRDeploymentProps {
   readonly dest: IImageName;
 
   /**
+   * The image architecture to be copied.
+   *
+   * @default - the underlying lambda auto-detects the relevant architecture (e.g., amd64, arm64)
+   * https://github.com/containers/image/blob/main/internal/pkg/platform/platform_matcher.go#L161
+   */
+  readonly imageArch?: string;
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -207,6 +215,7 @@ export class ECRDeployment extends Construct {
         SrcCreds: props.src.creds,
         DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
+        ImageArch: props.imageArch ?? '',
       },
     });
   }
