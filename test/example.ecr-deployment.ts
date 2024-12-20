@@ -37,7 +37,7 @@ class TestECRDeployment extends Stack {
     new ecrDeploy.ECRDeployment(this, 'DeployECRImage', {
       src: new ecrDeploy.DockerImageName(image.imageUri),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
-      imageArch: 'arm64',
+      imageArch: ['arm64'],
     });
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
@@ -54,7 +54,7 @@ class TestECRDeployment extends Stack {
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
       src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
-      imageArch: 'amd64',
+      imageArch: ['amd64'],
     }).addToPrincipalPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
