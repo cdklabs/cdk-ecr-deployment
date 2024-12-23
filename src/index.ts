@@ -33,6 +33,19 @@ export interface ECRDeploymentProps {
   readonly dest: IImageName;
 
   /**
+   * The image architecture to be copied.
+   *
+   * The 'amd64' architecture will be copied by default. Specify the
+   * architecture or architectures to copy here.
+   *
+   * It is currently not possible to copy more than one architecture
+   * at a time: the array you specify must contain exactly one string.
+   *
+   * @default ['amd64']
+   */
+  readonly imageArch?: string[];
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -199,14 +212,21 @@ export class ECRDeployment extends Construct {
       resources: ['*'],
     }));
 
+    if (props.imageArch && props.imageArch.length !== 1) {
+      throw new Error(`imageArch must contain exactly 1 element, got ${JSON.stringify(props.imageArch)}`);
+    }
+    const imageArch = props.imageArch ? props.imageArch[0] : '';
+
     new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
+      // This has been copy/pasted and is a pure lie, but changing it is going to change people's infra!! X(
       resourceType: 'Custom::CDKBucketDeployment',
       properties: {
         SrcImage: props.src.uri,
         SrcCreds: props.src.creds,
         DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
+        ...imageArch ? { ImageArch: imageArch } : {},
       },
     });
   }

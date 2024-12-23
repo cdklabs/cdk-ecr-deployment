@@ -148,6 +148,7 @@ const eCRDeploymentProps: ECRDeploymentProps = { ... }
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.src">src</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The source of the docker image. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.buildImage">buildImage</a></code> | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | The environment variable to set. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.imageArch">imageArch</a></code> | <code>string[]</code> | The image architecture to be copied. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.lambdaHandler">lambdaHandler</a></code> | <code>string</code> | The name of the lambda handler. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda function runtime environment. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.memoryLimit">memoryLimit</a></code> | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. |
@@ -208,6 +209,25 @@ public readonly environment: {[ key: string ]: string};
 - *Type:* {[ key: string ]: string}
 
 The environment variable to set.
+
+---
+
+##### `imageArch`<sup>Optional</sup> <a name="imageArch" id="cdk-ecr-deployment.ECRDeploymentProps.property.imageArch"></a>
+
+```typescript
+public readonly imageArch: string[];
+```
+
+- *Type:* string[]
+- *Default:* ['amd64']
+
+The image architecture to be copied.
+
+The 'amd64' architecture will be copied by default. Specify the
+architecture or architectures to copy here.
+
+It is currently not possible to copy more than one architecture
+at a time: the array you specify must contain exactly one string.
 
 ---
 
