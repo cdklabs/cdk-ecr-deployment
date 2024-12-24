@@ -362,7 +362,7 @@
           "exec": "yarn install --check-files"
         },
         {
-          "exec": "yarn upgrade aws-cdk-lib constructs got hpagent"
+          "exec": "yarn upgrade got hpagent"
         },
         {
           "exec": "npx projen"

@@ -10,7 +10,7 @@ const project = new CdklabsConstructLibrary({
   private: false,
   author: 'wchaws',
   authorAddress: 'https://aws.amazon.com',
-  cdkVersion: '2.0.0',
+  cdkVersion: '2.80.0',
   cdkVersionPinning: false,
   defaultReleaseBranch: 'main',
   majorVersion: 3,
@@ -26,8 +26,6 @@ const project = new CdklabsConstructLibrary({
     'hpagent',
   ],
   deps: [
-    'aws-cdk-lib@^2.0.0',
-    'constructs@^10.0.5',
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
