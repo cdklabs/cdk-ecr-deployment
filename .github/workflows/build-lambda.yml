@@ -20,7 +20,11 @@ jobs:
         run: |-
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20' # Specify Node.js version compatible with lru-cache@11.0.2
       - name: Install dependencies
         run: yarn install --check-files --frozen-lockfile
-      - name: build
+      - name: Build
         run: cd test/lambda && ./test.sh
