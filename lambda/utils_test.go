@@ -34,13 +34,17 @@ func TestGetCredsType(t *testing.T) {
 }
 
 func TestParseJsonSecret(t *testing.T) {
+	secretPlainText := "user_val:pass_val"
+	isValid := json.Valid([]byte(secretPlainText))
+	assert.False(t, isValid)
+
 	secretJson := "{\"username\":\"user_val\",\"password\":\"pass_val\"}"
-	isValid := json.Valid([]byte(secretJson))
+	isValid = json.Valid([]byte(secretJson))
 	assert.True(t, isValid)
 
 	successCase, noError := ParseJsonSecret(secretJson)
 	assert.NoError(t, noError)
-	assert.Equal(t, "user_val:pass_val", successCase)
+	assert.Equal(t, secretPlainText, successCase)
 
 	failParseCase, jsonParseError := ParseJsonSecret("{\"user}")
 	assert.Equal(t, "", failParseCase)
