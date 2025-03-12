@@ -169,6 +169,23 @@ func GetCredsType(s string) string {
 	}
 }
 
+func ParseJsonSecret(s string) (secret string, err error) {
+	var jsonData map[string]interface{}
+	jsonErr := json.Unmarshal([]byte(s), &jsonData)
+	if jsonErr != nil {
+		return "", fmt.Errorf("json unmarshal error: %v", jsonErr.Error())
+	}
+	username, ok := jsonData["username"].(string)
+	if !ok {
+		return "", fmt.Errorf("json username error")
+	}
+	password, ok := jsonData["password"].(string)
+	if !ok {
+		return "", fmt.Errorf("json password error")
+	}
+	return fmt.Sprintf("%s:%s", username, password), nil
+}
+
 func GetSecret(secretId string) (secret string, err error) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
