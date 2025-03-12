@@ -49,15 +49,15 @@ func TestParseJsonSecret(t *testing.T) {
 	failParseCase, jsonParseError := ParseJsonSecret("{\"user}")
 	assert.Equal(t, "", failParseCase)
 	assert.Error(t, jsonParseError)
-	assert.Contains(t, "json unmarshal error: unexpected end of JSON input", jsonParseError.Error())
+	assert.Contains(t, "error parsing json secret: unexpected end of JSON input", jsonParseError.Error())
 
 	noUsernameCase, usernameError := ParseJsonSecret("{\"password\":\"pass_val\"}")
 	assert.Equal(t, "", noUsernameCase)
 	assert.Error(t, usernameError)
-	assert.Contains(t, "json username error", usernameError.Error())
+	assert.Contains(t, "error parsing username from json secret", usernameError.Error())
 
 	noPasswordCase, passwordError := ParseJsonSecret("{\"username\":\"user_val\"}")
 	assert.Equal(t, "", noPasswordCase)
 	assert.Error(t, passwordError)
-	assert.Contains(t, "json password error", passwordError.Error())
+	assert.Contains(t, "error parsing password from json secret", passwordError.Error())
 }
