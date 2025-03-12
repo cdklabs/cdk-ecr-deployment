@@ -1,8 +1,6 @@
 // Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: Apache-2.0
 
-
-import * as child_process from 'child_process';
 import * as path from 'path';
 import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
@@ -131,17 +129,14 @@ export interface IImageName {
 function getCode(buildImage: string): lambda.AssetCode {
   if (shouldUsePrebuiltLambda()) {
     try {
-      const installScript = path.join(__dirname, '../lambda/install.js');
-      const prebuiltPath = path.join(__dirname, '../lambda/out');
-      child_process.execFileSync(process.argv0, [installScript, prebuiltPath]);
-
+      const prebuiltPath = path.join(__dirname, '../lambda-bin');
       return lambda.Code.fromAsset(prebuiltPath);
     } catch (err) {
       console.warn(`Can not get prebuilt lambda: ${err}`);
     }
   }
 
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda'), {
+  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda-src'), {
     buildArgs: {
       buildImage,
     },

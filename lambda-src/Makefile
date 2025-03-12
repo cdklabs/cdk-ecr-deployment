@@ -21,7 +21,7 @@ endif
 BUILDTAGS := exclude_graphdriver_devicemapper exclude_graphdriver_btrfs containers_image_openpgp lambda.norpc
 OUTPUT ?= cdk-ecr-deployment-handler
 
-all: test lambda
+all: lambda test
 
 upgrade-deps:
 	CGO_ENABLED=0 $(GPGME_ENV) $(GO) get -u -tags "$(BUILDTAGS)"
