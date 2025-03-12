@@ -32,7 +32,6 @@ jspm_packages/
 .yarn-integrity
 .cache
 cdk.out/
-lambda/out/bootstrap
 /test-reports/
 junit.xml
 /coverage/
