@@ -38,6 +38,7 @@ const project = new CdklabsConstructLibrary({
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',
+    'lambda/out/bootstrap',
   ], /* Additional entries to .npmignore. */
 });
 
