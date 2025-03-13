@@ -6,20 +6,8 @@ import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomR
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
-import { shouldUsePrebuiltLambda } from './config';
 
 export interface ECRDeploymentProps {
-
-  /**
-   * Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
-   *
-   * Might be needed for local build if all images need to come from own registry.
-   *
-   * Note that image should use yum as a package manager and have golang available.
-   *
-   * @default - public.ecr.aws/sam/build-go1.x:latest
-   */
-  readonly buildImage?: string;
   /**
    * The source of the docker image.
    */
@@ -86,25 +74,6 @@ export interface ECRDeploymentProps {
    * group will be created for this function.
    */
   readonly securityGroups?: ec2.SecurityGroup[];
-
-  /**
-   * The lambda function runtime environment.
-   *
-   * @default - lambda.Runtime.PROVIDED_AL2023
-   */
-  readonly lambdaRuntime?: lambda.Runtime;
-
-  /**
-   * The name of the lambda handler.
-   *
-   * @default - bootstrap
-   */
-  readonly lambdaHandler?: string;
-
-  /**
-   * The environment variable to set
-   */
-  readonly environment?: { [key: string]: string };
 }
 
 export interface IImageName {
@@ -124,23 +93,6 @@ export interface IImageName {
    * For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
    */
   creds?: string;
-}
-
-function getCode(buildImage: string): lambda.AssetCode {
-  if (shouldUsePrebuiltLambda()) {
-    try {
-      const prebuiltPath = path.join(__dirname, '../lambda-bin');
-      return lambda.Code.fromAsset(prebuiltPath);
-    } catch (err) {
-      console.warn(`Can not get prebuilt lambda: ${err}`);
-    }
-  }
-
-  return lambda.Code.fromDockerBuild(path.join(__dirname, '../lambda-src'), {
-    buildArgs: {
-      buildImage,
-    },
-  });
 }
 
 export class DockerImageName implements IImageName {
@@ -183,10 +135,9 @@ export class ECRDeployment extends Construct {
     const memoryLimit = props.memoryLimit ?? 512;
     this.handler = new lambda.SingletonFunction(this, 'CustomResourceHandler', {
       uuid: this.renderSingletonUuid(memoryLimit),
-      code: getCode(props.buildImage ?? 'public.ecr.aws/docker/library/golang:1'),
-      runtime: props.lambdaRuntime ?? new lambda.Runtime('provided.al2023', RuntimeFamily.OTHER), // not using Runtime.PROVIDED_AL2023 to support older CDK versions (< 2.105.0)
-      handler: props.lambdaHandler ?? 'bootstrap',
-      environment: props.environment,
+      code: lambda.Code.fromAsset(path.join(__dirname, '../lambda-bin')),
+      runtime: new lambda.Runtime('provided.al2023', RuntimeFamily.OTHER), // not using Runtime.PROVIDED_AL2023 to support older CDK versions (< 2.105.0)
+      handler: 'bootstrap',
       lambdaPurpose: 'Custom::CDKECRDeployment',
       timeout: Duration.minutes(15),
       role: props.role,
@@ -236,7 +187,7 @@ export class ECRDeployment extends Construct {
     new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
       // This has been copy/pasted and is a pure lie, but changing it is going to change people's infra!! X(
-      resourceType: 'Custom::CDKBucketDeployment',
+      resourceType: 'Custom::CDKECRDeployment',
       properties: {
         SrcImage: props.src.uri,
         SrcCreds: props.src.creds,

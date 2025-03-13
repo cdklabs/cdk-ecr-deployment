@@ -8,26 +8,16 @@
 
 CDK construct to synchronize single docker image between docker registries.
 
-**Only use v3 of this package**
-
-⚠️ Version 2.* is no longer supported, as the Go.1.x runtime is no longer supported in AWS Lambda.\
-⚠️ Version 1.* is no longer supported, as CDK v1 has reached the end-of-life
-stage.
+> [!IMPORTANT]
+>
+> Please use the latest version of this package, which is `v4`.
+>
+> (Older versions are no longer supported).
 
 ## Features
 
 - Copy image from ECR/external registry to (another) ECR/external registry
 - Copy an archive tarball image from s3 to ECR/external registry
-
-## Environment variables
-
-Enable flags: `true`, `1`. e.g. `export CI=1`
-
-- `CI` indicate if it's CI environment. This flag will enable building lambda from scratch.
-- `NO_PREBUILT_LAMBDA` disable using prebuilt lambda.
-- `FORCE_PREBUILT_LAMBDA` force using prebuilt lambda.
-
-⚠️ If you want to force using prebuilt lambda in CI environment to reduce build time. Try `export FORCE_PREBUILT_LAMBDA=1`.
 
 ## Examples
 
@@ -81,7 +71,7 @@ Then run the example like this:
 
 ```shell
 # Run the following command to try the sample.
-NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
+npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
 ```
 
 To run the DockerHub example you will first need to setup a Secret in AWS Secrets Manager to provide DockerHub credentials.
