@@ -21,6 +21,7 @@ class TestECRDeployment extends Stack {
     const repo = new ecr.Repository(this, 'NginxRepo', {
       repositoryName: 'nginx',
       removalPolicy: RemovalPolicy.DESTROY,
+      autoDeleteImages: true,
     });
 
     // const repo = ecr.Repository.fromRepositoryName(this, 'Repo', 'test');

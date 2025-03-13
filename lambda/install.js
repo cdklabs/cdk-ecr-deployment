@@ -29,6 +29,7 @@ function sha256sum(p) {
 }
 
 async function download(url, dest, agent) {
+  remove(dest);
   console.log(`download ${url}`);
   await pipeline(
     got.stream(url, { agent }),
@@ -36,6 +37,10 @@ async function download(url, dest, agent) {
   );
 }
 
+function remove(dest) {
+  console.log(`removing ${dest}`);
+  fs.rmSync(dest, { force: true });
+}
 
 
 (async () => {
@@ -46,18 +51,28 @@ async function download(url, dest, agent) {
   mkdirp(dir);
 
   const bin = path.join(dir, 'bootstrap');
+  const bootstrapExists = fs.existsSync(bin);
+  const size = bootstrapExists ? fs.statSync(bin).size : 0;
+  const oneMB = 1024*1024;
 
-  if (!fs.existsSync(bin)) {
+  // if the file doesn't exist or is obviously broken, download a new version
+  if (!bootstrapExists || size < oneMB) {
     const agent = {};
     agent.https = process.env.HTTPS_PROXY ? new HttpsProxyAgent({proxy: process.env.HTTPS_PROXY}): undefined;
     agent.http = process.env.HTTP_PROXY ? new HttpProxyAgent({proxy: process.env.HTTP_PROXY}): undefined;
 
-    await download(`${rootUrl}/releases/download/v${version}/bootstrap`, bin, agent);
-    const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/bootstrap.sha256`, { agent })).body.trim();
-    const integrity = await sha256sum(bin);
+    try {
+      await download(`${rootUrl}/releases/download/v${version}/bootstrap`, bin, agent);
+      const expectedIntegrity = (await got(`${rootUrl}/releases/download/v${version}/bootstrap.sha256`, { agent })).body.trim();
+      const integrity = await sha256sum(bin);
 
-    if (integrity !== expectedIntegrity) {
-      throw new Error(`Integrity check error: expected ${expectedIntegrity} but got ${integrity}`);
+      if (integrity !== expectedIntegrity) {
+        throw new Error(`Integrity check error: expected ${expectedIntegrity} but got ${integrity}`);
+      }      
+    } catch (err) {
+      // we had a failure downloading or validating integrity of the bootstrap file, so let's remove it to be sure
+      remove(bin);
+      throw err;
     }
   }
 
