@@ -29,18 +29,18 @@ class TestECRDeployment extends Stack {
       directory: path.join(__dirname, 'docker'),
     });
 
-    new ecrDeploy.ECRDeployment(this, 'DeployECRImage', {
+    new ecrDeploy.ECRDeployment(this, 'DeployECRImage1', {
       src: new ecrDeploy.DockerImageName(image.imageUri),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
     });
 
-    new ecrDeploy.ECRDeployment(this, 'DeployECRImage', {
+    new ecrDeploy.ECRDeployment(this, 'DeployECRImage2', {
       src: new ecrDeploy.DockerImageName(image.imageUri),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
       imageArch: ['arm64'],
     });
 
-    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
+    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage1', {
       src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
     }).addToPrincipalPolicy(new iam.PolicyStatement({
@@ -51,7 +51,7 @@ class TestECRDeployment extends Stack {
       resources: ['*'],
     }));
 
-    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
+    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage2', {
       src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
       dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
       imageArch: ['amd64'],
