@@ -3,7 +3,6 @@
 
 import * as path from 'path';
 import {
-  aws_iam as iam,
   aws_ecr as ecr,
   aws_ecr_assets as assets,
   Stack,
@@ -11,23 +10,26 @@ import {
   StackProps,
   RemovalPolicy,
 } from 'aws-cdk-lib';
-// eslint-disable-next-line no-duplicate-imports
 import * as ecrDeploy from '../src/index';
 
 class TestECRDeployment extends Stack {
   constructor(scope: App, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const repo = new ecr.Repository(this, 'NginxRepo', {
-      repositoryName: 'nginx',
+    const repo = new ecr.Repository(this, 'TargetRepo', {
+      repositoryName: 'ecr-deployment-target',
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteImages: true,
     });
 
-    // const repo = ecr.Repository.fromRepositoryName(this, 'Repo', 'test');
-
     const image = new assets.DockerImageAsset(this, 'CDKDockerImage', {
       directory: path.join(__dirname, 'docker'),
+      platform: assets.Platform.LINUX_AMD64,
+    });
+
+    const imageArm = new assets.DockerImageAsset(this, 'CDKDockerImageArm', {
+      directory: path.join(__dirname, 'docker'),
+      platform: assets.Platform.LINUX_ARM64,
     });
 
     new ecrDeploy.ECRDeployment(this, 'DeployECRImage1', {
@@ -36,33 +38,10 @@ class TestECRDeployment extends Stack {
     });
 
     new ecrDeploy.ECRDeployment(this, 'DeployECRImage2', {
-      src: new ecrDeploy.DockerImageName(image.imageUri),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest`),
+      src: new ecrDeploy.DockerImageName(imageArm.imageUri),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:latest-arm64`),
       imageArch: ['arm64'],
     });
-
-    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage1', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
-    }).addToPrincipalPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        'secretsmanager:GetSecretValue',
-      ],
-      resources: ['*'],
-    }));
-
-    new ecrDeploy.ECRDeployment(this, 'DeployDockerImage2', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', 'dockerhub'),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:dockerhub`),
-      imageArch: ['amd64'],
-    }).addToPrincipalPolicy(new iam.PolicyStatement({
-      effect: iam.Effect.ALLOW,
-      actions: [
-        'secretsmanager:GetSecretValue',
-      ],
-      resources: ['*'],
-    }));
 
     // Your can also copy a docker archive image tarball from s3
     // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
@@ -74,8 +53,6 @@ class TestECRDeployment extends Stack {
 
 const app = new App();
 
-new TestECRDeployment(app, 'test-ecr-deployments', {
-  env: { region: 'ap-northeast-1' },
-});
+new TestECRDeployment(app, 'test-ecr-deployments');
 
 app.synth();

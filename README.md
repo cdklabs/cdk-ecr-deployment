@@ -70,10 +70,42 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
 
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
 
+After cloning the repository, install dependencies and run a full build:
+
+```console
+yarn --frozen-lockfile --check-files
+yarn build
+```
+
+Then run the example like this:
+
 ```shell
 # Run the following command to try the sample.
 NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
 ```
+
+To run the DockerHub example you will first need to setup a Secret in AWS Secrets Manager to provide DockerHub credentials.
+Replace `username:access-token` with your credentials.
+**Please note that Secrets will occur a cost.**
+
+```console
+aws secretsmanager create-secret --name DockerHubCredentials --secret-string "username:access-token"
+```
+
+From the output, copy the ARN of your new secret and export it as env variable
+
+```console
+export DOCKERHUB_SECRET_ARN="<ARN>"
+```
+
+Finally run:
+
+```shell
+# Run the following command to try the sample.
+NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/dockerhub-example.ecr-deployment.ts"
+```
+
+If your Secret is encrypted, you might have to adjust the example to also grant decrypt permissions.
 
 ## [API](./API.md)
 
