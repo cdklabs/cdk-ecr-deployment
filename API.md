@@ -331,14 +331,16 @@ new DockerImageName(name: string, creds?: string)
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-ecr-deployment.DockerImageName.Initializer.parameter.name">name</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-ecr-deployment.DockerImageName.Initializer.parameter.creds">creds</a></code> | <code>string</code> | The credentials of the docker image. |
+| <code><a href="#cdk-ecr-deployment.DockerImageName.Initializer.parameter.name">name</a></code> | <code>string</code> | - The name of the image, e.g. retrieved from `DockerImageAsset.imageUri`. |
+| <code><a href="#cdk-ecr-deployment.DockerImageName.Initializer.parameter.creds">creds</a></code> | <code>string</code> | - The credentials of the docker image. |
 
 ---
 
 ##### `name`<sup>Required</sup> <a name="name" id="cdk-ecr-deployment.DockerImageName.Initializer.parameter.name"></a>
 
 - *Type:* string
+
+The name of the image, e.g. retrieved from `DockerImageAsset.imageUri`.
 
 ---
 
@@ -349,10 +351,8 @@ new DockerImageName(name: string, creds?: string)
 The credentials of the docker image.
 
 Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
-
 If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
 JSON (`{"username":"<username>","password":"<password>"}`).
-
 For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
@@ -364,7 +364,7 @@ For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/lates
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#cdk-ecr-deployment.DockerImageName.property.uri">uri</a></code> | <code>string</code> | The uri of the docker image. |
-| <code><a href="#cdk-ecr-deployment.DockerImageName.property.creds">creds</a></code> | <code>string</code> | The credentials of the docker image. |
+| <code><a href="#cdk-ecr-deployment.DockerImageName.property.creds">creds</a></code> | <code>string</code> | - The credentials of the docker image. |
 
 ---
 
@@ -393,10 +393,8 @@ public readonly creds: string;
 The credentials of the docker image.
 
 Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
-
 If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
 JSON (`{"username":"<username>","password":"<password>"}`).
-
 For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
@@ -416,9 +414,9 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
-| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.p">p</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.ref">ref</a></code> | <code>string</code> | *No description.* |
-| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.creds">creds</a></code> | <code>string</code> | The credentials of the docker image. |
+| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.p">p</a></code> | <code>string</code> | - the S3 bucket name and path of the archive (a S3 URI without the s3://). |
+| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.ref">ref</a></code> | <code>string</code> | - appended to the end of the name with a `:`, e.g. `:latest`. |
+| <code><a href="#cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.creds">creds</a></code> | <code>string</code> | - The credentials of the docker image. |
 
 ---
 
@@ -426,11 +424,15 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 
 - *Type:* string
 
+the S3 bucket name and path of the archive (a S3 URI without the s3://).
+
 ---
 
 ##### `ref`<sup>Optional</sup> <a name="ref" id="cdk-ecr-deployment.S3ArchiveName.Initializer.parameter.ref"></a>
 
 - *Type:* string
+
+appended to the end of the name with a `:`, e.g. `:latest`.
 
 ---
 
@@ -441,10 +443,8 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 The credentials of the docker image.
 
 Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
-
 If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
 JSON (`{"username":"<username>","password":"<password>"}`).
-
 For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
@@ -456,7 +456,7 @@ For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/lates
 | **Name** | **Type** | **Description** |
 | --- | --- | --- |
 | <code><a href="#cdk-ecr-deployment.S3ArchiveName.property.uri">uri</a></code> | <code>string</code> | The uri of the docker image. |
-| <code><a href="#cdk-ecr-deployment.S3ArchiveName.property.creds">creds</a></code> | <code>string</code> | The credentials of the docker image. |
+| <code><a href="#cdk-ecr-deployment.S3ArchiveName.property.creds">creds</a></code> | <code>string</code> | - The credentials of the docker image. |
 
 ---
 
@@ -485,10 +485,8 @@ public readonly creds: string;
 The credentials of the docker image.
 
 Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
-
 If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
 JSON (`{"username":"<username>","password":"<password>"}`).
-
 For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---

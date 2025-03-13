@@ -149,12 +149,28 @@ function getCode(buildImage: string): lambda.AssetCode {
 }
 
 export class DockerImageName implements IImageName {
+  /**
+   * @param name - The name of the image, e.g. retrieved from `DockerImageAsset.imageUri`
+   * @param creds - The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+   *     If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+   *     JSON (`{"username":"<username>","password":"<password>"}`).
+   *     For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
+   */
   public constructor(private name: string, public creds?: string) { }
   public get uri(): string { return `docker://${this.name}`; }
 }
 
 export class S3ArchiveName implements IImageName {
   private name: string;
+
+  /**
+   * @param p - the S3 bucket name and path of the archive (a S3 URI without the s3://)
+   * @param ref - appended to the end of the name with a `:`, e.g. `:latest`
+   * @param creds - The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+   *     If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+   *     JSON (`{"username":"<username>","password":"<password>"}`).
+   *     For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
+   */
   public constructor(p: string, ref?: string, public creds?: string) {
     this.name = p;
     if (ref) {
