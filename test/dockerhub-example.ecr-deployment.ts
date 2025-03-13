@@ -34,8 +34,8 @@ class TestECRDeployment extends Stack {
     const dockerHubSecret = sm.Secret.fromSecretCompleteArn(this, 'DockerHubSecret', process.env.DOCKERHUB_SECRET_ARN!);
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage1', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', dockerHubSecret.secretFullArn),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:javacs3-from-dockerhub`),
+      src: new ecrDeploy.DockerImageName('alpine:latest', dockerHubSecret.secretFullArn),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:alpine-from-dockerhub`),
     }).addToPrincipalPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -45,8 +45,8 @@ class TestECRDeployment extends Stack {
     }));
 
     new ecrDeploy.ECRDeployment(this, 'DeployDockerImage2', {
-      src: new ecrDeploy.DockerImageName('javacs3/javacs3:latest', dockerHubSecret.secretFullArn),
-      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:javacs3-amd64-from-dockerhub`),
+      src: new ecrDeploy.DockerImageName('alpine:latest', dockerHubSecret.secretFullArn),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:alpine-amd64-from-dockerhub`),
       imageArch: ['amd64'],
     }).addToPrincipalPolicy(new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,

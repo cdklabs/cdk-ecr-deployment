@@ -4,11 +4,12 @@
 #
 #
 #---------------------------------------------------------------------------------------------------
-# exeuctes unit tests
+# executes unit tests
 #
 # prepares a staging directory with the requirements
 set -e
 scriptdir=$(cd $(dirname $0) && pwd)
+DOCKER_CMD=${CDK_DOCKER:-docker}
 
 # prepare staging directory
 staging=$(mktemp -d)
@@ -20,5 +21,5 @@ cp -rvf ${scriptdir}/../../lambda/* $PWD
 cp -vf ${scriptdir}/* $PWD
 
 # this will run our tests inside the right environment
-docker version
-docker build --progress plain --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" .
+$DOCKER_CMD version
+$DOCKER_CMD build --progress plain --build-arg GOPROXY="$GOPROXY" .
