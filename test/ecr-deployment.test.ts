@@ -2,7 +2,7 @@ import { Stack, App, aws_ecr as ecr, assertions } from 'aws-cdk-lib';
 import { DockerImageName, ECRDeployment } from '../src';
 
 // Yes, it's a lie. It's also the truth.
-const CUSTOM_RESOURCE_TYPE = 'Custom::CDKBucketDeployment';
+const CUSTOM_RESOURCE_TYPE = 'Custom::CDKECRDeployment';
 
 let app: App;
 let stack: Stack;

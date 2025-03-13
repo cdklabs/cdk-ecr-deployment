@@ -132,11 +132,7 @@ const eCRDeploymentProps: ECRDeploymentProps = { ... }
 | --- | --- | --- |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.dest">dest</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The destination of the docker image. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.src">src</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The source of the docker image. |
-| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.buildImage">buildImage</a></code> | <code>string</code> | Image to use to build Golang lambda for custom resource, if download fails or is not wanted. |
-| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.environment">environment</a></code> | <code>{[ key: string ]: string}</code> | The environment variable to set. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.imageArch">imageArch</a></code> | <code>string[]</code> | The image architecture to be copied. |
-| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.lambdaHandler">lambdaHandler</a></code> | <code>string</code> | The name of the lambda handler. |
-| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.lambdaRuntime">lambdaRuntime</a></code> | <code>aws-cdk-lib.aws_lambda.Runtime</code> | The lambda function runtime environment. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.memoryLimit">memoryLimit</a></code> | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.role">role</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Execution role associated with this function. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup[]</code> | The list of security groups to associate with the Lambda's network interfaces. |
@@ -169,35 +165,6 @@ The source of the docker image.
 
 ---
 
-##### `buildImage`<sup>Optional</sup> <a name="buildImage" id="cdk-ecr-deployment.ECRDeploymentProps.property.buildImage"></a>
-
-```typescript
-public readonly buildImage: string;
-```
-
-- *Type:* string
-- *Default:* public.ecr.aws/sam/build-go1.x:latest
-
-Image to use to build Golang lambda for custom resource, if download fails or is not wanted.
-
-Might be needed for local build if all images need to come from own registry.
-
-Note that image should use yum as a package manager and have golang available.
-
----
-
-##### `environment`<sup>Optional</sup> <a name="environment" id="cdk-ecr-deployment.ECRDeploymentProps.property.environment"></a>
-
-```typescript
-public readonly environment: {[ key: string ]: string};
-```
-
-- *Type:* {[ key: string ]: string}
-
-The environment variable to set.
-
----
-
 ##### `imageArch`<sup>Optional</sup> <a name="imageArch" id="cdk-ecr-deployment.ECRDeploymentProps.property.imageArch"></a>
 
 ```typescript
@@ -214,32 +181,6 @@ architecture or architectures to copy here.
 
 It is currently not possible to copy more than one architecture
 at a time: the array you specify must contain exactly one string.
-
----
-
-##### `lambdaHandler`<sup>Optional</sup> <a name="lambdaHandler" id="cdk-ecr-deployment.ECRDeploymentProps.property.lambdaHandler"></a>
-
-```typescript
-public readonly lambdaHandler: string;
-```
-
-- *Type:* string
-- *Default:* bootstrap
-
-The name of the lambda handler.
-
----
-
-##### `lambdaRuntime`<sup>Optional</sup> <a name="lambdaRuntime" id="cdk-ecr-deployment.ECRDeploymentProps.property.lambdaRuntime"></a>
-
-```typescript
-public readonly lambdaRuntime: Runtime;
-```
-
-- *Type:* aws-cdk-lib.aws_lambda.Runtime
-- *Default:* lambda.Runtime.PROVIDED_AL2023
-
-The lambda function runtime environment.
 
 ---
 

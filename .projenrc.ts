@@ -15,7 +15,7 @@ const project = new CdklabsConstructLibrary({
   authorAddress: 'https://aws.amazon.com',
 
   defaultReleaseBranch: 'main',
-  majorVersion: 3,
+  majorVersion: 4,
   publishToPypi: {
     distName: 'cdk-ecr-deployment',
     module: 'cdk_ecr_deployment',
@@ -35,6 +35,7 @@ const project = new CdklabsConstructLibrary({
   npmignore: [
     'cdk.out',
     'build-lambda.sh',
+    'lambda-src',
   ],
 
   enablePRAutoMerge: true,
