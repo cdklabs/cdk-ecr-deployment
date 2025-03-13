@@ -299,3 +299,27 @@ jobs:
           GIT_USER_EMAIL: github-actions@github.com
           GITHUB_TOKEN: ${{ secrets.GO_GITHUB_TOKEN }}
         run: npx -p publib@latest publib-golang
+  release_prebuilt_lambda:
+    name: Publish Lambda to GitHub Releases
+    needs:
+      - release
+      - release_github
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist
+      - name: Build lambda
+        run: docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda && docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/bootstrap /out && echo $(sha256sum lambda/bootstrap | awk '{ print $1 }') > lambda/bootstrap.sha256
+      - name: Release lambda
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REF: ${{ github.sha }}
+        run: "gh release upload --clobber -R $GITHUB_REPOSITORY $(cat dist/releasetag.txt) lambda/bootstrap lambda/bootstrap.sha256 "
