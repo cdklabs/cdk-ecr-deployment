@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
-import { github } from 'projen';
 
 const project = new CdklabsConstructLibrary({
   setNodeEngineVersion: false,
@@ -34,11 +33,10 @@ const project = new CdklabsConstructLibrary({
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
     'cdk.out/',
-    'lambda/out/bootstrap',
+    'lambda-bin/bootstrap',
   ], /* Additional entries to .gitignore. */
   npmignore: [
     '/cdk.out',
-    'lambda/out/bootstrap',
   ], /* Additional entries to .npmignore. */
 });
 
@@ -48,49 +46,7 @@ project.package.addField('jsiiRosetta', {
   },
 });
 
-project.release?.addJobs({
-  release_prebuilt_lambda: {
-    runsOn: ['ubuntu-latest'],
-    name: 'Publish Lambda to GitHub Releases',
-    needs: ['release', 'release_github'],
-    permissions: {
-      contents: github.workflows.JobPermission.WRITE,
-    },
-    steps: [
-      {
-        name: 'Checkout',
-        uses: 'actions/checkout@v4',
-      },
-      {
-        name: 'Download build artifacts',
-        uses: 'actions/download-artifact@v4',
-        with: {
-          name: 'build-artifact',
-          path: 'dist',
-        },
-      },
-      {
-        name: 'Build lambda',
-        run: [
-          'docker build -t cdk-ecr-deployment-lambda --build-arg GOPROXY="https://goproxy.io|https://goproxy.cn|direct" lambda',
-          'docker run -v $PWD/lambda:/out cdk-ecr-deployment-lambda cp /asset/bootstrap /out',
-          'echo $(sha256sum lambda/bootstrap | awk \'{ print $1 }\') > lambda/bootstrap.sha256',
-        ].join(' && '),
-      },
-      {
-        name: 'Release lambda',
-        // For some reason, need '--clobber' otherwise we always get errors that these files already exist. They're probably
-        // uploaded elsewhere but TBH I don't know where so just add this flag to make it not fail.
-        run: 'gh release upload --clobber -R $GITHUB_REPOSITORY $(cat dist/releasetag.txt) lambda/bootstrap lambda/bootstrap.sha256 ',
-        env: {
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
-          GITHUB_REPOSITORY: '${{ github.repository }}',
-          GITHUB_REF: '${{ github.sha }}',
-        },
-      },
-    ],
-  },
-});
+project.preCompileTask.exec('./build-lambda.sh');
 
 project.package.addField('resolutions', {
   'trim-newlines': '3.0.1',

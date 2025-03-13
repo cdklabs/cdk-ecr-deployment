@@ -53,6 +53,8 @@ class TestECRDeployment extends Stack {
 
 const app = new App();
 
-new TestECRDeployment(app, 'test-ecr-deployments');
+new TestECRDeployment(app, 'test-ecr-deployments', {
+  env: { account: process.env.AWS_DEFAULT_ACCOUNT, region: process.env.AWS_DEFAULT_REGION },
+});
 
 app.synth();
