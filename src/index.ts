@@ -118,7 +118,12 @@ export interface IImageName {
   readonly uri: string;
 
   /**
-   * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+   * The credentials of the docker image. Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+   *
+   * If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+   * JSON (`{"username":"<username>","password":"<password>"}`).
+   *
+   * For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
    */
   creds?: string;
 }

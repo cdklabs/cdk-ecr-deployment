@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -164,6 +165,9 @@ func parseCreds(creds string) (string, error) {
 		return "", nil
 	} else if (credsType == SECRET_ARN) || (credsType == SECRET_NAME) {
 		secret, err := GetSecret(creds)
+		if err != nil && len(secret) > 0 && json.Valid([]byte(secret)) {
+			secret, err = ParseJsonSecret(secret)
+		}
 		return secret, err
 	} else if credsType == SECRET_TEXT {
 		return creds, nil

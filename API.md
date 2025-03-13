@@ -348,7 +348,12 @@ new DockerImageName(name: string, creds?: string)
 
 The credentials of the docker image.
 
-Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+
+If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+JSON (`{"username":"<username>","password":"<password>"}`).
+
+For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
 
@@ -387,7 +392,12 @@ public readonly creds: string;
 
 The credentials of the docker image.
 
-Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+
+If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+JSON (`{"username":"<username>","password":"<password>"}`).
+
+For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
 
@@ -430,7 +440,12 @@ new S3ArchiveName(p: string, ref?: string, creds?: string)
 
 The credentials of the docker image.
 
-Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+
+If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+JSON (`{"username":"<username>","password":"<password>"}`).
+
+For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
 
@@ -469,7 +484,12 @@ public readonly creds: string;
 
 The credentials of the docker image.
 
-Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+
+If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+JSON (`{"username":"<username>","password":"<password>"}`).
+
+For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
 
@@ -514,7 +534,12 @@ public readonly creds: string;
 
 The credentials of the docker image.
 
-Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`
+Format `user:password` or `AWS Secrets Manager secret arn` or `AWS Secrets Manager secret name`.
+
+If specifying an AWS Secrets Manager secret, the format of the secret should be either plain text (`user:password`) or
+JSON (`{"username":"<username>","password":"<password>"}`).
+
+For more details on JSON format, see https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html
 
 ---
 

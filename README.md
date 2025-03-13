@@ -51,7 +51,9 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage2', {
 });
 
 // Copy from private docker registry to ECR.
-// The format of secret in aws secrets manager must be plain text! e.g. <username>:<password>
+// The format of secret in aws secrets manager must be either:
+// - plain text in format <username>:<password>
+// - json in format {"username":"<username>","password":"<password>"}
 new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
   src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'username:password'),
   // src: new ecrdeploy.DockerImageName('javacs3/nginx:latest', 'aws-secrets-manager-secret-name'),
