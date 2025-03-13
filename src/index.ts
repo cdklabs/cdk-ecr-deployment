@@ -139,6 +139,7 @@ export class ECRDeployment extends Construct {
       runtime: new lambda.Runtime('provided.al2023', RuntimeFamily.OTHER), // not using Runtime.PROVIDED_AL2023 to support older CDK versions (< 2.105.0)
       handler: 'bootstrap',
       lambdaPurpose: 'Custom::CDKECRDeployment',
+      description: 'Custom resource handler for copying Docker images between docker registries.',
       timeout: Duration.minutes(15),
       role: props.role,
       memorySize: memoryLimit,
