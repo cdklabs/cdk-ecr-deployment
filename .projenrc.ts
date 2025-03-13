@@ -29,7 +29,8 @@ const project = new CdklabsConstructLibrary({
     'got',
     'hpagent',
   ], /* Runtime dependencies of this module. */
-  jsiiVersion: '5.1.x',
+  jsiiVersion: '5.7.x',
+  typescriptVersion: '5.7.x',
   description: 'CDK construct to deploy docker image to Amazon ECR', /* The description is just a string that helps people understand the purpose of the package. */
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment', /* The repository is the location where the actual code for your package lives. */
   gitignore: [
