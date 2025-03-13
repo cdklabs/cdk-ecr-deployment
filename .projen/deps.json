@@ -52,7 +52,7 @@
     },
     {
       "name": "jest-junit",
-      "version": "^15",
+      "version": "^16",
       "type": "build"
     },
     {
@@ -74,7 +74,7 @@
     },
     {
       "name": "jsii",
-      "version": "5.1.x",
+      "version": "5.7.x",
       "type": "build"
     },
     {
@@ -91,6 +91,7 @@
     },
     {
       "name": "typescript",
+      "version": "5.7.x",
       "type": "build"
     },
     {
