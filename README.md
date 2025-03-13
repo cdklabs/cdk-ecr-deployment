@@ -102,7 +102,7 @@ Finally run:
 
 ```shell
 # Run the following command to try the sample.
-NO_PREBUILT_LAMBDA=1 npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/dockerhub-example.ecr-deployment.ts"
+npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/dockerhub-example.ecr-deployment.ts"
 ```
 
 If your Secret is encrypted, you might have to adjust the example to also grant decrypt permissions.
@@ -116,4 +116,4 @@ Please take a look at those projects before contribution.
 
 To support a new docker image source(like docker tarball in s3), you need to implement [image transport interface](https://github.com/containers/image/blob/master/types/types.go). You could take a look at [docker-archive](https://github.com/containers/image/blob/ccb87a8d0f45cf28846e307eb0ec2b9d38a458c2/docker/archive/transport.go) transport for a good start.
 
-To test the `lambda` folder, `make test`.
+Any error in the custom resource provider will show up in the CloudFormation error log as `Invalid PhysicalResourceId`, because of this: <https://github.com/aws/aws-lambda-go/issues/107>. You need to go into the CloudWatch Log Group to find the real error.
