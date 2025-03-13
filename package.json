@@ -74,18 +74,6 @@
     "aws-cdk-lib": "^2.80.0",
     "constructs": "^10.0.5"
   },
-  "dependencies": {
-    "got": "^11.8.6",
-    "hpagent": "^0.1.2"
-  },
-  "bundledDependencies": [
-    "got",
-    "hpagent"
-  ],
-  "resolutions": {
-    "trim-newlines": "3.0.1",
-    "xmldom": "github:xmldom/xmldom#0.7.0"
-  },
   "keywords": [
     "cdk"
   ],
