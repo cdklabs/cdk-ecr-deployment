@@ -55,9 +55,9 @@
     fsevents "2.3.2"
 
 "@aws-cdk/integ-tests-alpha@latest":
-  version "2.196.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-tests-alpha/-/integ-tests-alpha-2.196.0-alpha.0.tgz#fe92bcb99a14c6e48426399792f61392ce3a4a62"
-  integrity sha512-Vgt74OKyyaJA8F3eF3SQ5zLc/KTBMCzJTkudRffwMczpgK1BjRslUgno9siGJ2CpEhav1t/MHzBVwKJzsEAyJQ==
+  version "2.196.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/integ-tests-alpha/-/integ-tests-alpha-2.196.1-alpha.0.tgz#8be68b133c0d9cde2296baea9fa01f2b7977dd27"
+  integrity sha512-yaXSJPWJ0SKvjQhWnHobtpVdBgcU+9+6Obb2ng9In36BRUnEi/O0GKIBbOXZRQUFrmkNM0kOxkXQWn/edwdbUw==
 
 "@aws-cdk/service-spec-types@^0.0.138":
   version "0.0.138"
@@ -985,16 +985,16 @@
   integrity sha512-hov8bUuiLiyFPGyFPE1lwWhmzYbirOXQNNo40+y3zow8aFVTeyn3VWL0VFFfdNddA8S4Vf0Tc062rzyNr7Paag==
 
 "@types/node@*":
-  version "22.15.18"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.15.18.tgz#2f8240f7e932f571c2d45f555ba0b6c3f7a75963"
-  integrity sha512-v1DKRfUdyW+jJhZNEI1PYy29S2YRxMV5AOO/x/SjKmW0acCIOqmbj6Haf9eHAhsPmrhlHSxEhv/1WszcLWV4cg==
+  version "22.15.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-22.15.19.tgz#ba9f321675243af0456d607fa82a4865931e0cef"
+  integrity sha512-3vMNr4TzNQyjHcRZadojpRaD9Ofr6LsonZAoQ+HMUa/9ORTPoxVIw0e0mpqWpdjj8xybyCM+oKOUH2vwFu/oEw==
   dependencies:
     undici-types "~6.21.0"
 
 "@types/node@^18":
-  version "18.19.100"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.100.tgz#7f3aefbb6911099ab7e0902a1f373b1a4d2c1947"
-  integrity sha512-ojmMP8SZBKprc3qGrGk8Ujpo80AXkrP7G2tOT4VWr5jlr5DHjsJF+emXJz+Wm0glmy4Js62oKMdZZ6B9Y+tEcA==
+  version "18.19.101"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.101.tgz#6c08ca62bdbc745b60b885f3c38f571ea145ccff"
+  integrity sha512-Ykg7fcE3+cOQlLUv2Ds3zil6DVjriGQaSN/kEpl5HQ3DIGM6W0F2n9+GkWV4bRt7KjLymgzNdTnSKCbFUUJ7Kw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -3912,17 +3912,17 @@ jsii@5.7.x:
     yargs "^17.7.2"
 
 jsii@~5.8.0:
-  version "5.8.8"
-  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.8.8.tgz#72b03fe4a1a2461f4e00a3a2d7a64a9ff74d1af7"
-  integrity sha512-TSgHsnYNJq1W5ILdIE3tUJ3lLjSbp2VhDolBZ4SU7IYfEbW1dg9kpFLe7J/XPgQXfHlf5eUzOPVXyV/9rXft1w==
+  version "5.8.9"
+  resolved "https://registry.yarnpkg.com/jsii/-/jsii-5.8.9.tgz#be9d59d7e8193b60291d3cd8a0913668fd11b0e1"
+  integrity sha512-TxdbK33FUEatwVQh2Kls7i+v2QAlPZPopdePMZ89xePFLIwmUKhEPuPQSPHnFwdMe43cBOqa1Oh68yDQHvKNug==
   dependencies:
-    "@jsii/check-node" "1.111.0"
-    "@jsii/spec" "^1.111.0"
+    "@jsii/check-node" "1.112.0"
+    "@jsii/spec" "^1.112.0"
     case "^1.6.3"
     chalk "^4"
     fast-deep-equal "^3.1.3"
     log4js "^6.9.1"
-    semver "^7.7.1"
+    semver "^7.7.2"
     semver-intersect "^1.5.0"
     sort-json "^2.0.1"
     spdx-license-list "^6.10.0"
