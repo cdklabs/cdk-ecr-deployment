@@ -165,7 +165,7 @@ func parseCreds(creds string) (string, error) {
 		return "", nil
 	} else if (credsType == SECRET_ARN) || (credsType == SECRET_NAME) {
 		secret, err := GetSecret(creds)
-		if err != nil && len(secret) > 0 && json.Valid([]byte(secret)) {
+		if err == nil && len(secret) > 0 && json.Valid([]byte(secret)) {
 			secret, err = ParseJsonSecret(secret)
 		}
 		return secret, err
