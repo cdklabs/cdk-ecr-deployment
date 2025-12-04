@@ -18,8 +18,6 @@ COPY go.mod go.sum ./
 
 RUN go env
 
-# RUN go mod download -x
-
 COPY . /ws
 
 RUN mkdir -p /asset/ && \
