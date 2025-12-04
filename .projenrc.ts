@@ -21,8 +21,8 @@ const project = new CdklabsConstructLibrary({
     module: 'cdk_ecr_deployment',
   },
 
-  jsiiVersion: '5.7.x',
-  typescriptVersion: '5.7.x',
+  jsiiVersion: '5.9.x',
+  typescriptVersion: '5.9.x',
   cdkVersion: '2.80.0',
   cdkVersionPinning: false,
   bundledDeps: [],
