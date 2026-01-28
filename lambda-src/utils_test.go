@@ -61,3 +61,33 @@ func TestParseJsonSecret(t *testing.T) {
 	assert.Error(t, passwordError)
 	assert.Contains(t, "error parsing password from json secret", passwordError.Error())
 }
+
+func TestGetArchChoice(t *testing.T) {
+	assert.Equal(t, "amd64", GetArchChoice("amd64", false))
+	assert.Equal(t, "", GetArchChoice("amd64", true))
+	assert.Equal(t, "arm64", GetArchChoice("arm64", false))
+	assert.Equal(t, "", GetArchChoice("arm64", true))
+}
+
+func TestGetImageTagsMap(t *testing.T) {
+	validJson := `{"amd64":"v1.0-amd64", "arm64":"v1.0-arm64"}`
+	tags, err := GetImageTagsMap(validJson)
+	assert.NoError(t, err)
+	assert.Equal(t, "v1.0-amd64", tags["amd64"])
+	assert.Equal(t, "v1.0-arm64", tags["arm64"])
+
+	invalidJson := `{"amd64":"v1.0-amd64"`
+	_, err = GetImageTagsMap(invalidJson)
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "error parsing arch image tags")
+}
+
+func TestGetImageDestination(t *testing.T) {
+	dest := "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/my-repo:latest"
+	result := GetImageDestination(dest, "v1.0-amd64")
+	assert.Equal(t, "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/my-repo:v1.0-amd64", result)
+
+	destNoTag := "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/my-repo"
+	result = GetImageDestination(destNoTag, "v1.0-arm64")
+	assert.Equal(t, "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/my-repo:v1.0-arm64", result)
+}

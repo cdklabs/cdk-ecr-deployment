@@ -58,6 +58,14 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		if err != nil {
 			return physicalResourceID, data, err
 		}
+		copyImageIndex, err := getBoolPropsDefault(event.ResourceProperties, COPY_IMAGE_INDEX, false)
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+		archImageTags, err := getStrPropsDefault(event.ResourceProperties, ARCH_IMAGE_TAGS, "")
+		if err != nil {
+			return physicalResourceID, data, err
+		}
 		srcCreds, err := getStrPropsDefault(event.ResourceProperties, SRC_CREDS, "")
 		if err != nil {
 			return physicalResourceID, data, err
@@ -76,47 +84,20 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 			return physicalResourceID, data, err
 		}
 
-		log.Printf("SrcImage: %v DestImage: %v ImageArch: %v", srcImage, destImage, imageArch)
+		log.Printf("SrcImage: %v DestImage: %v ImageArch: %v CopyImageIndex: %v", srcImage, destImage, imageArch, copyImageIndex)
 
-		srcRef, err := alltransports.ParseImageName(srcImage)
-		if err != nil {
-			return physicalResourceID, data, err
-		}
-		destRef, err := alltransports.ParseImageName(destImage)
+		// Main copy operation
+		err = copyImage(srcImage, destImage, srcCreds, destCreds, imageArch, copyImageIndex)
 		if err != nil {
 			return physicalResourceID, data, err
 		}
 
-		srcOpts := NewImageOpts(srcImage, imageArch)
-		srcOpts.SetCreds(srcCreds)
-		srcCtx, err := srcOpts.NewSystemContext()
-		if err != nil {
-			return physicalResourceID, data, err
-		}
-		destOpts := NewImageOpts(destImage, imageArch)
-		destOpts.SetCreds(destCreds)
-		destCtx, err := destOpts.NewSystemContext()
-		if err != nil {
-			return physicalResourceID, data, err
-		}
-
-		ctx, cancel := newTimeoutContext()
-		defer cancel()
-		policyContext, err := newPolicyContext()
-		if err != nil {
-			return physicalResourceID, data, err
-		}
-		defer policyContext.Destroy()
-
-		_, err = copy.Image(ctx, policyContext, destRef, srcRef, &copy.Options{
-			ReportWriter:   os.Stdout,
-			DestinationCtx: destCtx,
-			SourceCtx:      srcCtx,
-		})
-		if err != nil {
-			// log.Printf("Copy image failed: %v", err.Error())
-			// return physicalResourceID, data, nil
-			return physicalResourceID, data, fmt.Errorf("copy image failed: %s", err.Error())
+		// Apply architecture-specific image tags if specified
+		if archImageTags != "" {
+			err = applyArchImageTags(srcImage, destImage, srcCreds, destCreds, archImageTags)
+			if err != nil {
+				return physicalResourceID, data, err
+			}
 		}
 	}
 
@@ -159,6 +140,18 @@ func getStrPropsDefault(m map[string]interface{}, k string, d string) (string, e
 	return "", fmt.Errorf("can't get %v", k)
 }
 
+func getBoolPropsDefault(m map[string]interface{}, k string, d bool) (bool, error) {
+	v := m[k]
+	if v == nil {
+		return d, nil
+	}
+	val, ok := v.(string)
+	if ok && (v == "true" || v == "false") {
+		return val == "true", nil
+	}
+	return false, fmt.Errorf(`can't get %v as bool with value %v. valid values are "true" and "false"`, k, v)
+}
+
 func parseCreds(creds string) (string, error) {
 	credsType := GetCredsType(creds)
 	if creds == "" {
@@ -173,4 +166,67 @@ func parseCreds(creds string) (string, error) {
 		return creds, nil
 	}
 	return "", fmt.Errorf("unkown creds type")
+}
+
+func copyImage(srcImage string, destImage string, srcCreds string, destCreds string, imageArch string, copyImageIndex bool) error {
+	srcRef, err := alltransports.ParseImageName(srcImage)
+	if err != nil {
+		return err
+	}
+	destRef, err := alltransports.ParseImageName(destImage)
+	if err != nil {
+		return err
+	}
+
+	srcOpts := NewImageOpts(srcImage, imageArch, copyImageIndex)
+	srcOpts.SetCreds(srcCreds)
+	srcCtx, err := srcOpts.NewSystemContext()
+	if err != nil {
+		return err
+	}
+	destOpts := NewImageOpts(destImage, imageArch, copyImageIndex)
+	destOpts.SetCreds(destCreds)
+	destCtx, err := destOpts.NewSystemContext()
+	if err != nil {
+		return err
+	}
+
+	ctx, cancel := newTimeoutContext()
+	defer cancel()
+	policyContext, err := newPolicyContext()
+	if err != nil {
+		return err
+	}
+	defer policyContext.Destroy()
+
+	copyOpts := &copy.Options{
+		ReportWriter:   os.Stdout,
+		DestinationCtx: destCtx,
+		SourceCtx:      srcCtx,
+	}
+	if copyImageIndex {
+		copyOpts.ImageListSelection = copy.CopyAllImages
+	}
+
+	_, err = copy.Image(ctx, policyContext, destRef, srcRef, copyOpts)
+	if err != nil {
+		return fmt.Errorf("copy image failed: %s", err.Error())
+	}
+	return nil
+}
+
+func applyArchImageTags(srcImage string, destImage string, srcCreds string, destCreds string, archImageTags string) error {
+	tags, err := GetImageTagsMap(archImageTags)
+	if err != nil {
+		return err
+	}
+
+	for arch, tag := range tags {
+		archDestImage := GetImageDestination(destImage, tag)
+		err := copyImage(srcImage, archDestImage, srcCreds, destCreds, arch, false)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

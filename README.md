@@ -16,7 +16,7 @@ CDK construct to synchronize single docker image between docker registries.
 
 ## Features
 
-- Copy image from ECR/external registry to (another) ECR/external registry
+- Copy image or multi-architecture image index from ECR/external registry to (another) ECR/external registry
 - Copy an archive tarball image from s3 to ECR/external registry
 
 ## Examples
@@ -56,6 +56,17 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage3', {
   ],
   resources: ['*'],
 }));
+
+// Copy multi-architecture image index (manifest) with all architectures.
+new ecrdeploy.ECRDeployment(this, 'DeployDockerImage4', {
+  src: new ecrdeploy.DockerImageName('public.ecr.aws/nginx/nginx:latest'),
+  dest: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/my-nginx4:manifest`),
+  copyImageIndex: true,
+  archImageTags: {
+    amd64: 'my-nginx-amd64',
+    arm64: 'my-nginx-arm64',
+  },
+});
 ```
 
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)

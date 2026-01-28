@@ -43,6 +43,17 @@ class TestECRDeployment extends Stack {
       imageArch: ['arm64'],
     });
 
+    // Test copying a multi-arch image index
+    new ecrDeploy.ECRDeployment(this, 'DeployECRImageIndex', {
+      src: new ecrDeploy.DockerImageName('public.ecr.aws/nginx/nginx:latest'),
+      dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:nginx-manifest`),
+      copyImageIndex: true,
+      archImageTags: {
+        amd64: 'nginx-amd64',
+        arm64: 'nginx-arm64',
+      },
+    });
+
     // Your can also copy a docker archive image tarball from s3
     // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
     //   src: new ecrDeploy.S3ArchiveName('bucket-name/nginx.tar', 'nginx:latest'),

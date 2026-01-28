@@ -33,10 +33,10 @@ func TestMain(t *testing.T) {
 	destRef, err := alltransports.ParseImageName(destImage)
 	assert.NoError(t, err)
 
-	srcOpts := NewImageOpts(srcImage, "")
+	srcOpts := NewImageOpts(srcImage, "", false)
 	srcCtx, err := srcOpts.NewSystemContext()
 	assert.NoError(t, err)
-	destOpts := NewImageOpts(destImage, "")
+	destOpts := NewImageOpts(destImage, "", false)
 	destCtx, err := destOpts.NewSystemContext()
 	assert.NoError(t, err)
 
@@ -55,10 +55,33 @@ func TestMain(t *testing.T) {
 }
 
 func TestNewImageOpts(t *testing.T) {
-	srcOpts := NewImageOpts("s3://cdk-ecr-deployment/nginx.tar:nginx:latest", "arm64")
+	srcOpts := NewImageOpts("s3://cdk-ecr-deployment/nginx.tar:nginx:latest", "arm64", false)
 	_, err := srcOpts.NewSystemContext()
 	assert.NoError(t, err)
-	destOpts := NewImageOpts("dir:/tmp/nginx.dir", "arm64")
+	destOpts := NewImageOpts("dir:/tmp/nginx.dir", "arm64", false)
 	_, err = destOpts.NewSystemContext()
 	assert.NoError(t, err)
+}
+
+func TestGetBoolPropsDefault(t *testing.T) {
+	props := map[string]interface{}{
+		"trueKey":  "true",
+		"falseKey": "false",
+		"intKey":   123,
+	}
+	
+	result, err := getBoolPropsDefault(props, "trueKey", false)
+	assert.NoError(t, err)
+	assert.True(t, result)
+	
+	result, err = getBoolPropsDefault(props, "falseKey", true)
+	assert.NoError(t, err)
+	assert.False(t, result)
+	
+	result, err = getBoolPropsDefault(props, "missingKey", true)
+	assert.NoError(t, err)
+	assert.True(t, result)
+	
+	_, err = getBoolPropsDefault(props, "intKey", false)
+	assert.Error(t, err)
 }

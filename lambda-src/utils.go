@@ -21,11 +21,13 @@ import (
 )
 
 const (
-	SRC_IMAGE  string = "SrcImage"
-	DEST_IMAGE string = "DestImage"
-	IMAGE_ARCH string = "ImageArch"
-	SRC_CREDS  string = "SrcCreds"
-	DEST_CREDS string = "DestCreds"
+	SRC_IMAGE        string = "SrcImage"
+	DEST_IMAGE       string = "DestImage"
+	IMAGE_ARCH       string = "ImageArch"
+	SRC_CREDS        string = "SrcCreds"
+	DEST_CREDS       string = "DestCreds"
+	COPY_IMAGE_INDEX string = "CopyImageIndex"
+	ARCH_IMAGE_TAGS  string = "ArchImageTags"
 )
 
 type ECRAuth struct {
@@ -88,14 +90,15 @@ type ImageOpts struct {
 	region          string
 	creds           string
 	arch            string
+	copyImageIndex  bool
 }
 
-func NewImageOpts(uri string, arch string) *ImageOpts {
+func NewImageOpts(uri string, arch string, copyImageIndex bool) *ImageOpts {
 	requireECRLogin := strings.Contains(uri, "dkr.ecr")
 	if requireECRLogin {
-		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), "", arch}
+		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), "", arch, copyImageIndex}
 	} else {
-		return &ImageOpts{uri, requireECRLogin, "", "", arch}
+		return &ImageOpts{uri, requireECRLogin, "", "", arch, copyImageIndex}
 	}
 }
 
@@ -107,11 +110,18 @@ func (s *ImageOpts) SetCreds(creds string) {
 	s.creds = creds
 }
 
+func GetArchChoice(arch string, copyImageIndex bool) string {
+	if !copyImageIndex {
+		return arch
+	}
+	return ""
+}
+
 func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 	ctx := &types.SystemContext{
 		DockerRegistryUserAgent: "ecr-deployment",
 		DockerAuthConfig:        &types.DockerAuthConfig{},
-		ArchitectureChoice:      s.arch,
+		ArchitectureChoice:      GetArchChoice(s.arch, s.copyImageIndex),
 	}
 
 	if s.creds != "" {
@@ -203,4 +213,21 @@ func GetSecret(secretId string) (secret string, err error) {
 		return "", fmt.Errorf("fetch secret value error: %v", err.Error())
 	}
 	return *resp.SecretString, nil
+}
+
+func GetImageTagsMap(archImageTags string) (tags map[string]string, err error) {
+	err = json.Unmarshal([]byte(archImageTags), &tags)
+	if err != nil {
+		return nil, fmt.Errorf(`error parsing arch image tags: %v. expected JSON format like {"amd64":"amd64-tag", "arm64":"arm64-tag"}`, err.Error())
+	}
+	return tags, nil
+}
+
+func GetImageDestination(dest string, imageTag string) string {
+	destName := strings.Replace(dest, "docker://", "", 1)
+	repo := destName
+	if strings.Contains(destName, ":") {
+		repo = strings.Split(destName, ":")[0]
+	}
+	return fmt.Sprintf("docker://%s:%s", repo, imageTag)
 }

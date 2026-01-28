@@ -146,6 +146,8 @@ const eCRDeploymentProps: ECRDeploymentProps = { ... }
 | --- | --- | --- |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.dest">dest</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The destination of the docker image. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.src">src</a></code> | <code><a href="#cdk-ecr-deployment.IImageName">IImageName</a></code> | The source of the docker image. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.archImageTags">archImageTags</a></code> | <code>{[ key: string ]: string}</code> | Tags to apply to individual architecture-specific images when copyImageIndex is true. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.copyImageIndex">copyImageIndex</a></code> | <code>boolean</code> | Whether to copy a source docker image index (multi-arch manifest) to the destination. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.imageArch">imageArch</a></code> | <code>string[]</code> | The image architecture to be copied. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.memoryLimit">memoryLimit</a></code> | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.role">role</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Execution role associated with this function. |
@@ -176,6 +178,40 @@ public readonly src: IImageName;
 - *Type:* <a href="#cdk-ecr-deployment.IImageName">IImageName</a>
 
 The source of the docker image.
+
+---
+
+##### `archImageTags`<sup>Optional</sup> <a name="archImageTags" id="cdk-ecr-deployment.ECRDeploymentProps.property.archImageTags"></a>
+
+```typescript
+public readonly archImageTags: {[ key: string ]: string};
+```
+
+- *Type:* {[ key: string ]: string}
+
+Tags to apply to individual architecture-specific images when copyImageIndex is true.
+
+Can only be specified when copyImageIndex is true. Maps architecture names to
+their respective tags. This makes individual architectures discoverable
+by human-readable tags in addition to the image index tag.
+
+For example, { 'arm64': 'image-arm64', 'amd64': 'image-amd64' }.
+
+---
+
+##### `copyImageIndex`<sup>Optional</sup> <a name="copyImageIndex" id="cdk-ecr-deployment.ECRDeploymentProps.property.copyImageIndex"></a>
+
+```typescript
+public readonly copyImageIndex: boolean;
+```
+
+- *Type:* boolean
+- *Default:* False
+
+Whether to copy a source docker image index (multi-arch manifest) to the destination.
+
+When true, copies the image index and all underlying architecture-specific
+images in a single operation.
 
 ---
 

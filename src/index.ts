@@ -32,6 +32,28 @@ export interface ECRDeploymentProps {
   readonly imageArch?: string[];
 
   /**
+   * Whether to copy a source docker image index (multi-arch manifest) to the destination.
+   *
+   * When true, copies the image index and all underlying architecture-specific
+   * images in a single operation.
+   *
+   * @default False
+   */
+  readonly copyImageIndex?: boolean;
+
+  /**
+   * Tags to apply to individual architecture-specific images when
+   * copyImageIndex is true.
+   *
+   * Can only be specified when copyImageIndex is true. Maps architecture names to
+   * their respective tags. This makes individual architectures discoverable
+   * by human-readable tags in addition to the image index tag.
+   *
+   * For example, { 'arm64': 'image-arm64', 'amd64': 'image-amd64' }.
+   */
+  readonly archImageTags?: { [architecture: string]: string };
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -180,6 +202,12 @@ export class ECRDeployment extends Construct {
       resources: ['*'],
     }));
 
+    if (props.imageArch && props.copyImageIndex) {
+      throw new Error('imageArch and copyImageIndex cannot both be set');
+    }
+    if (!props.copyImageIndex && props.archImageTags) {
+      throw new Error('archImageTags can only be specified when copyImageIndex is true');
+    }
     if (props.imageArch && props.imageArch.length !== 1) {
       throw new Error(`imageArch must contain exactly 1 element, got ${JSON.stringify(props.imageArch)}`);
     }
@@ -195,6 +223,8 @@ export class ECRDeployment extends Construct {
         DestImage: props.dest.uri,
         DestCreds: props.dest.creds,
         ...imageArch ? { ImageArch: imageArch } : {},
+        ...props.copyImageIndex ? { CopyImageIndex: props.copyImageIndex } : {},
+        ...props.archImageTags ? { ArchImageTags: JSON.stringify(props.archImageTags) } : {},
       },
     });
   }
