@@ -91,3 +91,63 @@ func TestGetImageDestination(t *testing.T) {
 	result = GetImageDestination(destNoTag, "v1.0-arm64")
 	assert.Equal(t, "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/my-repo:v1.0-arm64", result)
 }
+
+func TestNewImageOptsPrivateECR(t *testing.T) {
+	tests := []struct {
+		name       string
+		uri        string
+		wantLogin  bool
+		wantPublic bool
+		wantRegion string
+	}{
+		{"us-west-2", "docker://123456789.dkr.ecr.us-west-2.amazonaws.com/repo:tag", true, false, "us-west-2"},
+		{"us-east-1", "docker://123456789.dkr.ecr.us-east-1.amazonaws.com/repo:tag", true, false, "us-east-1"},
+		{"cn-north-1", "docker://123456789.dkr.ecr.cn-north-1.amazonaws.com.cn/repo:tag", true, false, "cn-north-1"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := NewImageOpts(tt.uri, "amd64", false)
+			assert.True(t, opts.requireECRLogin)
+			assert.False(t, opts.requireECRPublicLogin)
+			assert.Equal(t, tt.wantRegion, opts.region)
+		})
+	}
+}
+
+func TestNewImageOptsPublicECR(t *testing.T) {
+	tests := []struct {
+		name string
+		uri  string
+	}{
+		{"nginx", "docker://public.ecr.aws/nginx/nginx:latest"},
+		{"custom alias", "docker://public.ecr.aws/myalias/myrepo:v1.0"},
+		{"no tag", "docker://public.ecr.aws/myalias/myrepo"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := NewImageOpts(tt.uri, "amd64", false)
+			assert.False(t, opts.requireECRLogin)
+			assert.True(t, opts.requireECRPublicLogin)
+			assert.Equal(t, "us-east-1", opts.region)
+		})
+	}
+}
+
+func TestNewImageOptsExternalRegistry(t *testing.T) {
+	tests := []struct {
+		name string
+		uri  string
+	}{
+		{"dockerhub", "docker://docker.io/library/nginx:latest"},
+		{"ghcr", "docker://ghcr.io/owner/repo:latest"},
+		{"quay", "docker://quay.io/org/repo:v1.0"},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			opts := NewImageOpts(tt.uri, "amd64", false)
+			assert.False(t, opts.requireECRLogin)
+			assert.False(t, opts.requireECRPublicLogin)
+			assert.Equal(t, "", opts.region)
+		})
+	}
+}
