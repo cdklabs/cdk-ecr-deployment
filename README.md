@@ -67,6 +67,37 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage4', {
     arm64: 'my-nginx-arm64',
   },
 });
+
+// Copy image to a public ECR registry.
+// Note: Public ECR authentication requires ecr-public and sts permissions.
+const publicDeployment = new ecrdeploy.ECRDeployment(this, 'DeployDockerImage5', {
+  src: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/my-nginx:latest`),
+  dest: new ecrdeploy.DockerImageName('public.ecr.aws/your-alias/your-repo:latest'),
+  copyImageIndex: true,
+  archImageTags: {
+    amd64: 'latest-amd64',
+    arm64: 'latest-arm64',
+  },
+});
+
+publicDeployment.addToPrincipalPolicy(new iam.PolicyStatement({
+  effect: iam.Effect.ALLOW,
+  actions: [
+    'ecr-public:GetAuthorizationToken',
+    'ecr-public:BatchCheckLayerAvailability',
+    'ecr-public:InitiateLayerUpload',
+    'ecr-public:UploadLayerPart',
+    'ecr-public:CompleteLayerUpload',
+    'ecr-public:PutImage',
+  ],
+  resources: ['*'],
+}));
+
+publicDeployment.addToPrincipalPolicy(new iam.PolicyStatement({
+  effect: iam.Effect.ALLOW,
+  actions: ['sts:GetServiceBearerToken'],
+  resources: ['*'],
+}));
 ```
 
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
