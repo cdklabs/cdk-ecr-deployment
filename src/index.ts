@@ -54,6 +54,15 @@ export interface ECRDeploymentProps {
   readonly archImageTags?: { [architecture: string]: string };
 
   /**
+   * Retry configuration to apply to when copying images such as the number of retry attemtps,
+   * the base amount of delay (in seconds) between each retry, and the max amount of delay (in seconds)
+   * between each retry.
+   * 
+   * For example, { 'numAttempts': 3, 'baseDelay': 1, 'maxDelay': 5 }
+   */
+  readonly retryConfigs?: { [fields: string]: number };
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -225,6 +234,7 @@ export class ECRDeployment extends Construct {
         ...imageArch ? { ImageArch: imageArch } : {},
         ...props.copyImageIndex ? { CopyImageIndex: props.copyImageIndex } : {},
         ...props.archImageTags ? { ArchImageTags: JSON.stringify(props.archImageTags) } : {},
+        ...props.retryConfigs ? { RetryConfigs: JSON.stringify(props.retryConfigs) } : {},
       },
     });
   }
