@@ -54,6 +54,25 @@ class TestECRDeployment extends Stack {
       },
     });
 
+    // Uncomment to stress tests copying images to ECR repos with retry configurations in place.
+    // ECR supports 10 TPS for PutImage calls by default.
+    // for (let i = 0; i < 11; i ++) {
+    //   new ecrDeploy.ECRDeployment(this, `DeployECRImageWithRetry${i}`, {
+    //     src: new ecrDeploy.DockerImageName('public.ecr.aws/nginx/nginx:latest'),
+    //     dest: new ecrDeploy.DockerImageName(`${repo.repositoryUri}:nginx-manifest-${i}`),
+    //     copyImageIndex: true,
+    //     archImageTags: {
+    //       amd64: `nginx-amd64-${i}`,
+    //       arm64: `nginx-arm64-${i}`,
+    //     },
+    //     retryConfigs: {
+    //       numAttempts: 3,
+    //       baseDelay: 1,
+    //       maxDelay: 30,
+    //     },
+    //   });
+    // }
+
     // Your can also copy a docker archive image tarball from s3
     // new ecrDeploy.ECRDeployment(this, 'DeployDockerImage', {
     //   src: new ecrDeploy.S3ArchiveName('bucket-name/nginx.tar', 'nginx:latest'),

@@ -7,8 +7,11 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
+	"math"
+	"math/rand"
 	"regexp"
 	"strings"
 	"time"
@@ -17,17 +20,20 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/aws/smithy-go"
 	"github.com/containers/image/v5/types"
 )
 
 const (
-	SRC_IMAGE        string = "SrcImage"
-	DEST_IMAGE       string = "DestImage"
-	IMAGE_ARCH       string = "ImageArch"
-	SRC_CREDS        string = "SrcCreds"
-	DEST_CREDS       string = "DestCreds"
-	COPY_IMAGE_INDEX string = "CopyImageIndex"
-	ARCH_IMAGE_TAGS  string = "ArchImageTags"
+	SRC_IMAGE          string = "SrcImage"
+	DEST_IMAGE         string = "DestImage"
+	IMAGE_ARCH         string = "ImageArch"
+	SRC_CREDS          string = "SrcCreds"
+	DEST_CREDS         string = "DestCreds"
+	COPY_IMAGE_INDEX   string = "CopyImageIndex"
+	ARCH_IMAGE_TAGS    string = "ArchImageTags"
+	RETRY_CONFIGS      string = "RetryConfigs"
+	ECRRateExceedError string = "toomanyrequests: Rate exceeded"
 )
 
 type ECRAuth struct {
@@ -36,6 +42,13 @@ type ECRAuth struct {
 	Pass          string
 	ProxyEndpoint string
 	ExpiresAt     time.Time
+}
+
+// Retriable configuration in the case the lambda function encounters any "retriable error" (i.e. rate limit exceeded).
+type RetryConfigs struct {
+	NumAttempts *int     `json:"numAttempts,omitempty"` // The maximum number of attempts to retry
+	BaseDelay   *float64 `json:"baseDelay,omitempty"`   // The base duration for the delay/sleep time in between each attempt (in seconds)
+	MaxDelay    *float64 `json:"maxDelay,omitempty"`    // The maimum duration for the delay/sleep time in between each attempt (in seconds)
 }
 
 func GetECRRegion(uri string) string {
@@ -230,4 +243,86 @@ func GetImageDestination(dest string, imageTag string) string {
 		repo = strings.Split(destName, ":")[0]
 	}
 	return fmt.Sprintf("docker://%s:%s", repo, imageTag)
+}
+
+func intPtr(v int) *int             { return &v }
+func float64Ptr(v float64) *float64 { return &v }
+
+func (rc *RetryConfigs) ToString() string {
+	return fmt.Sprintf("RetryConfigs: numAttempts=%v baseDelay=%v maxDelay=%v", aws.ToInt(rc.NumAttempts), aws.ToFloat64(rc.BaseDelay), aws.ToFloat64(rc.MaxDelay))
+}
+
+// Helper function to parse the specified retry configuration in the form of JSON data into a
+// RetryConfigs object
+func GetRetryConfigs(data string) (*RetryConfigs, error) {
+	// Initializing a new retry configuration with default values
+	config := RetryConfigs{
+		NumAttempts: intPtr(1),
+		BaseDelay:   float64Ptr(1.0),
+		MaxDelay:    float64Ptr(1.0),
+	}
+
+	if data != "" {
+		decoder := json.NewDecoder(strings.NewReader(data))
+		decoder.DisallowUnknownFields()
+		if err := decoder.Decode(&config); err != nil {
+			return nil, fmt.Errorf("unable to parse retry configuration from data: %v with error: %v", data, err)
+		}
+	}
+	if err := config.ValidateFields(); err != nil {
+		return nil, err
+	}
+	return &config, nil
+}
+
+// Helper function for RetryConfigs to validate that the values of the retry configs are non-negative/non-zero as well as
+// have a valid range between baseDelay and maxDelay.
+func (rc *RetryConfigs) ValidateFields() error {
+	attempts := aws.ToInt(rc.NumAttempts)
+	baseDelay := aws.ToFloat64(rc.BaseDelay)
+	maxDelay := aws.ToFloat64(rc.MaxDelay)
+	if attempts < 1 {
+		return fmt.Errorf("numAttempts cannot be less than 1")
+	}
+	if baseDelay <= 0.0 {
+		return fmt.Errorf("baseDelay cannot be less than or equal to 0")
+	}
+	if maxDelay <= 0.0 {
+		return fmt.Errorf("maxDelay cannot be less than or equal to 0")
+	}
+
+	if baseDelay > maxDelay {
+		return fmt.Errorf("baseDelay cannot be greater than maxDelay")
+	}
+	return nil
+}
+
+// Helper function to check if an error is a "rate limit exceeded" from ECR API calls
+func IsECRRateLimitError(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	// Attempt to cast it as a smithy APIError
+	var apiErr smithy.APIError
+	if errors.As(err, &apiErr) {
+		if strings.Contains(apiErr.ErrorMessage(), ECRRateExceedError) {
+			return true
+		}
+	}
+
+	// Fallback to string matching
+	s := strings.ToLower(err.Error())
+	return strings.Contains(s, "toomanyrequests") ||
+		strings.Contains(s, "ratelimitexceeded") ||
+		strings.Contains(s, "rate exceeded") ||
+		(strings.Contains(s, "rate") && strings.Contains(s, "exceed"))
+}
+
+// A simple backoff with jitter formula that's used for retries.
+// The formula is: delay = random(0, min(maxDelay, baseDelay * (2 ^ attempt number)))
+func BackoffWithJitter(attempt int, baseDelay float64, maxDelay float64) time.Duration {
+	delay := math.Min(maxDelay, baseDelay*math.Pow(2, float64(attempt)))
+	jitter := math.Max(baseDelay, rand.Float64()*delay)
+	return time.Duration(jitter * float64(time.Second))
 }
