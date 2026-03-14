@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/containers/image/v5/copy"
 	"github.com/containers/image/v5/signature"
@@ -17,6 +18,7 @@ import (
 
 	"github.com/aws/aws-lambda-go/cfn"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-sdk-go-v2/aws"
 
 	_ "cdk-ecr-deployment-handler/s3" // Install s3 transport plugin
 )
@@ -66,6 +68,14 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		if err != nil {
 			return physicalResourceID, data, err
 		}
+		retryData, err := getStrPropsDefault(event.ResourceProperties, RETRY_CONFIGS, "")
+		if err != nil {
+			return physicalResourceID, data, err
+		}
+		retryConfigs, err := GetRetryConfigs(retryData)
+		if err != nil {
+			return physicalResourceID, data, err
+		}
 		srcCreds, err := getStrPropsDefault(event.ResourceProperties, SRC_CREDS, "")
 		if err != nil {
 			return physicalResourceID, data, err
@@ -87,14 +97,14 @@ func handler(ctx context.Context, event cfn.Event) (physicalResourceID string, d
 		log.Printf("SrcImage: %v DestImage: %v ImageArch: %v CopyImageIndex: %v", srcImage, destImage, imageArch, copyImageIndex)
 
 		// Main copy operation
-		err = copyImage(srcImage, destImage, srcCreds, destCreds, imageArch, copyImageIndex)
+		err = copyImage(srcImage, destImage, srcCreds, destCreds, imageArch, copyImageIndex, retryConfigs)
 		if err != nil {
 			return physicalResourceID, data, err
 		}
 
 		// Apply architecture-specific image tags if specified
 		if archImageTags != "" {
-			err = applyArchImageTags(srcImage, destImage, srcCreds, destCreds, archImageTags)
+			err = applyArchImageTags(srcImage, destImage, srcCreds, destCreds, archImageTags, retryConfigs)
 			if err != nil {
 				return physicalResourceID, data, err
 			}
@@ -168,7 +178,7 @@ func parseCreds(creds string) (string, error) {
 	return "", fmt.Errorf("unkown creds type")
 }
 
-func copyImage(srcImage string, destImage string, srcCreds string, destCreds string, imageArch string, copyImageIndex bool) error {
+func copyImage(srcImage string, destImage string, srcCreds string, destCreds string, imageArch string, copyImageIndex bool, retryConfigs *RetryConfigs) error {
 	srcRef, err := alltransports.ParseImageName(srcImage)
 	if err != nil {
 		return err
@@ -208,14 +218,26 @@ func copyImage(srcImage string, destImage string, srcCreds string, destCreds str
 		copyOpts.ImageListSelection = copy.CopyAllImages
 	}
 
-	_, err = copy.Image(ctx, policyContext, destRef, srcRef, copyOpts)
-	if err != nil {
-		return fmt.Errorf("copy image failed: %s", err.Error())
+	attempts := aws.ToInt(retryConfigs.NumAttempts)
+	baseDelay := aws.ToFloat64(retryConfigs.BaseDelay)
+	maxDelay := aws.ToFloat64(retryConfigs.MaxDelay)
+	for i := 0; i < attempts; i++ {
+		_, err = copy.Image(ctx, policyContext, destRef, srcRef, copyOpts)
+		if err == nil {
+			return nil
+		}
+		if IsECRRateLimitError(err) && i < (attempts-1) {
+			wait := BackoffWithJitter(i+1, baseDelay, maxDelay)
+			log.Printf("Exceeded rate limit for ECR PutImages on attempt (%v/%v). Retrying in %v...", (i + 1), attempts, wait)
+			time.Sleep(wait)
+			continue
+		}
+		return fmt.Errorf("copy image failed with unknown error: %s", err.Error())
 	}
-	return nil
+	return fmt.Errorf("copy image failed after %d retries: %s", attempts, err.Error())
 }
 
-func applyArchImageTags(srcImage string, destImage string, srcCreds string, destCreds string, archImageTags string) error {
+func applyArchImageTags(srcImage string, destImage string, srcCreds string, destCreds string, archImageTags string, retryConfigs *RetryConfigs) error {
 	tags, err := GetImageTagsMap(archImageTags)
 	if err != nil {
 		return err
@@ -223,7 +245,7 @@ func applyArchImageTags(srcImage string, destImage string, srcCreds string, dest
 
 	for arch, tag := range tags {
 		archDestImage := GetImageDestination(destImage, tag)
-		err := copyImage(srcImage, archDestImage, srcCreds, destCreds, arch, false)
+		err := copyImage(srcImage, archDestImage, srcCreds, destCreds, arch, false, retryConfigs)
 		if err != nil {
 			return err
 		}

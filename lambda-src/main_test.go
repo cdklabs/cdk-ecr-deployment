@@ -69,19 +69,19 @@ func TestGetBoolPropsDefault(t *testing.T) {
 		"falseKey": "false",
 		"intKey":   123,
 	}
-	
+
 	result, err := getBoolPropsDefault(props, "trueKey", false)
 	assert.NoError(t, err)
 	assert.True(t, result)
-	
+
 	result, err = getBoolPropsDefault(props, "falseKey", true)
 	assert.NoError(t, err)
 	assert.False(t, result)
-	
+
 	result, err = getBoolPropsDefault(props, "missingKey", true)
 	assert.NoError(t, err)
 	assert.True(t, result)
-	
+
 	_, err = getBoolPropsDefault(props, "intKey", false)
 	assert.Error(t, err)
 }
