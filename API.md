@@ -150,6 +150,7 @@ const eCRDeploymentProps: ECRDeploymentProps = { ... }
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.copyImageIndex">copyImageIndex</a></code> | <code>boolean</code> | Whether to copy a source docker image index (multi-arch manifest) to the destination. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.imageArch">imageArch</a></code> | <code>string[]</code> | The image architecture to be copied. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.memoryLimit">memoryLimit</a></code> | <code>number</code> | The amount of memory (in MiB) to allocate to the AWS Lambda function which replicates the files from the CDK bucket to the destination bucket. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.retryConfigs">retryConfigs</a></code> | <code>{[ key: string ]: number}</code> | Retry configuration to apply to when copying images such as the number of retry attemtps, the base amount of delay (in seconds) between each retry, and the max amount of delay (in seconds) between each retry. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.role">role</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Execution role associated with this function. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup[]</code> | The list of security groups to associate with the Lambda's network interfaces. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network to place the deployment lambda handler in. |
@@ -247,6 +248,20 @@ The amount of memory (in MiB) to allocate to the AWS Lambda function which repli
 
 If you are deploying large files, you will need to increase this number
 accordingly.
+
+---
+
+##### `retryConfigs`<sup>Optional</sup> <a name="retryConfigs" id="cdk-ecr-deployment.ECRDeploymentProps.property.retryConfigs"></a>
+
+```typescript
+public readonly retryConfigs: {[ key: string ]: number};
+```
+
+- *Type:* {[ key: string ]: number}
+
+Retry configuration to apply to when copying images such as the number of retry attemtps, the base amount of delay (in seconds) between each retry, and the max amount of delay (in seconds) between each retry.
+
+For example, { 'numAttempts': 3, 'baseDelay': 1, 'maxDelay': 5 }
 
 ---
 
