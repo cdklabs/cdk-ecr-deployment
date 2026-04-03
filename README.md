@@ -67,6 +67,19 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage4', {
     arm64: 'my-nginx-arm64',
   },
 });
+
+// Copy image to a public ECR registry.
+// The required ecr-public and sts permissions are automatically attached
+// when the destination is a public.ecr.aws URI.
+new ecrdeploy.ECRDeployment(this, 'DeployDockerImage5', {
+  src: new ecrdeploy.DockerImageName(`${cdk.Aws.ACCOUNT_ID}.dkr.ecr.us-west-2.amazonaws.com/my-nginx:latest`),
+  dest: new ecrdeploy.DockerImageName('public.ecr.aws/your-alias/your-repo:latest'),
+  copyImageIndex: true,
+  archImageTags: {
+    amd64: 'latest-amd64',
+    arm64: 'latest-arm64',
+  },
+});
 ```
 
 ## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)

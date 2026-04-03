@@ -59,3 +59,98 @@ test('Cannot specify more or fewer than 1 elements in imageArch', () => {
     imageArch: ['banana', 'pear'],
   })).toThrow(/imageArch must contain exactly 1 element/);
 });
+
+test('public ECR dest auto-attaches ecr-public and sts permissions', () => {
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest: new DockerImageName('public.ecr.aws/myalias/myrepo:latest'),
+  });
+
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties('AWS::IAM::Policy', {
+    PolicyDocument: {
+      Statement: assertions.Match.arrayWith([
+        assertions.Match.objectLike({
+          Action: ['ecr-public:GetAuthorizationToken', 'sts:GetServiceBearerToken'],
+          Effect: 'Allow',
+          Resource: '*',
+        }),
+      ]),
+    },
+  });
+});
+
+test('public ECR permissions are scoped to repository ARN', () => {
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest: new DockerImageName('public.ecr.aws/myalias/myrepo:latest'),
+  });
+
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties('AWS::IAM::Policy', {
+    PolicyDocument: {
+      Statement: assertions.Match.arrayWith([
+        assertions.Match.objectLike({
+          Action: [
+            'ecr-public:BatchCheckLayerAvailability',
+            'ecr-public:InitiateLayerUpload',
+            'ecr-public:UploadLayerPart',
+            'ecr-public:CompleteLayerUpload',
+            'ecr-public:PutImage',
+          ],
+          Effect: 'Allow',
+          Resource: {
+            'Fn::Join': assertions.Match.arrayWith([
+              assertions.Match.arrayWith([
+                assertions.Match.stringLikeRegexp('.*ecr-public.*repository.*'),
+              ]),
+            ]),
+          },
+        }),
+      ]),
+    },
+  });
+});
+
+test('private ECR dest does NOT get ecr-public permissions', () => {
+  new ECRDeployment(stack, 'ECR', { src, dest });
+
+  const policyJson = JSON.stringify(assertions.Template.fromStack(stack).toJSON());
+  expect(policyJson).not.toContain('ecr-public:GetAuthorizationToken');
+  expect(policyJson).not.toContain('sts:GetServiceBearerToken');
+});
+
+test('non-ECR dest does NOT get ecr-public permissions', () => {
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest: new DockerImageName('ghcr.io/owner/repo:latest'),
+  });
+
+  const policyJson = JSON.stringify(assertions.Template.fromStack(stack).toJSON());
+  expect(policyJson).not.toContain('ecr-public:GetAuthorizationToken');
+  expect(policyJson).not.toContain('sts:GetServiceBearerToken');
+});
+
+test('public ECR source with private ECR dest gets read-auth permissions only', () => {
+  new ECRDeployment(stack, 'ECR', {
+    src: new DockerImageName('public.ecr.aws/nginx/nginx:latest'),
+    dest,
+  });
+
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties('AWS::IAM::Policy', {
+    PolicyDocument: {
+      Statement: assertions.Match.arrayWith([
+        assertions.Match.objectLike({
+          Action: ['ecr-public:GetAuthorizationToken', 'sts:GetServiceBearerToken'],
+          Effect: 'Allow',
+          Resource: '*',
+        }),
+      ]),
+    },
+  });
+
+  const policyJson = JSON.stringify(template.toJSON());
+  expect(policyJson).not.toContain('ecr-public:PutImage');
+  expect(policyJson).not.toContain('ecr-public:InitiateLayerUpload');
+});
