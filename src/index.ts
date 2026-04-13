@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Duration, CustomResource, Token } from 'aws-cdk-lib';
+import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Arn, Aws, Duration, CustomResource, Stack, Token } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
@@ -210,6 +210,53 @@ export class ECRDeployment extends Construct {
       ],
       resources: ['*'],
     }));
+
+    // Auto-attach public ECR permissions when the destination is a public ECR registry.
+    // When dest is public ECR, the auth token permissions also cover source-side auth
+    // if the source happens to be public ECR too.
+    if (props.dest.uri.includes('public.ecr.aws')) {
+      handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'ecr-public:GetAuthorizationToken',
+          'sts:GetServiceBearerToken',
+        ],
+        resources: ['*'],
+      }));
+
+      handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'ecr-public:BatchCheckLayerAvailability',
+          'ecr-public:InitiateLayerUpload',
+          'ecr-public:UploadLayerPart',
+          'ecr-public:CompleteLayerUpload',
+          'ecr-public:PutImage',
+        ],
+        resources: [
+          // Public ECR is only available in the 'aws' partition (not aws-cn or aws-us-gov)
+          Arn.format({
+            partition: 'aws',
+            service: 'ecr-public',
+            region: '',
+            account: Aws.ACCOUNT_ID,
+            resource: 'repository',
+            resourceName: '*',
+          }, Stack.of(this)),
+        ],
+      }));
+    } else if (props.src.uri.includes('public.ecr.aws')) {
+      // When reading from public ECR, the Lambda still authenticates via
+      // ecr-public:GetAuthorizationToken. Grant the minimal read-auth permissions.
+      handlerRole.addToPrincipalPolicy(new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: [
+          'ecr-public:GetAuthorizationToken',
+          'sts:GetServiceBearerToken',
+        ],
+        resources: ['*'],
+      }));
+    }
 
     if (props.imageArch && props.copyImageIndex) {
       throw new Error('imageArch and copyImageIndex cannot both be set');

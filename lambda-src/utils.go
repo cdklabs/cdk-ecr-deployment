@@ -19,6 +19,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ecr"
+	"github.com/aws/aws-sdk-go-v2/service/ecrpublic"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/smithy-go"
 	"github.com/containers/image/v5/types"
@@ -60,6 +61,24 @@ func GetECRRegion(uri string) string {
 	return "us-east-1"
 }
 
+// newECRAuth decodes a base64-encoded authorization token and builds an ECRAuth.
+func newECRAuth(encodedToken string, expiresAt time.Time) (*ECRAuth, error) {
+	data, err := base64.StdEncoding.DecodeString(encodedToken)
+	if err != nil {
+		return nil, fmt.Errorf("error decoding auth token: %v", err.Error())
+	}
+	parts := strings.SplitN(string(data), ":", 2)
+	if len(parts) != 2 {
+		return nil, fmt.Errorf("invalid auth token format: expected user:pass")
+	}
+	return &ECRAuth{
+		Token:     encodedToken,
+		User:      parts[0],
+		Pass:      parts[1],
+		ExpiresAt: expiresAt,
+	}, nil
+}
+
 func GetECRLogin(region string) ([]ECRAuth, error) {
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
@@ -68,50 +87,63 @@ func GetECRLogin(region string) ([]ECRAuth, error) {
 	if err != nil {
 		return nil, fmt.Errorf("api client configuration error: %v", err.Error())
 	}
-	client := ecr.NewFromConfig(cfg)
-	input := &ecr.GetAuthorizationTokenInput{}
 
-	resp, err := client.GetAuthorizationToken(context.TODO(), input)
+	resp, err := ecr.NewFromConfig(cfg).GetAuthorizationToken(context.TODO(), &ecr.GetAuthorizationTokenInput{})
 	if err != nil {
 		return nil, fmt.Errorf("error login into ECR: %v", err.Error())
 	}
 
 	auths := make([]ECRAuth, len(resp.AuthorizationData))
 	for i, auth := range resp.AuthorizationData {
-		// extract base64 token
-		data, err := base64.StdEncoding.DecodeString(*auth.AuthorizationToken)
+		a, err := newECRAuth(*auth.AuthorizationToken, *auth.ExpiresAt)
 		if err != nil {
 			return nil, err
 		}
-		// extract username and password
-		token := strings.SplitN(string(data), ":", 2)
-		// object to pass to template
-		auths[i] = ECRAuth{
-			Token:         *auth.AuthorizationToken,
-			User:          token[0],
-			Pass:          token[1],
-			ProxyEndpoint: *(auth.ProxyEndpoint),
-			ExpiresAt:     *(auth.ExpiresAt),
-		}
+		a.ProxyEndpoint = *auth.ProxyEndpoint
+		auths[i] = *a
 	}
 	return auths, nil
 }
 
+// GetECRPublicLogin authenticates to public ECR (public.ecr.aws).
+// Public ECR auth must always target us-east-1.
+// See https://docs.aws.amazon.com/AmazonECR/latest/public/public-registry-auth.html
+func GetECRPublicLogin() (*ECRAuth, error) {
+	cfg, err := config.LoadDefaultConfig(
+		context.TODO(),
+		config.WithRegion("us-east-1"),
+	)
+	if err != nil {
+		return nil, fmt.Errorf("api client configuration error: %v", err.Error())
+	}
+
+	resp, err := ecrpublic.NewFromConfig(cfg).GetAuthorizationToken(context.TODO(), &ecrpublic.GetAuthorizationTokenInput{})
+	if err != nil {
+		return nil, fmt.Errorf("error logging into ECR Public: %v", err.Error())
+	}
+
+	return newECRAuth(*resp.AuthorizationData.AuthorizationToken, *resp.AuthorizationData.ExpiresAt)
+}
+
 type ImageOpts struct {
-	uri             string
-	requireECRLogin bool
-	region          string
-	creds           string
-	arch            string
-	copyImageIndex  bool
+	uri                   string
+	requireECRLogin       bool
+	requireECRPublicLogin bool
+	region                string
+	creds                 string
+	arch                  string
+	copyImageIndex        bool
 }
 
 func NewImageOpts(uri string, arch string, copyImageIndex bool) *ImageOpts {
 	requireECRLogin := strings.Contains(uri, "dkr.ecr")
+	requireECRPublicLogin := strings.Contains(uri, "public.ecr.aws")
 	if requireECRLogin {
-		return &ImageOpts{uri, requireECRLogin, GetECRRegion(uri), "", arch, copyImageIndex}
+		return &ImageOpts{uri, requireECRLogin, false, GetECRRegion(uri), "", arch, copyImageIndex}
+	} else if requireECRPublicLogin {
+		return &ImageOpts{uri, false, requireECRPublicLogin, "us-east-1", "", arch, copyImageIndex}
 	} else {
-		return &ImageOpts{uri, requireECRLogin, "", "", arch, copyImageIndex}
+		return &ImageOpts{uri, false, false, "", "", arch, copyImageIndex}
 	}
 }
 
@@ -162,6 +194,17 @@ func (s *ImageOpts) NewSystemContext() (*types.SystemContext, error) {
 			ctx.DockerAuthConfig = &types.DockerAuthConfig{
 				Username: auth0.User,
 				Password: auth0.Pass,
+			}
+		} else if s.requireECRPublicLogin {
+			log.Printf("ECR Public auto login mode for %v", s.uri)
+
+			auth, err := GetECRPublicLogin()
+			if err != nil {
+				return nil, err
+			}
+			ctx.DockerAuthConfig = &types.DockerAuthConfig{
+				Username: auth.User,
+				Password: auth.Pass,
 			}
 		}
 	}
