@@ -12,7 +12,7 @@ import (
 
 	"cdk-ecr-deployment-handler/internal/iolimits"
 
-	"github.com/containers/image/v5/docker/reference"
+	"go.podman.io/image/v5/docker/reference"
 	"github.com/pkg/errors"
 )
 

@@ -33,6 +33,8 @@ const project = new CdklabsConstructLibrary({
   gitignore: [
     'cdk.out',
     'lambda-bin/bootstrap',
+    'test/**/*.lock',
+    'test/**/cdk-integ.out.*',
   ],
   npmignore: [
     'cdk.out',
@@ -49,6 +51,15 @@ project.package.addField('jsiiRosetta', {
     '@types/node': '^18',
   },
 });
+
+// Run integ tests against a single, modern aws-cdk-lib so the integ-tests-alpha
+// assertion provider uses a supported Lambda runtime (the 2.80 line shipped a
+// now-unsupported nodejs runtime). Resolutions only affect this repo's install;
+// the published peerDependency floor stays ^2.80.0, so consumers are unaffected.
+project.package.addPackageResolutions(
+  'aws-cdk-lib@2.257.0',
+  '@aws-cdk/integ-tests-alpha@2.257.0-alpha.0',
+);
 
 project.preCompileTask.exec('./build-lambda.sh');
 

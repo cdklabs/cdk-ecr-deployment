@@ -1,0 +1,110 @@
+{
+  "/S3ArchiveTest/DefaultTest/DeployAssert": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new IntegTest in @aws-cdk/integ-tests-alpha...",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.s3-archive.ts:33:15)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImages16cfe389c34f29f6888fd12e2677ab5a/Default": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": "*"
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImages16cfe389c34f29f6888fd12e2677ab5a/AssertionResults": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AssertionResultsAwsApiCallECRdescribeImages16cfe389c34f29f6888fd12e2677ab5a"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...@aws-cdk/integ-tests-alpha, aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.s3-archive.ts:34:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.s3-archive.ts:34:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/S3ArchiveTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImages16cfe389c34f29f6888fd12e2677ab5a/Default/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AwsApiCallECRdescribeImages16cfe389c34f29f6888fd12e2677ab5a"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.s3-archive.ts:34:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ]
+}

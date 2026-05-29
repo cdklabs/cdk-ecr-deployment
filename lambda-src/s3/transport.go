@@ -12,10 +12,10 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/containers/image/v5/docker/reference"
-	"github.com/containers/image/v5/image"
-	"github.com/containers/image/v5/transports"
-	"github.com/containers/image/v5/types"
+	"go.podman.io/image/v5/docker/reference"
+	"go.podman.io/image/v5/image"
+	"go.podman.io/image/v5/transports"
+	"go.podman.io/image/v5/types"
 )
 
 func init() {

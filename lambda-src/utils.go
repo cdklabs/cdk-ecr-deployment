@@ -22,7 +22,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecrpublic"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	"github.com/aws/smithy-go"
-	"github.com/containers/image/v5/types"
+	"go.podman.io/image/v5/types"
 )
 
 const (

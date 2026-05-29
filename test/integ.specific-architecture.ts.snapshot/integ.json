@@ -1,0 +1,13 @@
+{
+  "version": "53.0.0",
+  "testCases": {
+    "SpecificArchitectureTest/DefaultTest": {
+      "stacks": [
+        "integ-ecr-deployment-arch"
+      ],
+      "assertionStack": "SpecificArchitectureTest/DefaultTest/DeployAssert",
+      "assertionStackName": "SpecificArchitectureTestDefaultTestDeployAssertA8BC5528"
+    }
+  },
+  "minimumCliVersion": "2.1125.0"
+}

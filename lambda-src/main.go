@@ -11,9 +11,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/containers/image/v5/copy"
-	"github.com/containers/image/v5/signature"
-	"github.com/containers/image/v5/transports/alltransports"
+	"go.podman.io/image/v5/copy"
+	"go.podman.io/image/v5/signature"
+	"go.podman.io/image/v5/transports/alltransports"
 	"github.com/sirupsen/logrus"
 
 	"github.com/aws/aws-lambda-go/cfn"

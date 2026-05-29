@@ -5,24 +5,17 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@aws-cdk/asset-awscli-v1@npm:^2.2.177":
-  version: 2.2.227
-  resolution: "@aws-cdk/asset-awscli-v1@npm:2.2.227"
-  checksum: 10c0/3fb500c2e9ae69912da3046be421fd0e72954fca0d3fa98a411e72a4bc4344825a8e4002cc633793d4ab2b5b5dd8789f6f49a9ea0a1ffc2c76a2eed813773dee
+"@aws-cdk/asset-awscli-v1@npm:2.2.273":
+  version: 2.2.273
+  resolution: "@aws-cdk/asset-awscli-v1@npm:2.2.273"
+  checksum: 10c0/625f12bc6c659efcafdc135c0efcf0e780d4c33fbcbcf9cbcdef20b76d3cd7cfdf51c49306d7b65e37d58c6a4c1b20a15dac28a00bae55da10ccb01ade8a033b
   languageName: node
   linkType: hard
 
-"@aws-cdk/asset-kubectl-v20@npm:^2.1.1":
-  version: 2.1.4
-  resolution: "@aws-cdk/asset-kubectl-v20@npm:2.1.4"
-  checksum: 10c0/ab9353104f8a49807c906ce0193a838c3c82f25e6fecfa5b5341d722730574b4b5824fbf62b17fe69f07df34796a3e77513a55327e05f34556b518b0424041d7
-  languageName: node
-  linkType: hard
-
-"@aws-cdk/asset-node-proxy-agent-v5@npm:^2.0.148":
-  version: 2.0.166
-  resolution: "@aws-cdk/asset-node-proxy-agent-v5@npm:2.0.166"
-  checksum: 10c0/7385d48e25f199cdaac4e961ec6a95a031a60bb9a93d78ababaf3b91122593dc965fa764de6aeca2af9e12113dcbd18535aa031c67a1846e534294f2cf051558
+"@aws-cdk/asset-node-proxy-agent-v6@npm:^2.1.1":
+  version: 2.1.2
+  resolution: "@aws-cdk/asset-node-proxy-agent-v6@npm:2.1.2"
+  checksum: 10c0/5b80cf4e4b853d4410d80ab906adfa9c268c9a78b9df6f736ecee09dbd1e527e893188469d8bdc932e34c4778ffd4abda74288ea009174f42f8be1acf82824e7
   languageName: node
   linkType: hard
 
@@ -33,6 +26,28 @@ __metadata:
     "@aws-cdk/service-spec-types": "npm:^0.0.247"
     "@cdklabs/tskb": "npm:^0.0.4"
   checksum: 10c0/a30486e56e6cc1e71b7af76de9d122a08af11ae39c85ced61488e95b7906893f8510081e2b1edffe0442310b47f32f31952c7b0ba354f52be7e30d797e5b2c67
+  languageName: node
+  linkType: hard
+
+"@aws-cdk/cloud-assembly-api@npm:^2.2.4":
+  version: 2.2.5
+  resolution: "@aws-cdk/cloud-assembly-api@npm:2.2.5"
+  dependencies:
+    jsonschema: "npm:^1.5.0"
+    semver: "npm:^7.8.0"
+  peerDependencies:
+    "@aws-cdk/cloud-assembly-schema": ">=53.28.0"
+  checksum: 10c0/82b725a9bfbdfb0e6256047450d7df260f1b08b16db2a8759e373aa7bb33dd6f7f67e857804efbb577a619097b2b1b94f3f088506dae6de6fbdaad41043f24b6
+  languageName: node
+  linkType: hard
+
+"@aws-cdk/cloud-assembly-schema@npm:^53.25.0":
+  version: 53.28.0
+  resolution: "@aws-cdk/cloud-assembly-schema@npm:53.28.0"
+  dependencies:
+    jsonschema: "npm:^1.5.0"
+    semver: "npm:^7.8.0"
+  checksum: 10c0/9952eb6df8b9c509582976573b3051812fd180592c22bedd964ecca8d701a6f77683c15b5a4b582c69a101834732c4a830ed932c33048bda4f40f7ad5748d095
   languageName: node
   linkType: hard
 
@@ -48,7 +63,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@aws-cdk/integ-tests-alpha@npm:latest":
+"@aws-cdk/integ-tests-alpha@npm:2.257.0-alpha.0":
   version: 2.257.0-alpha.0
   resolution: "@aws-cdk/integ-tests-alpha@npm:2.257.0-alpha.0"
   peerDependencies:
@@ -1894,26 +1909,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"aws-cdk-lib@npm:2.80.0":
-  version: 2.80.0
-  resolution: "aws-cdk-lib@npm:2.80.0"
+"aws-cdk-lib@npm:2.257.0":
+  version: 2.257.0
+  resolution: "aws-cdk-lib@npm:2.257.0"
   dependencies:
-    "@aws-cdk/asset-awscli-v1": "npm:^2.2.177"
-    "@aws-cdk/asset-kubectl-v20": "npm:^2.1.1"
-    "@aws-cdk/asset-node-proxy-agent-v5": "npm:^2.0.148"
+    "@aws-cdk/asset-awscli-v1": "npm:2.2.273"
+    "@aws-cdk/asset-node-proxy-agent-v6": "npm:^2.1.1"
+    "@aws-cdk/cloud-assembly-api": "npm:^2.2.4"
+    "@aws-cdk/cloud-assembly-schema": "npm:^53.25.0"
     "@balena/dockerignore": "npm:^1.0.2"
     case: "npm:1.6.3"
-    fs-extra: "npm:^11.1.1"
-    ignore: "npm:^5.2.4"
-    jsonschema: "npm:^1.4.1"
-    minimatch: "npm:^3.1.2"
-    punycode: "npm:^2.3.0"
-    semver: "npm:^7.5.1"
-    table: "npm:^6.8.1"
-    yaml: "npm:1.10.2"
+    fs-extra: "npm:^11.3.3"
+    ignore: "npm:^5.3.2"
+    jsonschema: "npm:^1.5.0"
+    mime-types: "npm:^2.1.35"
+    minimatch: "npm:^10.2.3"
+    punycode: "npm:^2.3.1"
+    semver: "npm:^7.7.4"
+    table: "npm:^6.9.0"
+    yaml: "npm:1.10.3"
   peerDependencies:
-    constructs: ^10.0.0
-  checksum: 10c0/5ab3972e3cd5101ec95f5c8ec9e7dfae6c402d9d34892df71aff44a74d17454a8ea8de3b7283786220b3a2f066b68883182a35364264da2468bdc3261afebf59
+    constructs: ^10.5.0
+  checksum: 10c0/878e552b3c7a3095adbe90a00f938c70df50a2935804edcb3ad32d84df5b90983fa55e7a98807aae48d77deec4f7e33e6b2f95f19bf0bcfd368166ef348b764c
   languageName: node
   linkType: hard
 
@@ -3590,14 +3607,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-extra@npm:^11.1.1":
-  version: 11.3.0
-  resolution: "fs-extra@npm:11.3.0"
+"fs-extra@npm:^11.3.3":
+  version: 11.3.5
+  resolution: "fs-extra@npm:11.3.5"
   dependencies:
     graceful-fs: "npm:^4.2.0"
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
-  checksum: 10c0/5f95e996186ff45463059feb115a22fb048bdaf7e487ecee8a8646c78ed8fdca63630e3077d4c16ce677051f5e60d3355a06f3cd61f3ca43f48cc58822a44d0a
+  checksum: 10c0/33e80bad6b5d17308faa197e5ede99ecba4b6f6cb4aa4645d52745476c75afc57665bdf39ec75b2ebb38b97b7110f634a8dcc0a546e248eb4de059275cf5ac90
   languageName: node
   linkType: hard
 
@@ -4014,7 +4031,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^5.2.0, ignore@npm:^5.2.4":
+"ignore@npm:^5.2.0, ignore@npm:^5.3.2":
   version: 5.3.2
   resolution: "ignore@npm:5.3.2"
   checksum: 10c0/f9f652c957983634ded1e7f02da3b559a0d4cc210fca3792cb67f1b153623c9c42efdc1c4121af171e295444459fc4a9201101fb041b1104a3c000bccb188337
@@ -5233,7 +5250,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonschema@npm:^1.4.1":
+"jsonschema@npm:^1.5.0":
   version: 1.5.0
   resolution: "jsonschema@npm:1.5.0"
   checksum: 10c0/c24ddb8d741f02efc0da3ad9b597a275f6b595062903d3edbfaa535c3f9c4c98613df68da5cb6635ed9aeab30d658986fea61d7662fc5b2b92840d5a1e21235e
@@ -5506,6 +5523,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime-db@npm:1.52.0":
+  version: 1.52.0
+  resolution: "mime-db@npm:1.52.0"
+  checksum: 10c0/0557a01deebf45ac5f5777fe7740b2a5c309c6d62d40ceab4e23da9f821899ce7a900b7ac8157d4548ddbb7beffe9abc621250e6d182b0397ec7f10c7b91a5aa
+  languageName: node
+  linkType: hard
+
+"mime-types@npm:^2.1.35":
+  version: 2.1.35
+  resolution: "mime-types@npm:2.1.35"
+  dependencies:
+    mime-db: "npm:1.52.0"
+  checksum: 10c0/82fb07ec56d8ff1fc999a84f2f217aa46cb6ed1033fefaabd5785b9a974ed225c90dc72fff460259e66b95b73648596dbcc50d51ed69cdf464af2d237d3149b2
+  languageName: node
+  linkType: hard
+
 "mimic-fn@npm:^2.1.0":
   version: 2.1.0
   resolution: "mimic-fn@npm:2.1.0"
@@ -5520,7 +5553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.2.2":
+"minimatch@npm:^10.2.2, minimatch@npm:^10.2.3":
   version: 10.2.5
   resolution: "minimatch@npm:10.2.5"
   dependencies:
@@ -6177,7 +6210,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"punycode@npm:^2.1.0, punycode@npm:^2.3.0":
+"punycode@npm:^2.1.0, punycode@npm:^2.3.1":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: 10c0/14f76a8206bc3464f794fb2e3d3cc665ae416c01893ad7a02b23766eb07159144ee612ad67af5e84fa4479ccfe67678c4feb126b0485651b302babf66f04f9e9
@@ -6553,15 +6586,6 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/92d6871d6347e1f99d0ba396a70f2545ccf2a032cda3d378fa0699edf7506b5c6d266aed55c8b88e72bd91a30d2351e4f39db479375374430fcdc4b58f4e3c1a
-  languageName: node
-  linkType: hard
-
-"semver@npm:^7.5.1":
-  version: 7.7.1
-  resolution: "semver@npm:7.7.1"
-  bin:
-    semver: bin/semver.js
-  checksum: 10c0/fd603a6fb9c399c6054015433051bdbe7b99a940a8fb44b85c2b524c4004b023d7928d47cb22154f8d054ea7ee8597f586605e05b52047f048278e4ac56ae958
   languageName: node
   linkType: hard
 
@@ -7060,7 +7084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"table@npm:^6.8.1":
+"table@npm:^6.9.0":
   version: 6.9.0
   resolution: "table@npm:6.9.0"
   dependencies:
@@ -7810,10 +7834,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yaml@npm:1.10.2":
-  version: 1.10.2
-  resolution: "yaml@npm:1.10.2"
-  checksum: 10c0/5c28b9eb7adc46544f28d9a8d20c5b3cb1215a886609a2fd41f51628d8aaa5878ccd628b755dbcd29f6bb4921bd04ffbc6dcc370689bb96e594e2f9813d2605f
+"yaml@npm:1.10.3":
+  version: 1.10.3
+  resolution: "yaml@npm:1.10.3"
+  checksum: 10c0/c309ff85a0a569a981d71ab9cf0fef68672a16b9cdf40639d1c3b30034f6cd16ee428602bd6d64ecf006f8c8bee499023cac236538f79898aa99fb5db529a2ed
   languageName: node
   linkType: hard
 
