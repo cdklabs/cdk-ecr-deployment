@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ecrpublic v1.31.2
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.97.3
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.40.3
-	github.com/aws/smithy-go v1.24.2
+	github.com/aws/smithy-go v1.26.0
 	github.com/containers/image/v5 v5.36.2
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8
 	github.com/opencontainers/go-digest v1.0.0
