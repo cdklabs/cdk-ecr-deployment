@@ -2,13 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
-import { YamlFile } from 'projen';
+import { javascript, YamlFile } from 'projen';
 
 const project = new CdklabsConstructLibrary({
   name: 'cdk-ecr-deployment',
   stability: 'stable',
   private: false,
   projenrcTs: true,
+  packageManager: javascript.NodePackageManager.YARN_BERRY,
 
   description: 'CDK construct to deploy docker image to Amazon ECR',
   repositoryUrl: 'https://github.com/cdklabs/cdk-ecr-deployment',
