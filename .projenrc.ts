@@ -57,9 +57,9 @@ new YamlFile(project, '.github/dependabot.yml', {
     updates: [
       {
         'package-ecosystem': 'gomod',
-        directory: '/lambda-src',
-        schedule: { interval: 'weekly' },
-        labels: ['auto-approve'],
+        'directory': '/lambda-src',
+        'schedule': { interval: 'weekly' },
+        'labels': ['auto-approve'],
         'commit-message': { prefix: 'fix', include: 'scope' },
       },
     ],
