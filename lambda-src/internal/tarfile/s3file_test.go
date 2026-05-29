@@ -92,6 +92,36 @@ func TestBlockCache(t *testing.T) {
 	assert.Equal(t, append(mkblk(magic(0)), magic(1)...), buf)
 }
 
+// Reproduces https://github.com/cdklabs/cdk-ecr-deployment/issues/1270:
+// when an object's size is an exact multiple of BlockSize, reading up to EOF
+// must not request the block that starts at EOF (S3 answers 416 InvalidRange).
+// Also guards the (end-1) math against off-by-one edges (e.g. end == 1).
+func TestBlockCacheReadAtAlignedEOF(t *testing.T) {
+	cases := []struct {
+		name        string
+		size, begin, end int64
+	}{
+		{"single 8MiB block to EOF", iolimits.BlockSize, 0, iolimits.BlockSize},
+		{"two 8MiB blocks to EOF", 2 * iolimits.BlockSize, 0, 2 * iolimits.BlockSize},
+		{"single byte read", iolimits.BlockSize, 0, 1},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			// Mirrors S3File.onCacheMiss: S3 returns 416 when the range start is at/past EOF.
+			cacheMissFn := func(block *Block) error {
+				if block.Id*iolimits.BlockSize >= tc.size {
+					return fmt.Errorf("StatusCode: 416, api error InvalidRange: The requested range is not satisfiable")
+				}
+				return nil
+			}
+			cache := NewBlockCache(iolimits.CacheBlockCount)
+			buf, err := cache.Read(tc.begin, tc.end, cacheMissFn)
+			assert.NoError(t, err)
+			assert.Equal(t, int(tc.end-tc.begin), len(buf))
+		})
+	}
+}
+
 func TestLRUBlockPool(t *testing.T) {
 	n := 0
 	pool := NewLRUBlockPool(1)
