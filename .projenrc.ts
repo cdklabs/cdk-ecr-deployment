@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
+import { YamlFile } from 'projen';
 
 const project = new CdklabsConstructLibrary({
   name: 'cdk-ecr-deployment',
@@ -49,5 +50,20 @@ project.package.addField('jsiiRosetta', {
 });
 
 project.preCompileTask.exec('./build-lambda.sh');
+
+new YamlFile(project, '.github/dependabot.yml', {
+  obj: {
+    version: 2,
+    updates: [
+      {
+        'package-ecosystem': 'gomod',
+        'directory': '/lambda-src',
+        'schedule': { interval: 'weekly' },
+        'labels': ['auto-approve'],
+        'commit-message': { prefix: 'fix', include: 'scope' },
+      },
+    ],
+  },
+});
 
 project.synth();
