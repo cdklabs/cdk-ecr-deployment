@@ -35,6 +35,9 @@ const project = new CdklabsConstructLibrary({
     'lambda-bin/bootstrap',
     'test/**/*.lock',
     'test/**/cdk-integ.out.*',
+    // Don't commit staged asset bodies (e.g. the ~46MB Go lambda bootstrap) in
+    // integ snapshots; snapshot verification only needs templates + asset hashes.
+    'test/**/*.snapshot/**/asset.*',
   ],
   npmignore: [
     'cdk.out',
