@@ -327,7 +327,10 @@ func (c *BlockCache) Read(begin, end int64, cacheMissFn CacheMissFn) (buf []byte
 		return nil, fmt.Errorf("LRUBlockCache: byte end must greater than byte begin")
 	}
 	bidBegin := begin / iolimits.BlockSize
-	bidEnd := end / iolimits.BlockSize
+	// Use (end - 1) so a read that ends exactly on a block boundary does not
+	// request the next block, which would start at/after EOF and make S3 return
+	// 416 InvalidRange. begin < end is guaranteed above, so end-1 >= begin >= 0.
+	bidEnd := (end - 1) / iolimits.BlockSize
 	buf = make([]byte, 0)
 
 	for bid := bidBegin; bid <= bidEnd; bid++ {
