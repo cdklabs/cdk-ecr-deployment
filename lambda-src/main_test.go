@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/containers/image/v5/copy"
-	"github.com/containers/image/v5/transports/alltransports"
+	"go.podman.io/image/v5/copy"
+	"go.podman.io/image/v5/transports/alltransports"
 	"github.com/stretchr/testify/assert"
 
 	_ "cdk-ecr-deployment-handler/s3"

@@ -14,10 +14,10 @@ import (
 	"path"
 	"sync"
 
-	"github.com/containers/image/v5/docker/reference"
-	"github.com/containers/image/v5/manifest"
-	"github.com/containers/image/v5/pkg/compression"
-	"github.com/containers/image/v5/types"
+	"go.podman.io/image/v5/docker/reference"
+	"go.podman.io/image/v5/manifest"
+	"go.podman.io/image/v5/pkg/compression"
+	"go.podman.io/image/v5/types"
 	digest "github.com/opencontainers/go-digest"
 	"github.com/pkg/errors"
 )

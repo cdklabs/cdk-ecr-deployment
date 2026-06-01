@@ -1,0 +1,110 @@
+{
+  "/DockerImageAssetTest/DefaultTest/DeployAssert": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new IntegTest in @aws-cdk/integ-tests-alpha...",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:29:15)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImagesbe75983ba98767c933cebdd14056eb91/Default": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": "*"
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImagesbe75983ba98767c933cebdd14056eb91/AssertionResults": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AssertionResultsAwsApiCallECRdescribeImagesbe75983ba98767c933cebdd14056eb91"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...@aws-cdk/integ-tests-alpha, aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Role": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:30:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/SingletonFunction1488541a7b23466481b69b4408076b81/Handler": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:30:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/DockerImageAssetTest/DefaultTest/DeployAssert/AwsApiCallECRdescribeImagesbe75983ba98767c933cebdd14056eb91/Default/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AwsApiCallECRdescribeImagesbe75983ba98767c933cebdd14056eb91"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, DeployAssert.awsApiCall in @aws-cdk/integ-tests-alpha...",
+        "assertImageTags (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ-helpers.ts:14:8)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:30:16)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ]
+}

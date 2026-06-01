@@ -1,0 +1,13 @@
+{
+  "version": "53.0.0",
+  "testCases": {
+    "S3ArchiveTest/DefaultTest": {
+      "stacks": [
+        "integ-ecr-deployment-s3"
+      ],
+      "assertionStack": "S3ArchiveTest/DefaultTest/DeployAssert",
+      "assertionStackName": "S3ArchiveTestDefaultTestDeployAssert4D540B08"
+    }
+  },
+  "minimumCliVersion": "2.1125.0"
+}

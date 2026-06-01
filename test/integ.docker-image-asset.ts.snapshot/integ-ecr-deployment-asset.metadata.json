@@ -1,0 +1,290 @@
+{
+  "/integ-ecr-deployment-asset": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:13:15)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/TargetRepo": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "removalPolicy": "destroy",
+        "emptyOnDelete": true
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "code": "*",
+        "runtime": "*",
+        "handler": "*",
+        "description": "*",
+        "timeout": "*",
+        "role": "*",
+        "memorySize": "*",
+        "vpc": "*",
+        "vpcSubnets": "*",
+        "securityGroups": "*"
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/TargetRepo/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "TargetRepo95363C3C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Repository2 in aws-cdk-lib...",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:15:14)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/DeployImage/CustomResourceHandler": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "uuid": "*",
+        "code": "*",
+        "runtime": "*",
+        "handler": "*",
+        "lambdaPurpose": "*",
+        "description": "*",
+        "timeout": "*",
+        "role": "*",
+        "memorySize": "*",
+        "vpc": "*",
+        "vpcSubnets": "*",
+        "securityGroups": "*"
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/DeployImage/CustomResource": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "assumedBy": {
+          "principalAccount": "*",
+          "assumeRoleAction": "*"
+        },
+        "managedPolicies": [
+          {
+            "managedPolicyArn": "*"
+          }
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachInlinePolicy": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addToPrincipalPolicy": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SingletonFunction2 in aws-cdk-lib...",
+        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/LogGroup": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": {
+        "logGroupName": "*"
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/Exports/Output{\"Ref\":\"TargetRepo95363C3C\"}": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "ExportsOutputRefTargetRepo95363C3C5F436D3A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/DeployImage/CustomResource/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DeployImageCustomResource3E6E7A8D"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new CustomResource2 in aws-cdk-lib...",
+        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:272:5)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
+        "...node internals, ts-node, ts-node..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SingletonFunction2 in aws-cdk-lib...",
+        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/DefaultPolicy": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "attachToRole": [
+          "*"
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    },
+    {
+      "type": "aws:cdk:analytics:method",
+      "data": {
+        "addStatements": [
+          {}
+        ]
+      }
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/Code/AssetBucket": [
+    {
+      "type": "aws:cdk:analytics:construct",
+      "data": "*"
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/LogGroup/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBLogGroup77C91646"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new SingletonFunction2 in aws-cdk-lib...",
+        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:185:17)",
+        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
+        "...node internals, ts-node..."
+      ]
+    }
+  ]
+}

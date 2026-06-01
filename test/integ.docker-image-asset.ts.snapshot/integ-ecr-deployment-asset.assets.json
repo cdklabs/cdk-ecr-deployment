@@ -1,0 +1,50 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "0c47d00ea603023214d58ea892c673f9475b9e45d465c779a7dc26da7cca7533": {
+      "displayName": "Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/Code",
+      "source": {
+        "path": "asset.0c47d00ea603023214d58ea892c673f9475b9e45d465c779a7dc26da7cca7533",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "current_account-current_region-83d763d9": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "0c47d00ea603023214d58ea892c673f9475b9e45d465c779a7dc26da7cca7533.zip",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    },
+    "70044c74f8cc8777b0688139c668764133bb7b3c2d8f19c82edbcb0d76f1b19e": {
+      "displayName": "integ-ecr-deployment-asset Template",
+      "source": {
+        "path": "integ-ecr-deployment-asset.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "current_account-current_region-b470df6a": {
+          "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
+          "objectKey": "70044c74f8cc8777b0688139c668764133bb7b3c2d8f19c82edbcb0d76f1b19e.json",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  },
+  "dockerImages": {
+    "674d2399d29adcaad0345cb32afe7cd7a1633fbd0118f8e4e56ee2b643353e49": {
+      "displayName": "Image",
+      "source": {
+        "directory": "asset.674d2399d29adcaad0345cb32afe7cd7a1633fbd0118f8e4e56ee2b643353e49",
+        "dockerFile": "nginx.Dockerfile",
+        "platform": "linux/amd64"
+      },
+      "destinations": {
+        "current_account-current_region-773b8ad8": {
+          "repositoryName": "cdk-hnb659fds-container-assets-${AWS::AccountId}-${AWS::Region}",
+          "imageTag": "674d2399d29adcaad0345cb32afe7cd7a1633fbd0118f8e4e56ee2b643353e49",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-image-publishing-role-${AWS::AccountId}-${AWS::Region}"
+        }
+      }
+    }
+  }
+}

@@ -8,7 +8,7 @@ import (
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/containers/image/v5/types"
+	"go.podman.io/image/v5/types"
 )
 
 type s3ArchiveImageSource struct {

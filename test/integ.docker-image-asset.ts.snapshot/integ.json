@@ -1,0 +1,13 @@
+{
+  "version": "53.0.0",
+  "testCases": {
+    "DockerImageAssetTest/DefaultTest": {
+      "stacks": [
+        "integ-ecr-deployment-asset"
+      ],
+      "assertionStack": "DockerImageAssetTest/DefaultTest/DeployAssert",
+      "assertionStackName": "DockerImageAssetTestDefaultTestDeployAssert7EEFF022"
+    }
+  },
+  "minimumCliVersion": "2.1125.0"
+}

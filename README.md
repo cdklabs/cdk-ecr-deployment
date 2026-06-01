@@ -19,7 +19,7 @@ CDK construct to synchronize single docker image between docker registries.
 - Copy image or multi-architecture image index from ECR/external registry to (another) ECR/external registry
 - Copy an archive tarball image from s3 to ECR/external registry
 
-## Examples
+## Usage
 
 ```ts
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets';
@@ -82,52 +82,43 @@ new ecrdeploy.ECRDeployment(this, 'DeployDockerImage5', {
 });
 ```
 
-## Sample: [test/example.ecr-deployment.ts](./test/example.ecr-deployment.ts)
+## Examples: [examples/](./examples)
+
+The [examples/](./examples) directory contains a runnable CDK app per scenario
+(local image asset, specific architecture, multi-arch index, retry config, S3
+archive, and private-registry credentials). See [examples/README.md](./examples/README.md).
 
 After cloning the repository, install dependencies and run a full build:
 
 ```console
-yarn --frozen-lockfile --check-files
+yarn install --immutable
 yarn build
 ```
 
-Then run the example like this:
+Then synth or deploy any example:
 
 ```shell
-# Run the following command to try the sample.
-npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/example.ecr-deployment.ts"
+npx cdk synth --app "npx ts-node examples/docker-image-asset.ts"
+npx cdk deploy --app "npx ts-node examples/docker-image-asset.ts"
 ```
 
-To run the DockerHub example you will first need to setup a Secret in AWS Secrets Manager to provide DockerHub credentials.
-Replace `username:access-token` with your credentials.
-**Please note that Secrets will occur a cost.**
+The [private-registry-credentials](./examples/private-registry-credentials.ts) example needs a
+Secret in AWS Secrets Manager with your DockerHub credentials (**note: secrets incur a cost**):
 
 ```console
 aws secretsmanager create-secret --name DockerHubCredentials --secret-string "username:access-token"
-```
-
-From the output, copy the ARN of your new secret and export it as env variable
-
-```console
 export DOCKERHUB_SECRET_ARN="<ARN>"
 ```
 
-Finally run:
-
-```shell
-# Run the following command to try the sample.
-npx cdk deploy -a "npx ts-node -P tsconfig.dev.json --prefer-ts-exts test/dockerhub-example.ecr-deployment.ts"
-```
-
-If your Secret is encrypted, you might have to adjust the example to also grant decrypt permissions.
+If your secret is encrypted, you might have to adjust the example to also grant decrypt permissions.
 
 ## [API](./API.md)
 
-## Tech Details & Contribution
+## Tech Details & Contributions
 
-The core of this project relies on [containers/image](https://github.com/containers/image) which is used by [Skopeo](https://github.com/containers/skopeo).
-Please take a look at those projects before contribution.
+The core of this project relies on [containers/image](https://github.com/containers/container-libs/tree/main/image) (published as the Go module `go.podman.io/image/v5`) which is used by [Skopeo](https://github.com/containers/skopeo).
+Please take a look at those projects before contributing.
 
-To support a new docker image source(like docker tarball in s3), you need to implement [image transport interface](https://github.com/containers/image/blob/master/types/types.go). You could take a look at [docker-archive](https://github.com/containers/image/blob/ccb87a8d0f45cf28846e307eb0ec2b9d38a458c2/docker/archive/transport.go) transport for a good start.
+To support a new docker image source (like docker tarball in s3), you need to implement [image transport interface](https://github.com/containers/container-libs/blob/main/image/types/types.go). You could take a look at [docker-archive](https://github.com/containers/container-libs/blob/main/image/docker/archive/transport.go) transport for a good start.
 
 Any error in the custom resource provider will show up in the CloudFormation error log as `Invalid PhysicalResourceId`, because of this: <https://github.com/aws/aws-lambda-go/issues/107>. You need to go into the CloudWatch Log Group to find the real error.

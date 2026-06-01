@@ -42,6 +42,9 @@ jspm_packages/
 .cache
 cdk.out
 lambda-bin/bootstrap
+test/**/*.lock
+test/**/cdk-integ.out.*
+test/**/*.snapshot/**/asset.*
 /test-reports/
 junit.xml
 /coverage/
