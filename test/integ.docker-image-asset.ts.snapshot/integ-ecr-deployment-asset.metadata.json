@@ -1,13 +1,4 @@
 {
-  "/integ-ecr-deployment-asset": [
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:13:15)",
-        "...node internals, ts-node, ts-node..."
-      ]
-    }
-  ],
   "/integ-ecr-deployment-asset/TargetRepo": [
     {
       "type": "aws:cdk:analytics:construct",
@@ -38,40 +29,18 @@
     {
       "type": "aws:cdk:logicalId",
       "data": "BootstrapVersion"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...aws-cdk-lib...",
-        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/CheckBootstrapVersion": [
     {
       "type": "aws:cdk:logicalId",
       "data": "CheckBootstrapVersion"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...aws-cdk-lib...",
-        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/TargetRepo/Resource": [
     {
       "type": "aws:cdk:logicalId",
       "data": "TargetRepo95363C3C"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...new Repository2 in aws-cdk-lib...",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:15:14)",
-        "...node internals, ts-node, ts-node..."
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/DeployImage/CustomResourceHandler": [
@@ -151,15 +120,6 @@
     {
       "type": "aws:cdk:logicalId",
       "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB28EAD8E4"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...new SingletonFunction2 in aws-cdk-lib...",
-        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
-        "...node internals, ts-node..."
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/LogGroup": [
@@ -170,47 +130,22 @@
       }
     }
   ],
-  "/integ-ecr-deployment-asset/Exports/Output{\"Ref\":\"TargetRepo95363C3C\"}": [
+  "/integ-ecr-deployment-asset/Publish/Output{\"Ref\":\"TargetRepo95363C3C\"}": [
     {
       "type": "aws:cdk:logicalId",
-      "data": "ExportsOutputRefTargetRepo95363C3C5F436D3A"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...aws-cdk-lib, node internals...",
-        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
-      ]
+      "data": "PublishOutputRefTargetRepo95363C3C5DAB2B96"
     }
   ],
   "/integ-ecr-deployment-asset/DeployImage/CustomResource/Default": [
     {
       "type": "aws:cdk:logicalId",
       "data": "DeployImageCustomResource3E6E7A8D"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...new CustomResource2 in aws-cdk-lib...",
-        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:272:5)",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
-        "...node internals, ts-node, ts-node..."
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/Resource": [
     {
       "type": "aws:cdk:logicalId",
       "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRole8C8B0491"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...new SingletonFunction2 in aws-cdk-lib...",
-        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
-        "...node internals..."
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/DefaultPolicy": [
@@ -261,30 +196,12 @@
     {
       "type": "aws:cdk:logicalId",
       "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBLogGroup77C91646"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...new SingletonFunction2 in aws-cdk-lib...",
-        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:167:20)",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
-        "...node internals..."
-      ]
     }
   ],
   "/integ-ecr-deployment-asset/Custom::CDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiB/ServiceRole/DefaultPolicy/Resource": [
     {
       "type": "aws:cdk:logicalId",
       "data": "CustomCDKECRDeploymentbd07c930edb94112a20f03f096f53666512MiBServiceRoleDefaultPolicy280095F8"
-    },
-    {
-      "type": "aws:cdk:creationStack",
-      "data": [
-        "...WrappedClass.<anonymous> in aws-cdk-lib...",
-        "new ECRDeployment (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/src/index.ts:185:17)",
-        "<anonymous> (/Users/kornherm/code/cdklabs/cdk-ecr-deployment/test/integ.docker-image-asset.ts:24:1)",
-        "...node internals, ts-node..."
-      ]
     }
   ]
 }

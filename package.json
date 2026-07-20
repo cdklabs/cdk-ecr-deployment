@@ -64,7 +64,7 @@
     "jsii-diff": "^1.138.0",
     "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.138.0",
-    "jsii-rosetta": "^5.9.54",
+    "jsii-rosetta": "^5.9.55",
     "projen": "^0.99.70",
     "ts-jest": "^29",
     "ts-node": "^10.9.2",
@@ -75,8 +75,8 @@
     "constructs": "^10.5.1"
   },
   "resolutions": {
-    "@aws-cdk/integ-tests-alpha": "2.257.0-alpha.0",
-    "aws-cdk-lib": "2.257.0"
+    "@aws-cdk/integ-tests-alpha": "2.261.0-alpha.0",
+    "aws-cdk-lib": "2.261.0"
   },
   "keywords": [
     "cdk"

@@ -19,7 +19,13 @@
        [
         "\"",
         {
-         "Fn::ImportValue": "integ-ecr-deployment-asset:ExportsOutputRefTargetRepo95363C3C5F436D3A"
+         "Fn::GetStackOutput": {
+          "StackName": "integ-ecr-deployment-asset",
+          "Region": {
+           "Ref": "AWS::Region"
+          },
+          "OutputName": "PublishOutputRefTargetRepo95363C3C5DAB2B96"
+         }
         },
         "\""
        ]
@@ -28,7 +34,7 @@
      "imageIds": "[{\"imageTag\":\"latest\"}]"
     },
     "flattenResponse": "false",
-    "salt": "1780145666040"
+    "salt": "1784546905579"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
@@ -77,12 +83,12 @@
   "SingletonFunction1488541a7b23466481b69b4408076b81HandlerCD40AE9F": {
    "Type": "AWS::Lambda::Function",
    "Properties": {
-    "Runtime": "nodejs22.x",
+    "Runtime": "nodejs24.x",
     "Code": {
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "b5c2a7158e57582e84496b24c0499302cec1fd88624535b3dfb629311b3fdc2a.zip"
+     "S3Key": "6ffc47b88143a52aa50e26c31da776854b28dff0e45b1a97d7c1e530d59590ad.zip"
     },
     "Timeout": 120,
     "Handler": "index.handler",
@@ -91,6 +97,10 @@
       "SingletonFunction1488541a7b23466481b69b4408076b81Role37ABCE73",
       "Arn"
      ]
+    },
+    "LoggingConfig": {
+     "LogFormat": "JSON",
+     "ApplicationLogLevel": "FATAL"
     }
    }
   }

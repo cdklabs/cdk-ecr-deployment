@@ -60,8 +60,8 @@ project.package.addField('jsiiRosetta', {
 // now-unsupported nodejs runtime). Resolutions only affect this repo's install;
 // the published peerDependency floor stays ^2.80.0, so consumers are unaffected.
 project.package.addPackageResolutions(
-  'aws-cdk-lib@2.257.0',
-  '@aws-cdk/integ-tests-alpha@2.257.0-alpha.0',
+  'aws-cdk-lib@2.261.0',
+  '@aws-cdk/integ-tests-alpha@2.261.0-alpha.0',
 );
 
 project.preCompileTask.exec('./build-lambda.sh');

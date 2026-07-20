@@ -106,12 +106,12 @@
     },
     {
       "name": "@aws-cdk/integ-tests-alpha",
-      "version": "2.257.0-alpha.0",
+      "version": "2.261.0-alpha.0",
       "type": "override"
     },
     {
       "name": "aws-cdk-lib",
-      "version": "2.257.0",
+      "version": "2.261.0",
       "type": "override"
     },
     {
