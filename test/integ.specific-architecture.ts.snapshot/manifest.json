@@ -1,5 +1,5 @@
 {
-  "version": "53.0.0",
+  "version": "54.0.0",
   "artifacts": {
     "integ-ecr-deployment-arch.assets": {
       "type": "cdk:asset-manifest",
@@ -18,7 +18,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/3ffbfc0273f0aa13b5d4ef5498c98b1a52be0e4a3deaaaf23e477da796e11fed.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b94fd4421a3a902e9ced53baba19706ed9e3999fe395c03eabab338fa9103a61.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -53,7 +53,7 @@
         "validateOnSynth": false,
         "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
         "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
-        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/19bc29d80b8d0b40f3039c7bf3a98b2a51b9735560f513a4f92c9b2a82b23056.json",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/a24cd0048d7291c1e624dbdb4ae80e57b53f65221b5c33bde9c42b3617d4e18b.json",
         "requiresBootstrapStackVersion": 6,
         "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
         "additionalDependencies": [
@@ -594,13 +594,19 @@
             "recommendedValue": true,
             "explanation": "Use AL2023 as the default imageType for EC2 Batch compute environments instead of the deprecated AL2"
           },
+          "@aws-cdk/aws-eks:defaultToAL2023": {
+            "userValue": true,
+            "recommendedValue": true,
+            "explanation": "Use AL2023 as the default AMI type for EKS managed node groups using non-GPU instance types instead of the deprecated AL2"
+          },
           "@aws-cdk/core:annotationsInValidationReport": {
             "userValue": true,
             "recommendedValue": true,
             "explanation": "Include construct annotations (warnings and errors) in the policy validation report"
           },
           "@aws-cdk/core:defaultCrossStackReferences": {
-            "recommendedValue": "strong",
+            "userValue": "weak",
+            "recommendedValue": "weak",
             "explanation": "Controls whether cross-region stack references are strong, weak, or both",
             "unconfiguredBehavesLike": {
               "v2": "strong"
@@ -610,5 +616,5 @@
       }
     }
   },
-  "minimumCliVersion": "2.1125.0"
+  "minimumCliVersion": "2.1130.0"
 }

@@ -75,8 +75,8 @@
     "constructs": "^10.5.1"
   },
   "resolutions": {
-    "@aws-cdk/integ-tests-alpha": "2.257.0-alpha.0",
-    "aws-cdk-lib": "2.257.0"
+    "@aws-cdk/integ-tests-alpha": "2.261.0-alpha.0",
+    "aws-cdk-lib": "2.261.0"
   },
   "keywords": [
     "cdk"

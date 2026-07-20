@@ -1,5 +1,5 @@
 {
-  "version": "53.0.0",
+  "version": "54.0.0",
   "testCases": {
     "DockerImageAssetTest/DefaultTest": {
       "stacks": [
@@ -9,5 +9,5 @@
       "assertionStackName": "DockerImageAssetTestDefaultTestDeployAssert7EEFF022"
     }
   },
-  "minimumCliVersion": "2.1125.0"
+  "minimumCliVersion": "2.1132.0"
 }

@@ -151,7 +151,7 @@
      "S3Bucket": {
       "Fn::Sub": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}"
      },
-     "S3Key": "0c47d00ea603023214d58ea892c673f9475b9e45d465c779a7dc26da7cca7533.zip"
+     "S3Key": "9237631b006453b8d2b275e61053dbf9c1ec0da492720b99a9d83ce3b802c656.zip"
     },
     "Description": "Custom resource handler for copying Docker images between docker registries.",
     "Handler": "bootstrap",
@@ -191,12 +191,9 @@
   }
  },
  "Outputs": {
-  "ExportsOutputRefTargetRepo95363C3C5F436D3A": {
+  "PublishOutputRefTargetRepo95363C3C5DAB2B96": {
    "Value": {
     "Ref": "TargetRepo95363C3C"
-   },
-   "Export": {
-    "Name": "integ-ecr-deployment-index:ExportsOutputRefTargetRepo95363C3C5F436D3A"
    }
   }
  },
