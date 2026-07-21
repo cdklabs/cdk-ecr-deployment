@@ -268,6 +268,31 @@ func TestIsECRRateLimitError(t *testing.T) {
 			expected: true,
 		},
 		{
+			name:     "S3 503 Slow Down during blob read",
+			err:      errors.New("reading blob sha256:abc123: fetching blob: received unexpected HTTP status: 503 Slow Down (RequestId: req-001)"),
+			expected: true,
+		},
+		{
+			name:     "S3 503 Service Unavailable during blob read",
+			err:      errors.New("reading blob sha256:def456: fetching blob: received unexpected HTTP status: 503 Service Unavailable (RequestId: req-002)"),
+			expected: true,
+		},
+		{
+			name:     "bare slow down string",
+			err:      errors.New("Slow Down"),
+			expected: true,
+		},
+		{
+			name:     "500 Internal Server Error during blob read",
+			err:      errors.New("reading blob sha256:ghi789: fetching blob: received unexpected HTTP status: 500 Internal Server Error (RequestId: req-003)"),
+			expected: true,
+		},
+		{
+			name:     "connection reset by peer during image init",
+			err:      errors.New("initializing source docker://123456789012.dkr.ecr.us-west-2.amazonaws.com/repo:tag: read tcp 10.0.0.1:48000->10.0.0.2:443: read: connection reset by peer"),
+			expected: true,
+		},
+		{
 			name:     "unrelated error returns false",
 			err:      errors.New("connection timeout"),
 			expected: false,
