@@ -340,12 +340,18 @@ func (rc *RetryConfigs) ValidateFields() error {
 	return nil
 }
 
-// Helper function to check if an error is a "rate limit exceeded" from ECR API calls
-func IsECRRateLimitError(err error) bool {
+// IsRetryableError checks if an error is transient and should be retried.
+// This covers ECR API rate limits, S3 throttling during blob transfers,
+// and transient network errors.
+func IsRetryableError(err error) bool {
 	if err == nil {
 		return false
 	}
+	return IsECRRateLimitError(err) || IsS3ThrottlingError(err) || IsTransientNetworkError(err)
+}
 
+// IsECRRateLimitError checks for ECR API rate-limit errors (push-side throttling).
+func IsECRRateLimitError(err error) bool {
 	// Attempt to cast it as a smithy APIError
 	var apiErr smithy.APIError
 	if errors.As(err, &apiErr) {
@@ -354,12 +360,26 @@ func IsECRRateLimitError(err error) bool {
 		}
 	}
 
-	// Fallback to string matching
 	s := strings.ToLower(err.Error())
 	return strings.Contains(s, "toomanyrequests") ||
 		strings.Contains(s, "ratelimitexceeded") ||
 		strings.Contains(s, "rate exceeded") ||
 		(strings.Contains(s, "rate") && strings.Contains(s, "exceed"))
+}
+
+// IsS3ThrottlingError checks for S3 throttling errors during blob layer downloads.
+// ECR stores layers in S3 and serves them via presigned URLs; S3 uses HTTP 503 for throttling.
+func IsS3ThrottlingError(err error) bool {
+	s := strings.ToLower(err.Error())
+	return strings.Contains(s, "slow down") ||
+		strings.Contains(s, "503 service unavailable")
+}
+
+// IsTransientNetworkError checks for transient server and network errors.
+func IsTransientNetworkError(err error) bool {
+	s := strings.ToLower(err.Error())
+	return strings.Contains(s, "500 internal server error") ||
+		strings.Contains(s, "connection reset by peer")
 }
 
 // A simple backoff with jitter formula that's used for retries.
