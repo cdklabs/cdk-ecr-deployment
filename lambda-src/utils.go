@@ -359,6 +359,10 @@ func IsECRRateLimitError(err error) bool {
 	return strings.Contains(s, "toomanyrequests") ||
 		strings.Contains(s, "ratelimitexceeded") ||
 		strings.Contains(s, "rate exceeded") ||
+		strings.Contains(s, "slow down") ||
+		strings.Contains(s, "503 service unavailable") ||
+		strings.Contains(s, "500 internal server error") ||
+		strings.Contains(s, "connection reset by peer") ||
 		(strings.Contains(s, "rate") && strings.Contains(s, "exceed"))
 }
 
