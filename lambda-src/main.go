@@ -226,9 +226,9 @@ func copyImage(srcImage string, destImage string, srcCreds string, destCreds str
 		if err == nil {
 			return nil
 		}
-		if IsECRRateLimitError(err) && i < (attempts-1) {
+		if IsRetryableError(err) && i < (attempts-1) {
 			wait := BackoffWithJitter(i+1, baseDelay, maxDelay)
-			log.Printf("Exceeded rate limit for ECR PutImages on attempt (%v/%v). Retrying in %v...", (i + 1), attempts, wait)
+			log.Printf("Transient error on attempt (%v/%v). Retrying in %v... Error: %s", (i + 1), attempts, wait, err.Error())
 			time.Sleep(wait)
 			continue
 		}
