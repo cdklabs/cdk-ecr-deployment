@@ -7,7 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.43.4
 	github.com/aws/aws-sdk-go-v2/config v1.32.34
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.60.4
-	github.com/aws/aws-sdk-go-v2/service/ecrpublic v1.41.3
+	github.com/aws/aws-sdk-go-v2/service/ecrpublic v1.41.4
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.106.3
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.44.3
 	github.com/aws/smithy-go v1.27.7
