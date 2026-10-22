@@ -290,6 +290,16 @@ func TestIsRetryableError(t *testing.T) {
 			err:      errors.New("initializing source docker://123456789012.dkr.ecr.us-west-2.amazonaws.com/repo:tag: read tcp 10.0.0.1:48000->10.0.0.2:443: read: connection reset by peer"),
 			expected: true,
 		},
+		{
+			name:     "connection timed out during image init",
+			err:      errors.New("initializing source docker://123456789012.dkr.ecr.us-west-2.amazonaws.com/repo:tag: Get \"https://123456789012.dkr.ecr.us-west-2.amazonaws.com/v2/repo/manifests/tag\": dial tcp 10.0.0.2:443: connect: connection timed out"),
+			expected: true,
+		},
+		{
+			name:     "use of closed network connection during blob write",
+			err:      errors.New("writing blob: Patch \"https://123456789012.dkr.ecr.us-west-2.amazonaws.com/v2/repo/blobs/uploads/uuid\": write tcp 10.0.0.1:48000->10.0.0.2:443: use of closed network connection"),
+			expected: true,
+		},
 		// Negative cases
 		{
 			name:     "S3 503 Slow Down during blob read",
