@@ -383,7 +383,9 @@ func IsS3ThrottlingError(err error) bool {
 func IsTransientNetworkError(err error) bool {
 	s := strings.ToLower(err.Error())
 	return strings.Contains(s, "500 internal server error") ||
-		strings.Contains(s, "connection reset by peer")
+		strings.Contains(s, "connection reset by peer") ||
+		strings.Contains(s, "connection timed out") ||
+		strings.Contains(s, "use of closed network connection")
 }
 
 // A simple backoff with jitter formula that's used for retries.
