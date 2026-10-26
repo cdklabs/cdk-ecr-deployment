@@ -17,7 +17,7 @@
 !/package.json
 !/LICENSE
 !/.npmignore
-logs
+/logs
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -54,13 +54,14 @@ junit.xml
 !/.github/workflows/release.yml
 !/.github/pull_request_template.md
 !/test/
-!/tsconfig.dev.json
+!/tsconfig.json
+!/test/tsconfig.json
 !/src/
 /lib
 /dist/
 !/.eslintrc.json
+!/projenrc/tsconfig.json
 .jsii
-tsconfig.json
 !/API.md
 .jsii.tabl.json
 !/rosetta/default.ts-fixture

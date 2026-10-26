@@ -8,6 +8,7 @@
   "scripts": {
     "build": "projen build",
     "bump": "projen bump",
+    "bump:releasable-commits": "projen bump:releasable-commits",
     "clobber": "projen clobber",
     "compat": "projen compat",
     "compile": "projen compile",
@@ -52,8 +53,8 @@
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "aws-cdk-lib": "2.80.0",
-    "cdklabs-projen-project-types": "^0.5.0",
-    "commit-and-tag-version": "^12",
+    "cdklabs-projen-project-types": "^0.6.20",
+    "commit-and-tag-version": "^13",
     "constructs": "10.5.1",
     "eslint": "^9",
     "eslint-import-resolver-typescript": "^3.10.1",
@@ -65,7 +66,7 @@
     "jsii-docgen": "^10.5.0",
     "jsii-pacmak": "^1.141.0",
     "jsii-rosetta": "^5.9.70",
-    "projen": "^0.99.70",
+    "projen": "^0.104.12",
     "ts-jest": "^29",
     "ts-node": "^10.9.2",
     "typescript": "5.9.x"
@@ -90,6 +91,7 @@
   },
   "main": "lib/index.js",
   "license": "Apache-2.0",
+  "stability": "stable",
   "publishConfig": {
     "access": "public"
   },
@@ -135,13 +137,12 @@
       "^.+\\.[t]sx?$": [
         "ts-jest",
         {
-          "tsconfig": "tsconfig.dev.json"
+          "tsconfig": "test/tsconfig.json"
         }
       ]
     }
   },
   "types": "lib/index.d.ts",
-  "stability": "stable",
   "jsii": {
     "outdir": "dist",
     "targets": {
@@ -164,10 +165,8 @@
         "moduleName": "github.com/cdklabs/cdk-ecr-deployment-go"
       }
     },
-    "tsc": {
-      "outDir": "lib",
-      "rootDir": "src"
-    }
+    "tsconfig": "tsconfig.json",
+    "validateTsconfig": "strict"
   },
   "jsiiRosetta": {
     "exampleDependencies": {
