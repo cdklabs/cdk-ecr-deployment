@@ -44,6 +44,10 @@ const project = new CdklabsConstructLibrary({
       'cdk.out',
       'build-lambda.sh',
       'lambda-src',
+      '.yarn',
+      'examples',
+      'rosetta',
+      '.yarnrc.yml',
     ],
   },
 

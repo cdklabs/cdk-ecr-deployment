@@ -2,6 +2,10 @@
 cdk.out
 build-lambda.sh
 lambda-src
+.yarn
+examples
+rosetta
+.yarnrc.yml
 /.projen/
 /test-reports/
 junit.xml
