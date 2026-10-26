@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { CdklabsConstructLibrary } from 'cdklabs-projen-project-types';
-import { javascript, YamlFile } from 'projen';
+import { github, javascript, YamlFile } from 'projen';
 
 const project = new CdklabsConstructLibrary({
   name: 'cdk-ecr-deployment',
@@ -39,11 +39,31 @@ const project = new CdklabsConstructLibrary({
     // integ snapshots; snapshot verification only needs templates + asset hashes.
     'test/**/*.snapshot/**/asset.*',
   ],
-  npmignore: [
-    'cdk.out',
-    'build-lambda.sh',
-    'lambda-src',
-  ],
+  npmIgnoreOptions: {
+    ignorePatterns: [
+      'cdk.out',
+      'build-lambda.sh',
+      'lambda-src',
+      '.yarn',
+      'examples',
+      'rosetta',
+      '.yarnrc.yml',
+    ],
+  },
+
+  // Build the Go handler natively instead of in a container, so CI doesn't pull
+  // the golang image from a throttled registry (see build-lambda.sh).
+  // Packaging jobs check the repo out into a subdirectory and never build the
+  // handler, so the step is skipped there.
+  workflowBootstrapSteps: [{
+    name: 'Setup Go',
+    if: "hashFiles('lambda-src/go.mod') != ''",
+    uses: github.ActionRefs.ACTIONS_SETUP_GO,
+    with: {
+      'go-version-file': 'lambda-src/go.mod',
+      'cache-dependency-path': 'lambda-src/go.sum',
+    },
+  }],
 
   enablePRAutoMerge: true,
   setNodeEngineVersion: false,

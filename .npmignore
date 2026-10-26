@@ -2,6 +2,10 @@
 cdk.out
 build-lambda.sh
 lambda-src
+.yarn
+examples
+rosetta
+.yarnrc.yml
 /.projen/
 /test-reports/
 junit.xml
@@ -10,7 +14,7 @@ permissions-backup.acl
 /dist/changelog.md
 /dist/version.txt
 /test/
-/tsconfig.dev.json
+/test/tsconfig.json
 /src/
 !/lib/
 !/lib/**/*.js
@@ -23,6 +27,7 @@ dist
 /.projenrc.js
 tsconfig.tsbuildinfo
 /.eslintrc.json
+/projenrc/tsconfig.json
 !.jsii
 /.gitattributes
 /.projenrc.ts
