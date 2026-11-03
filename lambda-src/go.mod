@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/aws/aws-lambda-go v1.55.1
-	github.com/aws/aws-sdk-go-v2 v1.47.4
+	github.com/aws/aws-sdk-go-v2 v1.47.5
 	github.com/aws/aws-sdk-go-v2/config v1.33.10
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.66.4
 	github.com/aws/aws-sdk-go-v2/service/ecrpublic v1.47.6
