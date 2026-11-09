@@ -2258,7 +2258,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8"
     "@typescript-eslint/parser": "npm:^8"
     aws-cdk-lib: "npm:2.80.0"
-    cdklabs-projen-project-types: "npm:^0.6.21"
+    cdklabs-projen-project-types: "npm:^0.6.22"
     commit-and-tag-version: "npm:^13"
     constructs: "npm:10.5.1"
     eslint: "npm:^9"
@@ -2271,7 +2271,7 @@ __metadata:
     jsii-docgen: "npm:^10.5.0"
     jsii-pacmak: "npm:^1.142.0"
     jsii-rosetta: "npm:^5.9.72"
-    projen: "npm:^0.104.21"
+    projen: "npm:^0.104.27"
     ts-jest: "npm:^29"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.9.x"
@@ -2281,15 +2281,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"cdklabs-projen-project-types@npm:^0.6.21":
-  version: 0.6.21
-  resolution: "cdklabs-projen-project-types@npm:0.6.21"
+"cdklabs-projen-project-types@npm:^0.6.22":
+  version: 0.6.22
+  resolution: "cdklabs-projen-project-types@npm:0.6.22"
   dependencies:
     yaml: "npm:^2.9.1"
   peerDependencies:
     constructs: ^10.0.0
     projen: ">=0.104.12 <1.0.0"
-  checksum: 10c0/03bb2e3c6afa03b70819611b58782383463b4b252cfd6e946735dec50ad1b3be7c0bbf8b436774e3d7b94f33cef12835d8304b0b73f9fa7944321bb3ad1bda14
+  checksum: 10c0/bd1bd28ea9f239966a16eeb98c05593cc2e3a018620e3f6c5fcc273a854e035ab4151b82832868ed1a82317a43131e3dc9c498c0b3e0df2e2853b02eb51e2448
   languageName: node
   linkType: hard
 
@@ -5623,9 +5623,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.104.21":
-  version: 0.104.21
-  resolution: "projen@npm:0.104.21"
+"projen@npm:^0.104.27":
+  version: 0.104.27
+  resolution: "projen@npm:0.104.27"
   dependencies:
     "@iarna/toml": "npm:^2.2.5"
     case: "npm:^1.6.3"
@@ -5647,7 +5647,7 @@ __metadata:
     constructs: ^10.5.0
   bin:
     projen: bin/projen
-  checksum: 10c0/8ec2b9b9dfc2eb594faf798bd1870a90306e4db2f019f2822efb17c41e3e9d5ec16faa2d8b68ad691c2af2e4e5d5309132f591a73f65256cf7ea2acbea7ff74e
+  checksum: 10c0/cbb1bab9f91a8620ab437ee0566e28c7b8cf71f50f220e76ad5bdbc94001cc276fec5618d05357efa70b7ca3832cf868aab7cd36b658a860ac30bb24b805cc68
   languageName: node
   linkType: hard
 
