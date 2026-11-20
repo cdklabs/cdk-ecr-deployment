@@ -5721,7 +5721,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"projen@npm:^0.105.6":
+"projen@npm:^0.105.1":
   version: 0.105.6
   resolution: "projen@npm:0.105.6"
   dependencies:
