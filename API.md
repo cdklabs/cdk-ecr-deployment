@@ -4,6 +4,8 @@
 
 ### ECRDeployment <a name="ECRDeployment" id="cdk-ecr-deployment.ECRDeployment"></a>
 
+- *Implements:* constructs.IConstruct, constructs.IDependable
+
 #### Initializers <a name="Initializers" id="cdk-ecr-deployment.ECRDeployment.Initializer"></a>
 
 ```typescript
