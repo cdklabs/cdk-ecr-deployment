@@ -1,4 +1,4 @@
-import { Stack, App, aws_ecr as ecr, assertions } from 'aws-cdk-lib';
+import { Stack, App, Duration, aws_ecr as ecr, assertions } from 'aws-cdk-lib';
 import { DockerImageName, ECRDeployment } from '../src';
 
 // Yes, it's a lie. It's also the truth.
@@ -58,6 +58,49 @@ test('Cannot specify more or fewer than 1 elements in imageArch', () => {
     dest,
     imageArch: ['banana', 'pear'],
   })).toThrow(/imageArch must contain exactly 1 element/);
+});
+
+test('ServiceTimeout is missing from custom resource if argument not specified', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: assertions.Match.absent(),
+  });
+});
+
+test('ServiceTimeout is in custom resource properties if specified', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+    serviceTimeout: Duration.minutes(17),
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: '1020',
+  });
+});
+
+test('Cannot specify serviceTimeout outside 1 second to 1 hour', () => {
+  expect(() => new ECRDeployment(stack, 'TooLong', {
+    src,
+    dest,
+    serviceTimeout: Duration.minutes(61),
+  })).toThrow(/serviceTimeout must be between 1 second and 1 hour, got 3660 seconds/);
+
+  expect(() => new ECRDeployment(stack, 'TooShort', {
+    src,
+    dest,
+    serviceTimeout: Duration.seconds(0),
+  })).toThrow(/serviceTimeout must be between 1 second and 1 hour, got 0 seconds/);
 });
 
 test('public ECR dest auto-attaches ecr-public and sts permissions', () => {

@@ -63,6 +63,21 @@ export interface ECRDeploymentProps {
   readonly retryConfigs?: { [fields: string]: number };
 
   /**
+   * The maximum time CloudFormation waits for the custom resource to respond
+   * before failing the operation.
+   *
+   * The copy Lambda times out after 15 minutes. If it never responds (for
+   * example, it times out or can't reach CloudFormation), CloudFormation waits
+   * 1 hour by default before failing. A value a little above 15 minutes makes
+   * such deployments fail fast.
+   *
+   * Must be between 1 second and 1 hour.
+   *
+   * @default - the CloudFormation default (1 hour)
+   */
+  readonly serviceTimeout?: Duration;
+
+  /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
    * replicates the files from the CDK bucket to the destination bucket.
    *
@@ -268,6 +283,12 @@ export class ECRDeployment extends Construct {
       throw new Error(`imageArch must contain exactly 1 element, got ${JSON.stringify(props.imageArch)}`);
     }
     const imageArch = props.imageArch ? props.imageArch[0] : '';
+    if (props.serviceTimeout && !Token.isUnresolved(props.serviceTimeout.toSeconds())) {
+      const seconds = props.serviceTimeout.toSeconds();
+      if (seconds < 1 || seconds > 3600) {
+        throw new Error(`serviceTimeout must be between 1 second and 1 hour, got ${seconds} seconds`);
+      }
+    }
 
     new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
@@ -282,6 +303,8 @@ export class ECRDeployment extends Construct {
         ...props.copyImageIndex ? { CopyImageIndex: props.copyImageIndex } : {},
         ...props.archImageTags ? { ArchImageTags: JSON.stringify(props.archImageTags) } : {},
         ...props.retryConfigs ? { RetryConfigs: JSON.stringify(props.retryConfigs) } : {},
+        // Set through properties (not CustomResourceProps.serviceTimeout) to keep supporting older aws-cdk-lib versions.
+        ...props.serviceTimeout ? { ServiceTimeout: props.serviceTimeout.toSeconds().toString() } : {},
       },
     });
   }
