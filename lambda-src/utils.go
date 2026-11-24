@@ -385,6 +385,7 @@ func IsTransientNetworkError(err error) bool {
 	return strings.Contains(s, "500 internal server error") ||
 		strings.Contains(s, "connection reset by peer") ||
 		strings.Contains(s, "connection timed out") ||
+		strings.Contains(s, "tls handshake timeout") ||
 		strings.Contains(s, "use of closed network connection")
 }
 

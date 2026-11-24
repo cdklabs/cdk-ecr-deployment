@@ -296,6 +296,11 @@ func TestIsRetryableError(t *testing.T) {
 			expected: true,
 		},
 		{
+			name:     "TLS handshake timeout during blob read",
+			err:      errors.New("reading blob sha256:abc123: Get \"https://123456789012.dkr.ecr.us-west-2.amazonaws.com/v2/repo/blobs/sha256:abc123\": net/http: TLS handshake timeout"),
+			expected: true,
+		},
+		{
 			name:     "use of closed network connection during blob write",
 			err:      errors.New("writing blob: Patch \"https://123456789012.dkr.ecr.us-west-2.amazonaws.com/v2/repo/blobs/uploads/uuid\": write tcp 10.0.0.1:48000->10.0.0.2:443: use of closed network connection"),
 			expected: true,
