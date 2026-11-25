@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Arn, Aws, Duration, CustomResource, Stack, Token } from 'aws-cdk-lib';
+import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Arn, Aws, CfnResource, Duration, CustomResource, Stack, Token, Tokenization } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
@@ -291,7 +291,7 @@ export class ECRDeployment extends Construct {
       }
     }
 
-    new CustomResource(this, 'CustomResource', {
+    const resource = new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
       // This has been copy/pasted and is a pure lie, but changing it is going to change people's infra!! X(
       resourceType: 'Custom::CDKECRDeployment',
@@ -304,10 +304,11 @@ export class ECRDeployment extends Construct {
         ...props.copyImageIndex ? { CopyImageIndex: props.copyImageIndex } : {},
         ...props.archImageTags ? { ArchImageTags: JSON.stringify(props.archImageTags) } : {},
         ...props.retryConfigs ? { RetryConfigs: JSON.stringify(props.retryConfigs) } : {},
-        // Set through properties (not CustomResourceProps.serviceTimeout) to keep supporting older aws-cdk-lib versions.
-        ServiceTimeout: serviceTimeout.toSeconds().toString(),
       },
     });
+    // Set as an override (not CustomResourceProps.serviceTimeout) to keep supporting older aws-cdk-lib
+    // versions. Passing it through `properties` triggers a key-conflict warning on aws-cdk-lib >= 2.180.
+    (resource.node.defaultChild as CfnResource).addPropertyOverride('ServiceTimeout', Tokenization.stringifyNumber(serviceTimeout.toSeconds()));
   }
 
   public addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyResult {
