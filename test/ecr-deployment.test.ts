@@ -60,7 +60,7 @@ test('Cannot specify more or fewer than 1 elements in imageArch', () => {
   })).toThrow(/imageArch must contain exactly 1 element/);
 });
 
-test('ServiceTimeout is missing from custom resource if argument not specified', () => {
+test('ServiceTimeout defaults to 17 minutes if argument not specified', () => {
   // WHEN
   new ECRDeployment(stack, 'ECR', {
     src,
@@ -70,7 +70,7 @@ test('ServiceTimeout is missing from custom resource if argument not specified',
   // THEN
   const template = assertions.Template.fromStack(stack);
   template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
-    ServiceTimeout: assertions.Match.absent(),
+    ServiceTimeout: '1020',
   });
 });
 
@@ -79,13 +79,13 @@ test('ServiceTimeout is in custom resource properties if specified', () => {
   new ECRDeployment(stack, 'ECR', {
     src,
     dest,
-    serviceTimeout: Duration.minutes(17),
+    serviceTimeout: Duration.minutes(30),
   });
 
   // THEN
   const template = assertions.Template.fromStack(stack);
   template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
-    ServiceTimeout: '1020',
+    ServiceTimeout: '1800',
   });
 });
 

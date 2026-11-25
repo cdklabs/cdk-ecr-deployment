@@ -69,7 +69,8 @@
      ]
     },
     "CopyImageIndex": true,
-    "ArchImageTags": "{\"amd64\":\"nginx-amd64\",\"arm64\":\"nginx-arm64\"}"
+    "ArchImageTags": "{\"amd64\":\"nginx-amd64\",\"arm64\":\"nginx-arm64\"}",
+    "ServiceTimeout": "1020"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"

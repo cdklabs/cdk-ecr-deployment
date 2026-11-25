@@ -325,14 +325,14 @@ public readonly serviceTimeout: Duration;
 ```
 
 - *Type:* aws-cdk-lib.Duration
-- *Default:* the CloudFormation default (1 hour)
+- *Default:* Duration.minutes(17)
 
 The maximum time CloudFormation waits for the custom resource to respond before failing the operation.
 
 The copy Lambda times out after 15 minutes. If it never responds (for
-example, it times out or can't reach CloudFormation), CloudFormation waits
-1 hour by default before failing. A value a little above 15 minutes makes
-such deployments fail fast.
+example, it times out or can't reach CloudFormation), CloudFormation would
+otherwise wait its own default of 1 hour before failing. The default, a
+little above the Lambda timeout, makes such deployments fail fast.
 
 Must be between 1 second and 1 hour.
 

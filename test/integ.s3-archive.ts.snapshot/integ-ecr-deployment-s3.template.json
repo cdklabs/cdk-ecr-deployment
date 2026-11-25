@@ -78,7 +78,8 @@
        ":from-s3"
       ]
      ]
-    }
+    },
+    "ServiceTimeout": "1020"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"

@@ -67,13 +67,13 @@ export interface ECRDeploymentProps {
    * before failing the operation.
    *
    * The copy Lambda times out after 15 minutes. If it never responds (for
-   * example, it times out or can't reach CloudFormation), CloudFormation waits
-   * 1 hour by default before failing. A value a little above 15 minutes makes
-   * such deployments fail fast.
+   * example, it times out or can't reach CloudFormation), CloudFormation would
+   * otherwise wait its own default of 1 hour before failing. The default, a
+   * little above the Lambda timeout, makes such deployments fail fast.
    *
    * Must be between 1 second and 1 hour.
    *
-   * @default - the CloudFormation default (1 hour)
+   * @default Duration.minutes(17)
    */
   readonly serviceTimeout?: Duration;
 
@@ -283,8 +283,9 @@ export class ECRDeployment extends Construct {
       throw new Error(`imageArch must contain exactly 1 element, got ${JSON.stringify(props.imageArch)}`);
     }
     const imageArch = props.imageArch ? props.imageArch[0] : '';
-    if (props.serviceTimeout && !Token.isUnresolved(props.serviceTimeout.toSeconds())) {
-      const seconds = props.serviceTimeout.toSeconds();
+    const serviceTimeout = props.serviceTimeout ?? Duration.minutes(17);
+    if (!Token.isUnresolved(serviceTimeout.toSeconds())) {
+      const seconds = serviceTimeout.toSeconds();
       if (seconds < 1 || seconds > 3600) {
         throw new Error(`serviceTimeout must be between 1 second and 1 hour, got ${seconds} seconds`);
       }
@@ -304,7 +305,7 @@ export class ECRDeployment extends Construct {
         ...props.archImageTags ? { ArchImageTags: JSON.stringify(props.archImageTags) } : {},
         ...props.retryConfigs ? { RetryConfigs: JSON.stringify(props.retryConfigs) } : {},
         // Set through properties (not CustomResourceProps.serviceTimeout) to keep supporting older aws-cdk-lib versions.
-        ...props.serviceTimeout ? { ServiceTimeout: props.serviceTimeout.toSeconds().toString() } : {},
+        ServiceTimeout: serviceTimeout.toSeconds().toString(),
       },
     });
   }

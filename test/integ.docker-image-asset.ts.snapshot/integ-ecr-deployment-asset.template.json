@@ -77,7 +77,8 @@
        ":latest"
       ]
      ]
-    }
+    },
+    "ServiceTimeout": "1020"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
