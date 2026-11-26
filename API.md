@@ -177,6 +177,7 @@ const eCRDeploymentProps: ECRDeploymentProps = { ... }
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.retryConfigs">retryConfigs</a></code> | <code>{[ key: string ]: number}</code> | Retry configuration to apply to when copying images such as the number of retry attemtps, the base amount of delay (in seconds) between each retry, and the max amount of delay (in seconds) between each retry. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.role">role</a></code> | <code>aws-cdk-lib.aws_iam.IRole</code> | Execution role associated with this function. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.securityGroups">securityGroups</a></code> | <code>aws-cdk-lib.aws_ec2.SecurityGroup[]</code> | The list of security groups to associate with the Lambda's network interfaces. |
+| <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.serviceTimeout">serviceTimeout</a></code> | <code>aws-cdk-lib.Duration</code> | The maximum time CloudFormation waits for the custom resource to respond before failing the operation. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.vpc">vpc</a></code> | <code>aws-cdk-lib.aws_ec2.IVpc</code> | The VPC network to place the deployment lambda handler in. |
 | <code><a href="#cdk-ecr-deployment.ECRDeploymentProps.property.vpcSubnets">vpcSubnets</a></code> | <code>aws-cdk-lib.aws_ec2.SubnetSelection</code> | Where in the VPC to place the deployment lambda handler. |
 
@@ -314,6 +315,26 @@ public readonly securityGroups: SecurityGroup[];
 The list of security groups to associate with the Lambda's network interfaces.
 
 Only used if 'vpc' is supplied.
+
+---
+
+##### `serviceTimeout`<sup>Optional</sup> <a name="serviceTimeout" id="cdk-ecr-deployment.ECRDeploymentProps.property.serviceTimeout"></a>
+
+```typescript
+public readonly serviceTimeout: Duration;
+```
+
+- *Type:* aws-cdk-lib.Duration
+- *Default:* Duration.minutes(17)
+
+The maximum time CloudFormation waits for the custom resource to respond before failing the operation.
+
+The copy Lambda times out after 15 minutes. If it never responds (for
+example, it times out or can't reach CloudFormation), CloudFormation would
+otherwise wait its own default of 1 hour before failing. The default, a
+little above the Lambda timeout, makes such deployments fail fast.
+
+Must be between 1 second and 1 hour.
 
 ---
 

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import * as path from 'path';
-import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Arn, Aws, Duration, CustomResource, Stack, Token } from 'aws-cdk-lib';
+import { aws_ec2 as ec2, aws_iam as iam, aws_lambda as lambda, Arn, Aws, CfnResource, Duration, CustomResource, Stack, Token, Tokenization } from 'aws-cdk-lib';
 import { PolicyStatement, AddToPrincipalPolicyResult } from 'aws-cdk-lib/aws-iam';
 import { RuntimeFamily } from 'aws-cdk-lib/aws-lambda';
 import { Construct } from 'constructs';
@@ -61,6 +61,21 @@ export interface ECRDeploymentProps {
    * For example, { 'numAttempts': 3, 'baseDelay': 1, 'maxDelay': 5 }
    */
   readonly retryConfigs?: { [fields: string]: number };
+
+  /**
+   * The maximum time CloudFormation waits for the custom resource to respond
+   * before failing the operation.
+   *
+   * The copy Lambda times out after 15 minutes. If it never responds (for
+   * example, it times out or can't reach CloudFormation), CloudFormation would
+   * otherwise wait its own default of 1 hour before failing. The default, a
+   * little above the Lambda timeout, makes such deployments fail fast.
+   *
+   * Must be between 1 second and 1 hour.
+   *
+   * @default Duration.minutes(17)
+   */
+  readonly serviceTimeout?: Duration;
 
   /**
    * The amount of memory (in MiB) to allocate to the AWS Lambda function which
@@ -268,8 +283,15 @@ export class ECRDeployment extends Construct {
       throw new Error(`imageArch must contain exactly 1 element, got ${JSON.stringify(props.imageArch)}`);
     }
     const imageArch = props.imageArch ? props.imageArch[0] : '';
+    const serviceTimeout = props.serviceTimeout ?? Duration.minutes(17);
+    if (!Token.isUnresolved(serviceTimeout.toSeconds())) {
+      const seconds = serviceTimeout.toSeconds();
+      if (seconds < 1 || seconds > 3600) {
+        throw new Error(`serviceTimeout must be between 1 second and 1 hour, got ${seconds} seconds`);
+      }
+    }
 
-    new CustomResource(this, 'CustomResource', {
+    const resource = new CustomResource(this, 'CustomResource', {
       serviceToken: this.handler.functionArn,
       // This has been copy/pasted and is a pure lie, but changing it is going to change people's infra!! X(
       resourceType: 'Custom::CDKECRDeployment',
@@ -284,6 +306,9 @@ export class ECRDeployment extends Construct {
         ...props.retryConfigs ? { RetryConfigs: JSON.stringify(props.retryConfigs) } : {},
       },
     });
+    // Set as an override (not CustomResourceProps.serviceTimeout) to keep supporting older aws-cdk-lib
+    // versions. Passing it through `properties` triggers a key-conflict warning on aws-cdk-lib >= 2.180.
+    (resource.node.defaultChild as CfnResource).addPropertyOverride('ServiceTimeout', Tokenization.stringifyNumber(serviceTimeout.toSeconds()));
   }
 
   public addToPrincipalPolicy(statement: PolicyStatement): AddToPrincipalPolicyResult {

@@ -1,4 +1,4 @@
-import { Stack, App, aws_ecr as ecr, assertions } from 'aws-cdk-lib';
+import { Stack, App, CfnParameter, Duration, Lazy, Token, aws_ecr as ecr, assertions } from 'aws-cdk-lib';
 import { DockerImageName, ECRDeployment } from '../src';
 
 // Yes, it's a lie. It's also the truth.
@@ -58,6 +58,108 @@ test('Cannot specify more or fewer than 1 elements in imageArch', () => {
     dest,
     imageArch: ['banana', 'pear'],
   })).toThrow(/imageArch must contain exactly 1 element/);
+});
+
+test('ServiceTimeout defaults to 17 minutes if argument not specified', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: '1020',
+  });
+});
+
+test('ServiceTimeout does not emit a custom resource property conflict warning', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+  });
+
+  // THEN
+  assertions.Annotations.fromStack(stack).hasNoWarning('*', assertions.Match.stringLikeRegexp('will be overwritten'));
+});
+
+test('ServiceTimeout is in custom resource properties if specified', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+    serviceTimeout: Duration.minutes(30),
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: '1800',
+  });
+});
+
+test('ServiceTimeout passes an unresolved number parameter through to the template', () => {
+  // WHEN
+  const timeout = new CfnParameter(stack, 'Timeout', { type: 'Number' });
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+    serviceTimeout: Duration.seconds(timeout.valueAsNumber),
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: { Ref: 'Timeout' },
+  });
+});
+
+test('ServiceTimeout skips range validation for an unresolved string parameter', () => {
+  // WHEN
+  // The deploy-time value is arbitrary (here not even a number), so it cannot be validated at synth time.
+  const timeout = new CfnParameter(stack, 'Timeout', { type: 'String', default: 'not-a-number' });
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+    serviceTimeout: Duration.seconds(Token.asNumber(timeout.valueAsString)),
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: { Ref: 'Timeout' },
+  });
+});
+
+test('ServiceTimeout resolves a lazy value at synth time', () => {
+  // WHEN
+  new ECRDeployment(stack, 'ECR', {
+    src,
+    dest,
+    serviceTimeout: Duration.seconds(Lazy.number({ produce: () => 600 })),
+  });
+
+  // THEN
+  const template = assertions.Template.fromStack(stack);
+  template.hasResourceProperties(CUSTOM_RESOURCE_TYPE, {
+    ServiceTimeout: '600',
+  });
+});
+
+test('Cannot specify serviceTimeout outside 1 second to 1 hour', () => {
+  expect(() => new ECRDeployment(stack, 'TooLong', {
+    src,
+    dest,
+    serviceTimeout: Duration.minutes(61),
+  })).toThrow(/serviceTimeout must be between 1 second and 1 hour, got 3660 seconds/);
+
+  expect(() => new ECRDeployment(stack, 'TooShort', {
+    src,
+    dest,
+    serviceTimeout: Duration.seconds(0),
+  })).toThrow(/serviceTimeout must be between 1 second and 1 hour, got 0 seconds/);
 });
 
 test('public ECR dest auto-attaches ecr-public and sts permissions', () => {

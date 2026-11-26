@@ -78,7 +78,8 @@
       ]
      ]
     },
-    "ImageArch": "arm64"
+    "ImageArch": "arm64",
+    "ServiceTimeout": "1020"
    },
    "UpdateReplacePolicy": "Delete",
    "DeletionPolicy": "Delete"
